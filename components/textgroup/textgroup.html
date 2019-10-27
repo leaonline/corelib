@@ -1,0 +1,7 @@
+<template name="textGroup">
+	<div class="d-flex align-items-start {{groupClass}}">
+		{{> soundbutton tts=tts outline=true type=type }}
+		{{> text src=(i18n tts) class=(join "ml-3" class)}}
+		{{> Template.contentBlock .. }}
+	</div>
+</template>

@@ -1,0 +1,7 @@
+<template name="text">
+    <span class="lea-text text-wrapper {{class}}">
+        {{#each token in tokens}}
+            <span {{tokenAttributes @index}} data-index="{{@index}}">{{token}}</span>
+        {{/each}}
+    </span>
+</template>
