@@ -1,0 +1,7 @@
+<template name="TaskRendererFactory">
+	{{#with templateContext}}
+		{{> Template.dynamic template=this.template data=this.data }}
+	{{else}}
+		<span class="text-danger"><i class="fa fas fa-fw fa-exclamation-triangle"></i></span>
+	{{/with}}
+</template>
