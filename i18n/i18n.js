@@ -1,8 +1,13 @@
+import { check } from 'meteor/check'
+
 let _translator
 
 export const i18n = {}
 
-i18n.load = function (i18n) {
+i18n.load = function ({ get, set, getLocale }) {
+  check(get, Function)
+  check(set, Function)
+  check(getLocale, Function)
   _translator = i18n
 }
 
@@ -11,9 +16,9 @@ i18n.get = function (...params) {
 }
 
 i18n.set = function (lang, options) {
-  return _translator.addl10n({ [lang]: options })
+  return _translator.set(lang, options)
 }
 
 i18n.getLocale = function () {
-  return _translator.currentLocale.get()
+  return _translator.getLocale()
 }
