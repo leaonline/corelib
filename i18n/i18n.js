@@ -8,7 +8,7 @@ i18n.load = function ({ get, set, getLocale }) {
   check(get, Function)
   check(set, Function)
   check(getLocale, Function)
-  _translator = i18n
+  _translator = { get, set, getLocale }
 }
 
 i18n.get = function (...params) {

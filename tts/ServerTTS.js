@@ -29,8 +29,10 @@ ServerTTS.play = function ({ id, text, onEnd, onError }) {
     if (err) {
       return onError(err)
     } else {
-      const { url } = res.data
-      console.log(url)
+      const url = res.data && res.data.url
+      if (!url) {
+        return onError(new Error('Invalid response'))
+      }
       _requestCache.set(requestText, url)
       playAudio(url, onEnd)
     }

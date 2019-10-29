@@ -2,22 +2,25 @@ import { i18n } from '../i18n/i18n'
 
 export const BrowserTTS = {}
 
-const speechSynth = window.speechSynthesis
+let speechSynth
 const _voices = {}
 let _synthVoices
 
-function loadVoicesWhenAvailable () {
+
+function loadVoicesWhenAvailable (onComplete = () => {}) {
+  speechSynth = window.speechSynthesis
   const voices = speechSynth.getVoices()
 
   if (voices.length !== 0) {
     _synthVoices = voices
+    onComplete()
   } else {
-    setTimeout(function () { loadVoicesWhenAvailable() }, 10)
+    return setTimeout(function () { loadVoicesWhenAvailable(onComplete) }, 100)
   }
 }
 
 const getVoices = (locale) => {
-  if (!global.speechSynthesis) {
+  if (!speechSynth) {
     throw new Error('Browser does not support speech synthesis')
   }
   if (_voices[locale]) return _voices[locale]
@@ -81,4 +84,4 @@ BrowserTTS.stop = function () {
   speechSynth.cancel()
 }
 
-loadVoicesWhenAvailable()
+BrowserTTS.load = loadVoicesWhenAvailable

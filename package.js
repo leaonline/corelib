@@ -16,6 +16,7 @@ Package.onUse(function(api) {
   api.use('dynamic-import');
   api.use('reactive-dict');
   api.use('templating');
+  api.use('http');
   api.mainModule('core.js');
 });
 
