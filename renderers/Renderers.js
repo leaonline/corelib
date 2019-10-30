@@ -1,9 +1,9 @@
 const widthOptions = (i18n) => [
-  { value: 'col-12', label: i18n('grid.col.12') },
-  { value: 'col-8', label: i18n('grid.col.8') },
-  { value: 'col-6', label: i18n('grid.col.6') },
-  { value: 'col-4', label: i18n('grid.col.4') },
-  { value: 'col-2', label: i18n('grid.col.2') },
+  { value: '12', label: i18n('grid.12') },
+  { value: '8', label: i18n('grid.8') },
+  { value: '6', label: i18n('grid.6') },
+  { value: '4', label: i18n('grid.4') },
+  { value: '2', label: i18n('grid.2') }
 ]
 
 export const TaskRenderers = {
@@ -18,7 +18,7 @@ export const TaskRenderers = {
   },
   text: {
     name: 'text',
-    schema: ({i18n}) => ({
+    schema: ({ i18n }) => ({
       type: {
         type: String,
         defaultValue: 'text',
@@ -42,7 +42,7 @@ export const TaskRenderers = {
       },
       width: {
         type: String,
-        defaultValue: 'col-12',
+        defaultValue: '12',
         autoform: {
           firstOption: false,
           options () {
