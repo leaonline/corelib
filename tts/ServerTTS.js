@@ -24,8 +24,10 @@ ServerTTS.play = function ({ id, text, onEnd, onError }) {
    }
   }
 
-  HTTP.post(TTSConfig.url(), options, (err, res) => {
-    console.log(err, res)
+  const url = TTSConfig.url()
+  console.log(url)
+  HTTP.post(url, options, (err, res) => {
+    console.log(err, res.content)
     if (err) {
       return onError(err)
     } else {

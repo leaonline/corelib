@@ -7,7 +7,7 @@ export const TTSEngine = {}
 
 TTSEngine.configure = function ({ ttsUrl }) {
   check(ttsUrl, String)
-  TTSConfig.url({ttsUrl})
+  TTSConfig.url(ttsUrl)
   BrowserTTS.load()
 }
 
