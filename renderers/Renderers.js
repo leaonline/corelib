@@ -106,7 +106,7 @@ export const TaskRenderers = {
   h5p: {
     name: 'h5p',
     schema: {
-      item: String
+      contentId: String
     },
     label: 'taskRenderers.h5p',
     icon: 'edit',
