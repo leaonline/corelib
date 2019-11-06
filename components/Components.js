@@ -81,6 +81,6 @@ Components.load = function (names) {
     .then(() => {
       loaded.set(true)
     })
-    .catch(e => error(e))
+    .catch(e => console.error(e))
   return loaded
 }
