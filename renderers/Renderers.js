@@ -105,9 +105,39 @@ export const TaskRenderers = {
   },
   h5p: {
     name: 'h5p',
-    schema: {
-      contentId: String
-    },
+    schema: ({ i18n, version, uriBase, h5p }) => ({
+      type: {
+        type: String,
+        defaultValue: 'item',
+        autoform: {
+          type: 'hidden'
+        }
+      },
+      subtype: {
+        type: String,
+        defaultValue: 'h5p',
+        autoform: {
+          type: 'hidden'
+        }
+      },
+      value: {
+        type: String,
+        autoform: {
+          type: 'h5p',
+          h5p
+        }
+      },
+      width: {
+        type: String,
+        defaultValue: 'col-12',
+        autoform: {
+          firstOption: false,
+          options () {
+            return widthOptions(i18n)
+          }
+        }
+      }
+    }),
     label: 'taskRenderers.h5p',
     icon: 'edit',
     template: 'h5pRenderer',
