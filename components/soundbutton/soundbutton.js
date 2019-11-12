@@ -10,6 +10,8 @@ Template.soundbutton.onCreated(function () {
   const { data } = instance
 
   const initialTTS = data.tts
+  const initialText = data.text
+
   const btnType = getBsType(data.type, data.outline)
   const btnBlock = data.block ? 'btn-block' : ''
   const btnSize = data.md || data.xs || data.lg || 'btn-sm'
@@ -19,18 +21,23 @@ Template.soundbutton.onCreated(function () {
 
   instance.isPlaying = new ReactiveVar(false)
   instance.tts = new ReactiveVar(initialTTS)
+  instance.text = new ReactiveVar(initialText)
+
   instance.attributes = new ReactiveVar({
     id: data.id,
     title: data.title,
     class: `lea-sound-btn btn btn-${btnType} ${btnBlock} ${btnSize} ${borderClass} ${activeClass} ${customClass}`,
     'data-tts': initialTTS,
+    'data-text': initialText,
     'aria-label': data.title || i18n.get('aria.readText')
   })
 
   instance.autorun(() => {
     const reactiveData = Template.currentData()
+    const reactiveTTS = (reactiveData.tts || reactiveData.text)
+    const currentTTS = (instance.tts.get() || instance.text.get())
 
-    if (reactiveData.tts !== instance.tts.get()) {
+    if (reactiveTTS !== currentTTS) {
       // if the TTS target changed reactively
       // we need to stop the current playing
       if (instance.isPlaying.get()) {
@@ -39,6 +46,7 @@ Template.soundbutton.onCreated(function () {
       // we need to update the internal
       // TTS target state to allow playing the new sound
       instance.tts.set(reactiveData.tts)
+      instance.text.set(reactiveData.text)
     }
   })
 })
@@ -62,6 +70,7 @@ Template.soundbutton.helpers({
       atts.class += ' active'
     }
     atts['data-tts'] = instance.tts.get()
+    atts['data-text'] = instance.text.get()
 
     return atts
   },
@@ -82,11 +91,13 @@ Template.soundbutton.events({
       return
     }
 
-    const id = templateInstance.$(event.currentTarget).data('tts')
+    const $target = templateInstance.$(event.currentTarget)
+    const id = $target.data('tts')
+    const text = $target.data('text')
     const onEnd = () => templateInstance.isPlaying.set(false)
-    if (id) {
+    if (id || text) {
       try {
-        TTSEngine.play({ id, onEnd })
+        TTSEngine.play({ id, text, onEnd })
         templateInstance.isPlaying.set(true)
       } catch (e) {
         console.error(e)

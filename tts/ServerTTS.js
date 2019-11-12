@@ -8,26 +8,25 @@ const _requestCache = new Map()
 
 let audio
 
-
 ServerTTS.play = function ({ id, text, onEnd, onError }) {
   const requestText = text || i18n.get(id)
   const cachedUrl = _requestCache.get(requestText)
+
   if (cachedUrl) {
     return playAudio(cachedUrl, onEnd)
   }
 
+  const url = TTSConfig.url()
   const options = {
-   params: {text: requestText},
-   headers: {
-     'Accept': 'application/json, text/plain, */*',
-     'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
-   }
+    params: { text: requestText },
+    headers: {
+      'Accept': 'application/json, text/plain, */*',
+      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+    }
   }
 
-  const url = TTSConfig.url()
-  console.log(url)
   HTTP.post(url, options, (err, res) => {
-    console.log(err, res.content)
+    console.log(err, res)
     if (err) {
       return onError(err)
     } else {

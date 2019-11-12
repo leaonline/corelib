@@ -1,7 +1,12 @@
 <template name="textGroup">
 	<div class="d-flex align-items-start {{groupClass}}">
-		{{> soundbutton tts=tts outline=true type=type }}
-		{{> text src=(i18n tts) class=(join "ml-3" class)}}
+		{{#if text}}
+			{{> soundbutton text=text outline=true type=type }}
+			{{> text src=text class=(join "ml-3" class)}}
+		{{else}}
+			{{> soundbutton tts=tts outline=true type=type }}
+			{{> text src=(i18n tts) class=(join "ml-3" class)}}
+		{{/if}}
 		{{> Template.contentBlock .. }}
 	</div>
 </template>
