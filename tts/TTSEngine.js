@@ -7,11 +7,15 @@ export const TTSEngine = {}
 
 TTSEngine.configure = function ({ ttsUrl }) {
   check(ttsUrl, String)
+
+  // on macos and ios we
+  const isMacLike = /(Mac|iPhone|iPod|iPad)/i.test(window.navigator.platform)
+  const isIOS = /(iPhone|iPod|iPad)/i.test(window.navigator.platform)
+  TTSEngine.mode = (isMacLike || isIOS) ? 'browser' : 'server'
+
   TTSConfig.url(ttsUrl)
   BrowserTTS.load()
 }
-
-TTSEngine.mode = 'server'
 
 TTSEngine.play = function ({ id, text, onEnd }) {
   const fallback = () => {
