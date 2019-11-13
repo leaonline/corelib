@@ -1,14 +1,11 @@
 import { Template } from 'meteor/templating'
-import { Meteor } from 'meteor/meteor'
+import { RendererConfig } from '../RendererConfig'
 import './h5pRenderer.html'
-
-const settings = Meteor.settings.public.hosts.items
-const { renderUrl } = settings
 
 Template.h5pRenderer.helpers({
   contentUrl () {
     const data = Template.instance().data
-    console.log(data, renderUrl)
-    return data.value && `${renderUrl}${data.value}`
+    console.log(data, RendererConfig.h5pRenderUrl)
+    return data.value && `${RendererConfig.h5pRenderUrl}${data.value}`
   }
 })

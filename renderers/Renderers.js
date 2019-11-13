@@ -1,3 +1,5 @@
+import { RendererConfig } from './RendererConfig'
+
 const widthOptions = (i18n) => [
   { value: '12', label: i18n('grid.12') },
   { value: '8', label: i18n('grid.8') },
@@ -143,6 +145,9 @@ export const TaskRenderers = {
     template: 'h5pRenderer',
     async load () {
       return import('./h5p/h5pRenderer')
+    },
+    configure ({ renderUrl }) {
+      RendererConfig.h5pRenderUrl = renderUrl
     }
   }
 }
