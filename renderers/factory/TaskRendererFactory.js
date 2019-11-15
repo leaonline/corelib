@@ -15,7 +15,6 @@ Template.TaskRendererFactory.onCreated(function () {
     const data = Template.currentData()
     const { content } = data
 
-
     // skip current autorun if we have no content
     // or the template has already been loaded
     // for this current content type
@@ -23,7 +22,7 @@ Template.TaskRendererFactory.onCreated(function () {
       return
     }
 
-    const rendererContext = TaskRenderers[ content.subtype ]
+    const rendererContext = TaskRenderers[content.subtype]
     if (!rendererContext) {
       // something weirdly failed, what to do here? FIXME
       return

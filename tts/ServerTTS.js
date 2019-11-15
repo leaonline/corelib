@@ -20,7 +20,7 @@ ServerTTS.play = function ({ id, text, onEnd, onError }) {
   const options = {
     params: { text: requestText },
     headers: {
-      'Accept': 'application/json, text/plain, */*',
+      Accept: 'application/json, text/plain, */*',
       'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
     }
   }
@@ -42,7 +42,7 @@ ServerTTS.play = function ({ id, text, onEnd, onError }) {
 
 function playAudio (url, onEnd) {
   ServerTTS.stop()
-  audio = new Audio(url)
+  audio = new window.Audio(url)
   audio.onended = onEnd
   audio.play()
 }
@@ -50,7 +50,7 @@ function playAudio (url, onEnd) {
 ServerTTS.stop = function () {
   if (audio) {
     audio.pause()
-    const event = new Event('ended')
+    const event = new window.Event('ended')
     audio.dispatchEvent(event)
   }
 }

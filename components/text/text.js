@@ -5,7 +5,6 @@ import { TTSEngine } from '../../tts/TTSEngine'
 import './text.css'
 import './text.html'
 
-const OUT_TIMEOUT = 100
 const whiteSpace = /\s+/g
 
 Template.text.onCreated(function () {

@@ -1,3 +1,4 @@
+import { Template } from 'meteor/templating'
 import '../text/text'
 import '../soundbutton/soundbutton'
 import './textgroup.html'

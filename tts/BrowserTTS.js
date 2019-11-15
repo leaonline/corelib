@@ -6,7 +6,6 @@ let speechSynth
 const _voices = {}
 let _synthVoices
 
-
 function loadVoicesWhenAvailable (onComplete = () => {}) {
   speechSynth = window.speechSynthesis
   const voices = speechSynth.getVoices()

@@ -42,7 +42,7 @@ Template.actionButton.helpers({
 
     Object.keys(data).forEach(key => {
       if (key.indexOf('data-') === -1) return
-      atts[ key ] = data[ key ]
+      atts[key] = data[key]
     })
 
     return atts

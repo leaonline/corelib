@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor'
 import { ReactiveVar } from 'meteor/reactive-var'
 
 export const Components = {}
@@ -75,7 +76,7 @@ async function loadAll (names) {
 }
 
 Components.load = function (names) {
-  log(`[Components]: loadall`, names)
+  log('[Components]: loadall', names)
   const loaded = new ReactiveVar(false)
   loadAll(names)
     .then(() => {
