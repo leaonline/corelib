@@ -1,0 +1,1 @@
+import './multiChoiceItemRenderer.html'

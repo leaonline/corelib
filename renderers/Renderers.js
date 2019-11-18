@@ -149,5 +149,48 @@ export const TaskRenderers = {
     configure ({ renderUrl }) {
       RendererConfig.h5pRenderUrl = renderUrl
     }
+  },
+  cloze: {
+    name: 'cloze',
+    schema: ({ i18n }) => ({
+      type: {
+        type: String,
+        defaultValue: 'item',
+        autoform: {
+          type: 'hidden'
+        }
+      },
+      subtype: {
+        type: String,
+        defaultValue: 'cloze',
+        autoform: {
+          type: 'hidden'
+        }
+      },
+      value: {
+        type: String,
+        autoform: {
+          type: 'textarea',
+          rows: 8
+        }
+      },
+      width: {
+        type: String,
+        defaultValue: 'col-12',
+        autoform: {
+          firstOption: false,
+          options () {
+            return widthOptions(i18n)
+          }
+        }
+      }
+    }),
+    label: 'taskRenderers.items.cloze.title',
+    icon: 'text',
+    template: 'clozeItemRenderer',
+    instructions: 'taskRenderers.items.cloze.instructions',
+    async load () {
+      return import('./items/cloze/clozeItemRenderer')
+    }
   }
 }
