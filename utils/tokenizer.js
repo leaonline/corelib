@@ -1,16 +1,17 @@
 /**
  * Creates a simple tokenizer to split strings by a given pattern, defined by a
  * open-pattern and close-pattern. No AST scanning etc. required.
+ *
  * @param openPattern A unique pattern indicate the following content is part if our token
  * @param closePattern A unique pattern indicate the previous content was part of our token
- * @returns {Array<Object>>} An array of token-objects.
+ * @returns {Array<Object>} An array of token-objects
  */
 export const createSimpleTokenizer = (openPattern, closePattern) => (value) => {
   if ('string' !== typeof value || value.length === 0) {
     return []
   }
 
-  let startIndex = 0, endIndex = 0
+  let startIndex = 0, endIndex = 0, index = 0, substr
   const tokens = []
 
   while (startIndex < value.length && startIndex > -1) {
@@ -19,16 +20,19 @@ export const createSimpleTokenizer = (openPattern, closePattern) => (value) => {
     if (startIndex === -1 || startIndex >= value.length) {
       // no open bracket is found, we still try to add the rest of the words
       // that may remain in the value string until the end
-      tokens.push({ value: value.substring(endIndex, value.length) })
+      substr = value.substring(endIndex, value.length)
+      tokens.push({ value: substr, length: substr.length, index: index++ })
       break
     }
 
     // add previous words
-    tokens.push({ value: value.substring(endIndex, startIndex) })
+    substr = value.substring(endIndex, startIndex)
+    tokens.push({ value: substr, length: substr.length, index: index++ })
 
     // add input related words
     endIndex = value.indexOf(closePattern, startIndex)
-    tokens.push({ isToken: true, value: value.substring(startIndex + openPattern.length, endIndex) })
+    substr = value.substring(startIndex + openPattern.length, endIndex)
+    tokens.push({ isToken: true, value: substr, length: substr.length, index: index++ })
     endIndex += closePattern.length
   }
 
