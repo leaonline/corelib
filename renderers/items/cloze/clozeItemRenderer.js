@@ -11,6 +11,7 @@ const tokenize = createSimpleTokenizer(startPattern, closePattern)
 Template.clozeItemRenderer.onCreated(function () {
   const instance = this
   instance.tokens = new ReactiveVar()
+  instance.responseCache = new ReactiveVar('')
 
   instance.autorun(() => {
     const data = Template.currentData()
@@ -42,10 +43,10 @@ Template.clozeItemRenderer.events({
 
     // prevent layout overflow by limiting
     // overall width of an input to it's parent
+
     if ($target.width() >= $container.width()) {
       return
     }
-
     // otherwise we resize, if the word length
     // exceedes the default size of the input words
     const value = $target.val()
@@ -54,5 +55,45 @@ Template.clozeItemRenderer.events({
     const originalSize = tokens[ tokenindex ].value.length
     const newSize = value.length > originalSize ? value.length : originalSize
     $target.attr('size', newSize)
+  },
+  'blur .cloze-input' (event, templateInstance) {
+    submitValues(templateInstance)
   }
 })
+
+function submitValues (templateInstance) {
+  // skip if there is no onInput connected
+  // which can happen when creating new items
+  if (!templateInstance.data.onInput) {
+    return
+  }
+
+  const userId = templateInstance.data.userId
+  const sessionId = templateInstance.data.sessionId
+  const taskId = templateInstance.data.taskId
+  const page = templateInstance.data.page
+  const type = templateInstance.data.subtype
+
+  // also return if our identifier values
+  // are not set, which also can occur in item-dev
+  if (!userId || !sessionId || !taskId) {
+    return
+  }
+
+  const responses = []
+  templateInstance.$('input').each(function (index, input) {
+    const value = templateInstance.$(input).val()
+    responses.push(value || '__undefined__')
+  })
+
+  // we use a simple stringified cache as we have fixed
+  // positions, so we can easily skip sending same repsonses
+  const cache = templateInstance.responseCache.get()
+  const strResponses = JSON.stringify(responses)
+  if (strResponses === cache) {
+    return
+  }
+
+  templateInstance.responseCache.set(strResponses)
+  templateInstance.data.onInput({ userId, sessionId, taskId, page, type, responses })
+}
