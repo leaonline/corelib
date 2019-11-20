@@ -8,7 +8,7 @@ const widthOptions = (i18n) => [
   { value: '2', label: i18n('grid.2') }
 ]
 
-const RendererGroups = {
+export const RendererGroups = {
   layout: {
     name: 'layout',
     label: 'taskRenderers.layout'
