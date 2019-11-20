@@ -8,6 +8,17 @@ const widthOptions = (i18n) => [
   { value: '2', label: i18n('grid.2') }
 ]
 
+const RendererGroups = {
+  layout: {
+    name: 'layout',
+    label: 'taskRenderers.layout'
+  },
+  items: {
+    name: 'items',
+    label: 'taskRenderers.items'
+  },
+}
+
 export const TaskRenderers = {
   factory: {
     name: 'factory',
@@ -20,6 +31,7 @@ export const TaskRenderers = {
   },
   text: {
     name: 'text',
+    group: RendererGroups.layout,
     schema: ({ i18n }) => ({
       type: {
         type: String,
@@ -62,6 +74,7 @@ export const TaskRenderers = {
   },
   markdown: {
     name: 'markdown',
+    group: RendererGroups.layout,
     schema: ({ i18n }) => ({
       type: {
         type: String,
@@ -130,6 +143,7 @@ export const TaskRenderers = {
   },
   image: {
     name: 'image',
+    group: RendererGroups.layout,
     schema: ({ i18n, imagesCollection, version, uriBase }) => ({
       type: {
         type: String,
@@ -175,6 +189,7 @@ export const TaskRenderers = {
   },
   h5p: {
     name: 'h5p',
+    group: RendererGroups.items,
     schema: ({ i18n, version, uriBase, h5p }) => ({
       type: {
         type: String,
@@ -220,6 +235,7 @@ export const TaskRenderers = {
   },
   cloze: {
     name: 'cloze',
+    group: RendererGroups.items,
     schema: ({ i18n }) => ({
       type: {
         type: String,
@@ -263,6 +279,7 @@ export const TaskRenderers = {
   },
   singleChoice: {
     name: 'singleChoice',
+    group: RendererGroups.items,
     schema: ({ i18n, imagesCollection, version, uriBase }) => ({
       type: {
         type: String,
