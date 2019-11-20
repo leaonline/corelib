@@ -60,6 +60,74 @@ export const TaskRenderers = {
       return import('./text/textRenderer')
     }
   },
+  markdown: {
+    name: 'markdown',
+    schema: ({ i18n }) => ({
+      type: {
+        type: String,
+        defaultValue: 'text',
+        autoform: {
+          type: 'hidden'
+        }
+      },
+      subtype: {
+        type: String,
+        defaultValue: 'markdown',
+        autoform: {
+          type: 'hidden'
+        }
+      },
+      value: {
+        type: String,
+        autoform: {
+          type: 'markdown',
+        }
+      },
+      padding: {
+        type: Number,
+        optional: true,
+        defaultValue: 0,
+        min: 0,
+        max: 5
+      },
+      background: {
+        type: String,
+        optional: true,
+        autoform: {
+          options: () => [
+            { value: 'light', label: i18n('colors.light')},
+            { value: 'dark', label: i18n('colors.dark')},
+          ]
+        }
+      },
+      textColor: {
+        type: String,
+        optional: true,
+        autoform: {
+          options: () => [
+            { value: 'light', label: i18n('colors.light')},
+            { value: 'dark', label: i18n('colors.dark')},
+          ]
+        }
+      },
+      width: {
+        type: String,
+        defaultValue: '12',
+        autoform: {
+          firstOption: false,
+          options () {
+            return widthOptions(i18n)
+          }
+        }
+      }
+    }),
+    label: 'taskRenderers.markdown.title',
+    icon: 'align-center',
+    template: 'markdownRenderer',
+    async load () {
+      return import('./markdown/markdownRenderer')
+    }
+  },
   image: {
     name: 'image',
     schema: ({ i18n, imagesCollection, version, uriBase }) => ({
