@@ -186,11 +186,65 @@ export const TaskRenderers = {
       }
     }),
     label: 'taskRenderers.items.cloze.title',
-    icon: 'text',
+    icon: 'align-left',
     template: 'clozeItemRenderer',
     instructions: 'taskRenderers.items.cloze.instructions',
     async load () {
       return import('./items/cloze/clozeItemRenderer')
+    }
+  },
+  singleChoice: {
+    name: 'singleChoice',
+    schema: ({ i18n, imagesCollection, version, uriBase }) => ({
+      type: {
+        type: String,
+        defaultValue: 'item',
+        autoform: {
+          type: 'hidden'
+        }
+      },
+      subtype: {
+        type: String,
+        defaultValue: 'singleChoice',
+        autoform: {
+          type: 'hidden'
+        }
+      },
+      value: Array,
+      'value.$': Object,
+      'value.$.text': String,
+      'value.$.tts': {
+        type: String,
+        optional: true
+      },
+      'value.$.image': {
+        type: String,
+        optional: true,
+        autoform: {
+          type: 'imageSelect',
+          imagesCollection: imagesCollection,
+          save: 'url',
+          uriBase: uriBase,
+          version: version
+        }
+      },
+      width: {
+        type: String,
+        defaultValue: 'col-12',
+        autoform: {
+          firstOption: false,
+          options () {
+            return widthOptions(i18n)
+          }
+        }
+      }
+    }),
+    label: 'taskRenderers.items.singleChoice.title',
+    icon: 'list-ul',
+    template: 'singleChoiceItemRenderer',
+    instructions: 'taskRenderers.items.singleChoice.instructions',
+    async load () {
+      return import('./items/singlechoice/singleChoiceItemRenderer')
     }
   }
 }
