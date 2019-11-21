@@ -26,6 +26,7 @@ Template.soundbutton.onCreated(function () {
   instance.attributes = new ReactiveVar({
     id: data.id,
     title: data.title,
+    type: 'button',
     class: `lea-sound-btn btn btn-${btnType} ${btnBlock} ${btnSize} ${borderClass} ${activeClass} ${customClass}`,
     'data-tts': initialTTS,
     'data-text': initialText,
