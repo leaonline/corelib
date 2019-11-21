@@ -1,7 +1,24 @@
 {
   "taskRenderers": {
+    "layout": {
+      "title": "Layout",
+      "text": {
+        "title": "Text"
+      },
+      "image": {
+        "title": "Bild"
+      }
+    },
     "items": {
-
+      "title": "Items",
+      "singleChoice": {
+        "title": "Single Choice",
+        "instruction": "Bilder und TTS sind optional. TTS kann sich vom Text unterscheiden"
+      },
+      "cloze": {
+        "title": "Lückentext",
+        "instruction": "Lückentexte werden durch {{Wort oder Satz$TTS Ausgabe}} definiert. Dabei bestimmt die Länge von 'Wort oder Satz' die anfängliche Länge des Eingabefelds."
+      }
     }
   }
 }
