@@ -1,11 +1,11 @@
 <template name="singleChoiceItemRenderer">
 	<div class="single-choice-container w-100">
 		{{#each entry in values}}
-			<div class="d-flex align-items-center w-100 my-2 p-2 choice-entry bg-light {{#if selected @index}}border border-secondary{{/if}}"
+			<div class="d-flex align-items-center w-100 my-2 p-2 choice-entry bg-light {{#if selected @index}}border border-{{color}}{{/if}}"
 				 data-index="{{@index}}" data-name="{{entry.name}}">
-				<input type="radio" id="{{entry.name}}-{{@index}}" name="{{entry.name}}" value={{entry.index}} class="mx-2 radio-group-button">
+				<input type="radio" id="{{entry.name}}-{{@index}}" name="{{entry.name}}" value="{{entry.index}}" class="mx-2 radio-group-button">
 				{{#if entry.tts}}
-					{{> soundbutton text=entry.tts class="radio-group-soundbutton"}}
+					{{> soundbutton type=color text=entry.tts class="radio-group-soundbutton"}}
 				{{/if}}
 				<span class="h-100 mx-2">
 					<label class="radio-group-label" for="{{entry.name}}-{{@index}}">{{entry.text}}</label>

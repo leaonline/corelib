@@ -7,11 +7,18 @@ Template.singleChoiceItemRenderer.onCreated(function () {
   const instance = this
   instance.values = new ReactiveVar()
   instance.selected = new ReactiveVar(null)
+  instance.color = new ReactiveVar('secondary')
   instance.responseCache = new ReactiveVar(null)
 
   instance.autorun(function () {
     const data = Template.currentData()
     const { value } = data
+    const { color } = data
+
+    if (color) {
+      instance.color.set(color)
+    }
+
     const name = Math.floor(Math.random() * 10000)
     instance.values.set(value.map((entry, index) => {
       entry.name = name
@@ -32,6 +39,9 @@ Template.singleChoiceItemRenderer.helpers({
   },
   selected (index) {
     return Template.instance().selected.get() === index
+  },
+  color () {
+    return Template.instance().color.get()
   }
 })
 
