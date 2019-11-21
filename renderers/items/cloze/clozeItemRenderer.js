@@ -2,37 +2,69 @@ import { ReactiveVar } from 'meteor/reactive-var'
 import { createSimpleTokenizer } from '../../../utils/tokenizer'
 import '../../../components/soundbutton/soundbutton'
 import './clozeItemRenderer.html'
+import './clozeItemRenderer.css'
 
 const separator = '$'
 const startPattern = '{{'
 const closePattern = '}}'
+const newLinePattern = '//'
+const newLineReplacer = `${startPattern}${newLinePattern}${closePattern}`
+const newLineRegExp = new RegExp(/\n/,'g')
 const tokenize = createSimpleTokenizer(startPattern, closePattern)
 
 Template.clozeItemRenderer.onCreated(function () {
   const instance = this
   instance.tokens = new ReactiveVar()
+  instance.color = new ReactiveVar('secondary')
   instance.responseCache = new ReactiveVar('')
 
   instance.autorun(() => {
     const data = Template.currentData()
+
+    // set the color of the current dimension
+    // only if it has been passed with the data
+    const { color } = data
+    if (color) {
+      instance.color.set(color)
+    }
+
     const { value } = data
-    const tokens = tokenize(value).map(entry => {
+    const preprocessedValue = value.replace(newLineRegExp, newLineReplacer)
+
+    console.log(value)
+    console.log(preprocessedValue)
+    const tokens = tokenize(preprocessedValue).map(entry => {
+      // we simply indicate newlines within
+      // our brackets to avoid complex parsing
+      if (entry.value.indexOf('//') > -1) {
+        entry.isNewLine = true
+        return entry
+      }
+
+      // for normal text tokens we don't need
+      // further processing of content here
       if (entry.value.indexOf(separator) === -1) {
         return entry
       }
       const split = entry.value.split('$')
+      console.log(split)
       entry.value = split[ 0 ]
-      entry.tts = split[ 1 ]
+      entry.label = split[ 1 ]
+      entry.tts = split[ 2 ]
+      entry.length = entry.value.length
       return entry
     })
+    console.log(tokens)
     instance.tokens.set(tokens)
-
   })
 })
 
 Template.clozeItemRenderer.helpers({
   tokens () {
     return Template.instance().tokens.get()
+  },
+  color () {
+    return Template.instance().color.get()
   }
 })
 
