@@ -50,12 +50,20 @@ _comps.image = {
   }
 }
 
+_comps.icon = {
+  template: 'icon',
+  async load () {
+    return import('./icon/icon')
+  }
+}
+
 Components.template = {
   soundbutton: _comps.soundbutton.template,
   actionButton: _comps.actionButton.template,
   text: _comps.text.template,
   textGroup: _comps.textGroup.template,
-  image: _comps.image.template
+  image: _comps.image.template,
+  icon: _comps.icon.template
 }
 
 async function _load (name) {
