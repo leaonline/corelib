@@ -9,7 +9,7 @@ const startPattern = '{{'
 const closePattern = '}}'
 const newLinePattern = '//'
 const newLineReplacer = `${startPattern}${newLinePattern}${closePattern}`
-const newLineRegExp = new RegExp(/\n/,'g')
+const newLineRegExp = new RegExp(/\n/, 'g')
 const tokenize = createSimpleTokenizer(startPattern, closePattern)
 
 Template.clozeItemRenderer.onCreated(function () {
@@ -17,6 +17,11 @@ Template.clozeItemRenderer.onCreated(function () {
   instance.tokens = new ReactiveVar()
   instance.color = new ReactiveVar('secondary')
   instance.responseCache = new ReactiveVar('')
+
+  const { collector } = instance.data
+  collector.addEventListener('collect', function () {
+    submitValues(instance)
+  })
 
   instance.autorun(() => {
     const data = Template.currentData()
@@ -48,9 +53,9 @@ Template.clozeItemRenderer.onCreated(function () {
       }
       const split = entry.value.split('$')
       console.log(split)
-      entry.value = split[ 0 ]
-      entry.label = split[ 1 ]
-      entry.tts = split[ 2 ]
+      entry.value = split[0]
+      entry.label = split[1]
+      entry.tts = split[2]
       entry.length = entry.value.length
       return entry
     })
@@ -84,7 +89,7 @@ Template.clozeItemRenderer.events({
     const value = $target.val()
     const tokenindex = $target.data('tokenindex')
     const tokens = templateInstance.tokens.get()
-    const originalSize = tokens[ tokenindex ].value.length
+    const originalSize = tokens[tokenindex].value.length
     const newSize = value.length > originalSize ? value.length : originalSize
     $target.attr('size', newSize)
   },
