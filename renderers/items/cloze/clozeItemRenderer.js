@@ -19,9 +19,11 @@ Template.clozeItemRenderer.onCreated(function () {
   instance.responseCache = new ReactiveVar('')
 
   const { collector } = instance.data
-  collector.addEventListener('collect', function () {
-    submitValues(instance)
-  })
+  if (collector) {
+    collector.addEventListener('collect', function () {
+      submitValues(instance)
+    })
+  }
 
   instance.autorun(() => {
     const data = Template.currentData()
@@ -35,9 +37,6 @@ Template.clozeItemRenderer.onCreated(function () {
 
     const { value } = data
     const preprocessedValue = value.replace(newLineRegExp, newLineReplacer)
-
-    console.log(value)
-    console.log(preprocessedValue)
     const tokens = tokenize(preprocessedValue).map(entry => {
       // we simply indicate newlines within
       // our brackets to avoid complex parsing
@@ -52,14 +51,13 @@ Template.clozeItemRenderer.onCreated(function () {
         return entry
       }
       const split = entry.value.split('$')
-      console.log(split)
       entry.value = split[0]
       entry.label = split[1]
       entry.tts = split[2]
       entry.length = entry.value.length
       return entry
     })
-    console.log(tokens)
+
     instance.tokens.set(tokens)
   })
 })

@@ -10,6 +10,13 @@ Template.singleChoiceItemRenderer.onCreated(function () {
   instance.color = new ReactiveVar('secondary')
   instance.responseCache = new ReactiveVar(null)
 
+  const { collector } = instance.data
+  if (collector) {
+    collector.addEventListener('collect', function () {
+      submitValues(instance)
+    })
+  }
+
   instance.autorun(function () {
     const data = Template.currentData()
     const { value } = data
