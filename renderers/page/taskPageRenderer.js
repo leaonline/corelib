@@ -94,7 +94,7 @@ Template.taskPageRenderer.helpers({
 Template.taskPageRenderer.events({
   'click .lea-pagenav-button' (event, templateInstance) {
     event.preventDefault()
-    const action = templateInstance.$(even.currentTarget).data('action')
+    const action = templateInstance.$(event.currentTarget).data('action')
     const taskDoc = templateInstance.state.get('taskDoc')
     const currentPageCount = templateInstance.state.get('currentPageCount')
     const newPage = {}
