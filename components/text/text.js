@@ -31,17 +31,25 @@ Template.text.onCreated(function () {
 })
 
 Template.text.helpers({
+  attributes() {
+    const data = Template.instance().data
+    const additionalClass = data.class || ''
+    return  {
+      class: `lea-text text-wrapper ${additionalClass}`
+    }
+  },
   tokens () {
     return Template.instance().data.src.split(whiteSpace)
   },
   tokenAttributes (currentIndex) {
     const instance = Template.instance()
     const { data } = instance
+    const fill = (data.fill && 'flex-fill') || ''
     const customTokenClass = data.tokenClass || ''
     const playingClass = instance.isPlaying(currentIndex)
       ? 'lea-text-token-active'
       : ''
-    return { class: `lea-text-token ${playingClass} ${customTokenClass}` }
+    return { class: `lea-text-token ${fill} ${playingClass} ${customTokenClass}` }
   }
 })
 
@@ -57,50 +65,4 @@ Template.text.events({
     TTSEngine.play({ text, onEnd })
     templateInstance.play(index)
   }
-  /*
-  'mousedown .lea-text-token' (event, templateInstance) {
-    const index = dataTarget(event, templateInstance, 'index')
-    templateInstance.startIndex.set(index)
-  },
-  'mouseup .lea-text-token' (event, templateInstance) {
-    const selection = window.getSelection
-      ? window.getSelection()
-      : document.selection
-    const selectedText = selection.toString()
-    if (!selectedText) {
-      return true
-    }
-
-    const token = templateInstance.token.get()
-    const endIndex = dataTarget(event, templateInstance, 'index') || token.length - 1
-    const startIndex = templateInstance.startIndex.get() || 0
-    const length = endIndex - startIndex
-    const indices = []
-    indices.length = length
-
-    let i
-    for (i = 0; i <= length; i++) {
-      indices[ i ] = startIndex + i
-    }
-
-    // get the "real" tokens from the
-    // spans, referred by the indices
-    const onEnd = () => templateInstance.clear()
-    const text = indices.map(index => token[ index ]).join(' ')
-
-    // also clear on ranges the
-    // existing isPlaying state
-    templateInstance.clear()
-
-    TTSEngine.play({ text, onEnd })
-    templateInstance.play(...indices)
-
-    // cleanup selection
-    if (selection.removeAllRanges) {
-      selection.removeAllRanges()
-    } else if (selection.empty) {
-      selection.empty()
-    }
-  }
-  */
 })
