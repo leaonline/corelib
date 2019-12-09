@@ -14,7 +14,7 @@ Template.soundbutton.onCreated(function () {
 
   const btnType = getBsType(data.type, data.outline)
   const btnBlock = data.block ? 'btn-block' : ''
-  const btnSize = data.md || data.xs || data.lg || 'btn-sm'
+  const btnSize = (data.sm && 'btn-sm') || (data.lg && 'btn-lg') || ''
   const customClass = data.class || ''
   const activeClass = data.active ? 'active' : ''
   const borderClass = data.border ? '' : 'border-0'
@@ -26,6 +26,7 @@ Template.soundbutton.onCreated(function () {
   instance.attributes = new ReactiveVar({
     id: data.id,
     title: data.title,
+    disabled: data.disabled,
     type: 'button',
     class: `lea-sound-btn btn btn-${btnType} ${btnBlock} ${btnSize} ${borderClass} ${activeClass} ${customClass}`,
     'data-tts': initialTTS,
