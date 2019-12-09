@@ -1,4 +1,5 @@
 import { ReactiveVar } from 'meteor/reactive-var'
+import { ReactiveDict } from 'meteor/reactive-dict'
 import { createSimpleTokenizer } from '../../../utils/tokenizer'
 import '../../../components/soundbutton/soundbutton'
 import './clozeItemRenderer.html'
@@ -14,6 +15,7 @@ const tokenize = createSimpleTokenizer(startPattern, closePattern)
 
 Template.clozeItemRenderer.onCreated(function () {
   const instance = this
+  instance.state = new ReactiveDict()
   instance.tokens = new ReactiveVar()
   instance.color = new ReactiveVar('secondary')
   instance.responseCache = new ReactiveVar('')
