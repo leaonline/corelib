@@ -1,7 +1,9 @@
 <template name="clozeItemRenderer">
 	<div class="cloze-container w-100 p-5">
 		{{#each token in tokens}}
-			{{#if token.isNewLine}}
+			{{#if token.isBlock}}
+				{{> soundbutton md=true outline=false block=true type=color text=token.tts class="h-100 mr-n1" }}
+			{{else if token.isNewLine}}
 				<div class="d-block p-2"></div>
 			{{else if token.isToken}}
 				<span class="cloze-input-group no-wrap">

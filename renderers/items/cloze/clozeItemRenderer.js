@@ -53,11 +53,15 @@ Template.clozeItemRenderer.onCreated(function () {
       if (entry.value.indexOf(separator) === -1) {
         return entry
       }
+
+      // if this is an interactive token
+      // we process ist from the value split
       const split = entry.value.split('$')
       entry.value = split[0]
       entry.label = split[1]
       entry.tts = split[2]
       entry.length = entry.value.length
+      entry.isBlock = !entry.value && !entry.label
       return entry
     })
 
