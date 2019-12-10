@@ -38,6 +38,11 @@ Template.singleChoiceItemRenderer.onCreated(function () {
   })
 })
 
+Template.singleChoiceItemRenderer.onDestroyed(function () {
+  const instance = this
+  instance.state.clear()
+})
+
 Template.singleChoiceItemRenderer.onRendered(function () {
   const instance = this
   submitValues(instance)

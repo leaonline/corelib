@@ -1,6 +1,7 @@
 import { ReactiveVar } from 'meteor/reactive-var'
 import { Template } from 'meteor/templating'
 import { ReactiveDict } from 'meteor/reactive-dict'
+import { Random } from 'meteor/random'
 import { createSimpleTokenizer } from '../../../utils/tokenizer'
 import '../../../components/soundbutton/soundbutton'
 import './clozeItemRenderer.html'
@@ -69,12 +70,21 @@ Template.clozeItemRenderer.onCreated(function () {
   })
 })
 
+Template.clozeItemRenderer.onDestroyed(function () {
+  const instance = this
+  instance.state.clear()
+})
+
+
 Template.clozeItemRenderer.helpers({
   tokens () {
     return Template.instance().tokens.get()
   },
   color () {
     return Template.instance().color.get()
+  },
+  random () {
+    return Random.id(10)
   }
 })
 
