@@ -13,12 +13,12 @@ Template.singleChoiceItemRenderer.onCreated(function () {
   instance.color = new ReactiveVar('secondary')
   instance.responseCache = new ReactiveVar(null)
 
-  const { collector } = instance.data
-  if (collector) {
-    collector.addEventListener('collect', function () {
-      submitValues(instance)
-    })
-  }
+  //const { collector } = instance.data
+  //if (collector) {
+  //  collector.addEventListener('collect', function () {
+  //    submitValues(instance)
+  //  })
+  //}
 
   instance.autorun(function () {
     const data = Template.currentData()
@@ -40,6 +40,7 @@ Template.singleChoiceItemRenderer.onCreated(function () {
 
 Template.singleChoiceItemRenderer.onDestroyed(function () {
   const instance = this
+  submitValues(instance)
   instance.state.clear()
 })
 
@@ -110,7 +111,12 @@ function submitValues (templateInstance) {
   }
 
   const responses = []
-  responses.push(value)
+  if (value.length > 0) {
+    responses.push(value)
+  } else {
+    responses.push('__undefined__')
+  }
+
 
   // we use a simple stringified cache as we have fixed
   // positions, so we can easily skip sending same repsonses

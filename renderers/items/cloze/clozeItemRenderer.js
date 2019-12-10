@@ -22,12 +22,12 @@ Template.clozeItemRenderer.onCreated(function () {
   instance.color = new ReactiveVar('secondary')
   instance.responseCache = new ReactiveVar('')
 
-  const { collector } = instance.data
-  if (collector) {
-    collector.addEventListener('collect', function () {
-      submitValues(instance)
-    })
-  }
+  //const { collector } = instance.data
+  //if (collector) {
+  //  collector.addEventListener('collect', function () {
+  //    submitValues(instance)
+  //  })
+  //}
 
   instance.autorun(() => {
     const data = Template.currentData()
@@ -72,6 +72,7 @@ Template.clozeItemRenderer.onCreated(function () {
 
 Template.clozeItemRenderer.onDestroyed(function () {
   const instance = this
+  submitValues(instance)
   instance.state.clear()
 })
 
