@@ -1,3 +1,4 @@
+import { Template } from 'meteor/templating'
 import { ReactiveVar } from 'meteor/reactive-var'
 import { ReactiveDict } from 'meteor/reactive-dict'
 import '../../../components/soundbutton/soundbutton'
@@ -43,7 +44,7 @@ Template.singleChoiceItemRenderer.onRendered(function () {
 })
 
 Template.singleChoiceItemRenderer.helpers({
-  values() {
+  values () {
     return Template.instance().values.get()
   },
   selected (index) {

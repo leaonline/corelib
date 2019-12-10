@@ -1,4 +1,5 @@
 import { ReactiveVar } from 'meteor/reactive-var'
+import { Template } from 'meteor/templating'
 import { ReactiveDict } from 'meteor/reactive-dict'
 import { createSimpleTokenizer } from '../../../utils/tokenizer'
 import '../../../components/soundbutton/soundbutton'

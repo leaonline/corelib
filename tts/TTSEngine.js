@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor'
 import { check } from 'meteor/check'
 import { BrowserTTS } from './BrowserTTS'
 import { ServerTTS } from './ServerTTS'

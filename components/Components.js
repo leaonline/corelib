@@ -68,15 +68,15 @@ Components.template = {
 
 async function _load (name) {
   log(`[Components]: try to load <${name}>`)
-  if (!_comps[ name ]) return false
-  if (_loaded[ name ]) {
+  if (!_comps[name]) return false
+  if (_loaded[name]) {
     log(`[Components]: already loaded <${name}>`)
     return true
   } else {
     log(`[Components]: load <${name}>`)
-    _loaded[ name ] = true
+    _loaded[name] = true
   }
-  return _comps[ name ].load()
+  return _comps[name].load()
 }
 
 async function loadAll (names) {

@@ -31,10 +31,10 @@ Template.text.onCreated(function () {
 })
 
 Template.text.helpers({
-  attributes() {
+  attributes () {
     const data = Template.instance().data
     const additionalClass = data.class || ''
-    return  {
+    return {
       class: `lea-text text-wrapper ${additionalClass}`
     }
   },

@@ -7,7 +7,7 @@ Template.icon.helpers({
     const fw = data.fw ? 'fa-fw' : ''
     const pulse = data.pulse ? 'fa-pulse' : ''
     const name = data.name
-    const classAtts = `fa fas ${fw} fa-${name}`
+    const classAtts = `fa fas ${fw} fa-${name} ${pulse}`
     return {
       class: classAtts,
       title: data.title,

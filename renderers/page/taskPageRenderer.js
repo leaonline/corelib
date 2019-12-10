@@ -1,8 +1,9 @@
+/* global EventTarget Event */
 import { Template } from 'meteor/templating'
 import { Meteor } from 'meteor/meteor'
 import '../factory/TaskRendererFactory'
 import '../../components/actionButton/actionButton'
-import '../../components/actionButton/actionButton'
+
 import './taskPageRenderer.html'
 
 function onInput (...args) {
