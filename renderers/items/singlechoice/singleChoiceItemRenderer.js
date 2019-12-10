@@ -1,10 +1,12 @@
 import { ReactiveVar } from 'meteor/reactive-var'
+import { ReactiveDict } from 'meteor/reactive-dict'
 import '../../../components/soundbutton/soundbutton'
 import './singleChoiceItemRenderer.css'
 import './singleChoiceItemRenderer.html'
 
 Template.singleChoiceItemRenderer.onCreated(function () {
   const instance = this
+  instance.state = new ReactiveDict()
   instance.values = new ReactiveVar()
   instance.selected = new ReactiveVar(null)
   instance.color = new ReactiveVar('secondary')
