@@ -113,6 +113,13 @@ export const TaskRenderers = {
         min: 0,
         max: 5
       },
+      lineHeight: {
+        type: Number,
+        optional: true,
+        defaultValue: 0,
+        min: 0,
+        max: 5
+      },
       background: {
         type: String,
         optional: true,
