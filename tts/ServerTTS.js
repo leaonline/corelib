@@ -26,7 +26,6 @@ ServerTTS.play = function ({ id, text, onEnd, onError }) {
   }
 
   HTTP.post(url, options, (err, res) => {
-    console.log(err, res)
     if (err) {
       return onError(err)
     } else {

@@ -16,7 +16,7 @@ export const RendererGroups = {
   items: {
     name: 'items',
     label: 'taskRenderers.items'
-  },
+  }
 }
 
 export const TaskRenderers = {
@@ -26,6 +26,16 @@ export const TaskRenderers = {
     template: 'TaskRendererFactory',
     async load () {
       return import('./factory/TaskRendererFactory.js')
+    },
+    exclude: true
+  },
+  page: {
+    name: 'page',
+    label: 'taskRenderers.page',
+    template: 'taskPageRenderer',
+    async load () {
+      console.log('load task page renderer')
+      return import('./page/taskPageRenderer.js')
     },
     exclude: true
   },
@@ -93,10 +103,17 @@ export const TaskRenderers = {
       value: {
         type: String,
         autoform: {
-          type: 'markdown',
+          type: 'markdown'
         }
       },
       padding: {
+        type: Number,
+        optional: true,
+        defaultValue: 0,
+        min: 0,
+        max: 5
+      },
+      lineHeight: {
         type: Number,
         optional: true,
         defaultValue: 0,
@@ -108,8 +125,8 @@ export const TaskRenderers = {
         optional: true,
         autoform: {
           options: () => [
-            { value: 'light', label: i18n('colors.light')},
-            { value: 'dark', label: i18n('colors.dark')},
+            { value: 'light', label: i18n('colors.light') },
+            { value: 'dark', label: i18n('colors.dark') }
           ]
         }
       },
@@ -118,8 +135,8 @@ export const TaskRenderers = {
         optional: true,
         autoform: {
           options: () => [
-            { value: 'light', label: i18n('colors.light')},
-            { value: 'dark', label: i18n('colors.dark')},
+            { value: 'light', label: i18n('colors.light') },
+            { value: 'dark', label: i18n('colors.dark') }
           ]
         }
       },

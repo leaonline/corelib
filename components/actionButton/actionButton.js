@@ -27,7 +27,7 @@ Template.actionButton.helpers({
     const btnBlock = data.block ? 'btn-block' : ''
     const customClass = data.btnClass || ''
     const activeClass = data.active ? 'active' : ''
-    const bgClass = btnType === 'outline-secondary' ? 'lea-outline-secondary' : ''
+    const bgClass = `lea-action-btn-${btnType}`
 
     const atts = {
       id: data.id,

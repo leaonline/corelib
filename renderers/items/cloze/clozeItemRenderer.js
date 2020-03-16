@@ -1,4 +1,7 @@
 import { ReactiveVar } from 'meteor/reactive-var'
+import { Template } from 'meteor/templating'
+import { ReactiveDict } from 'meteor/reactive-dict'
+import { Random } from 'meteor/random'
 import { createSimpleTokenizer } from '../../../utils/tokenizer'
 import '../../../components/soundbutton/soundbutton'
 import './clozeItemRenderer.html'
@@ -9,14 +12,22 @@ const startPattern = '{{'
 const closePattern = '}}'
 const newLinePattern = '//'
 const newLineReplacer = `${startPattern}${newLinePattern}${closePattern}`
-const newLineRegExp = new RegExp(/\n/,'g')
+const newLineRegExp = new RegExp(/\n/, 'g')
 const tokenize = createSimpleTokenizer(startPattern, closePattern)
 
 Template.clozeItemRenderer.onCreated(function () {
   const instance = this
+  instance.state = new ReactiveDict()
   instance.tokens = new ReactiveVar()
   instance.color = new ReactiveVar('secondary')
   instance.responseCache = new ReactiveVar('')
+
+  //const { collector } = instance.data
+  //if (collector) {
+  //  collector.addEventListener('collect', function () {
+  //    submitValues(instance)
+  //  })
+  //}
 
   instance.autorun(() => {
     const data = Template.currentData()
@@ -30,9 +41,6 @@ Template.clozeItemRenderer.onCreated(function () {
 
     const { value } = data
     const preprocessedValue = value.replace(newLineRegExp, newLineReplacer)
-
-    console.log(value)
-    console.log(preprocessedValue)
     const tokens = tokenize(preprocessedValue).map(entry => {
       // we simply indicate newlines within
       // our brackets to avoid complex parsing
@@ -46,18 +54,28 @@ Template.clozeItemRenderer.onCreated(function () {
       if (entry.value.indexOf(separator) === -1) {
         return entry
       }
+
+      // if this is an interactive token
+      // we process ist from the value split
       const split = entry.value.split('$')
-      console.log(split)
-      entry.value = split[ 0 ]
-      entry.label = split[ 1 ]
-      entry.tts = split[ 2 ]
+      entry.value = split[0]
+      entry.label = split[1]
+      entry.tts = split[2]
       entry.length = entry.value.length
+      entry.isBlock = !entry.value && !entry.label
       return entry
     })
-    console.log(tokens)
+
     instance.tokens.set(tokens)
   })
 })
+
+Template.clozeItemRenderer.onDestroyed(function () {
+  const instance = this
+  submitValues(instance)
+  instance.state.clear()
+})
+
 
 Template.clozeItemRenderer.helpers({
   tokens () {
@@ -65,6 +83,9 @@ Template.clozeItemRenderer.helpers({
   },
   color () {
     return Template.instance().color.get()
+  },
+  random () {
+    return Random.id(10)
   }
 })
 
@@ -84,7 +105,7 @@ Template.clozeItemRenderer.events({
     const value = $target.val()
     const tokenindex = $target.data('tokenindex')
     const tokens = templateInstance.tokens.get()
-    const originalSize = tokens[ tokenindex ].value.length
+    const originalSize = tokens[tokenindex].value.length
     const newSize = value.length > originalSize ? value.length : originalSize
     $target.attr('size', newSize)
   },

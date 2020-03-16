@@ -1,17 +1,21 @@
 <template name="clozeItemRenderer">
 	<div class="cloze-container w-100 p-5">
 		{{#each token in tokens}}
-			{{#if token.isNewLine}}
+			{{#if token.isBlock}}
+				{{> soundbutton md=true outline=false block=true type=color text=token.tts class="h-100 mr-n1" }}
+			{{else if token.isNewLine}}
 				<div class="d-block p-2"></div>
 			{{else if token.isToken}}
 				<span class="cloze-input-group no-wrap">
 				{{#if token.tts}}
-					{{> soundbutton md=true outline=true type=color text=token.tts class="h-100 mr-n2" }}
+					{{> soundbutton md=true outline=true sm=true type=color text=token.tts class="h-100 mr-n1" }}
 				{{/if}}
+
 					{{#if token.value}}
-					<input class="cloze-input border border-{{color}}" data-index={{@index}}
-						   data-tokenindex={{token.index}} type="text"
-						   size="{{token.length}}" name="{{Random.id}}" autocomplete="off">
+						<input class="cloze-input {{#if token.label}}mr-n1{{/if}} border border-{{color}}"
+							   data-index="{{@index}}"
+							   data-tokenindex="{{token.index}}" type="text"
+							   size="{{token.length}}" name="{{random}}" autocomplete="off">
 					{{/if}}
 					{{#if token.label}}
 						<span>{{token.label}}</span>

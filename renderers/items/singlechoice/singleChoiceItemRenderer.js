@@ -1,14 +1,24 @@
+import { Template } from 'meteor/templating'
 import { ReactiveVar } from 'meteor/reactive-var'
+import { ReactiveDict } from 'meteor/reactive-dict'
 import '../../../components/soundbutton/soundbutton'
 import './singleChoiceItemRenderer.css'
 import './singleChoiceItemRenderer.html'
 
 Template.singleChoiceItemRenderer.onCreated(function () {
   const instance = this
+  instance.state = new ReactiveDict()
   instance.values = new ReactiveVar()
   instance.selected = new ReactiveVar(null)
   instance.color = new ReactiveVar('secondary')
   instance.responseCache = new ReactiveVar(null)
+
+  //const { collector } = instance.data
+  //if (collector) {
+  //  collector.addEventListener('collect', function () {
+  //    submitValues(instance)
+  //  })
+  //}
 
   instance.autorun(function () {
     const data = Template.currentData()
@@ -28,13 +38,19 @@ Template.singleChoiceItemRenderer.onCreated(function () {
   })
 })
 
+Template.singleChoiceItemRenderer.onDestroyed(function () {
+  const instance = this
+  submitValues(instance)
+  instance.state.clear()
+})
+
 Template.singleChoiceItemRenderer.onRendered(function () {
   const instance = this
   submitValues(instance)
 })
 
 Template.singleChoiceItemRenderer.helpers({
-  values() {
+  values () {
     return Template.instance().values.get()
   },
   selected (index) {
@@ -95,7 +111,12 @@ function submitValues (templateInstance) {
   }
 
   const responses = []
-  responses.push(value)
+  if (value.length > 0) {
+    responses.push(value)
+  } else {
+    responses.push('__undefined__')
+  }
+
 
   // we use a simple stringified cache as we have fixed
   // positions, so we can easily skip sending same repsonses
