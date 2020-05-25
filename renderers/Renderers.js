@@ -11,11 +11,11 @@ const widthOptions = (i18n) => [
 export const RendererGroups = {
   layout: {
     name: 'layout',
-    label: 'taskRenderers.layout'
+    label: 'taskRenderers.layout.title'
   },
   items: {
     name: 'items',
-    label: 'taskRenderers.items'
+    label: 'taskRenderers.items.title'
   }
 }
 
@@ -75,7 +75,7 @@ export const TaskRenderers = {
         }
       }
     }),
-    label: 'taskRenderers.text',
+    label: 'taskRenderers.layout.text.title',
     icon: 'align-justify',
     template: 'textRenderer',
     async load () {
@@ -151,8 +151,8 @@ export const TaskRenderers = {
         }
       }
     }),
-    label: 'taskRenderers.markdown.title',
-    icon: 'align-center',
+    label: 'taskRenderers.layout.markdown.title',
+    icon: 'hashtag',
     template: 'markdownRenderer',
     async load () {
       return import('./markdown/markdownRenderer')
@@ -161,7 +161,7 @@ export const TaskRenderers = {
   image: {
     name: 'image',
     group: RendererGroups.layout,
-    schema: ({ i18n, imagesCollection, version, uriBase }) => ({
+    schema: ({ i18n, imageForm }) => ({
       type: {
         type: String,
         defaultValue: 'media',
@@ -178,13 +178,7 @@ export const TaskRenderers = {
       },
       value: {
         type: String,
-        autoform: {
-          type: 'imageSelect',
-          imagesCollection: imagesCollection,
-          save: 'url',
-          uriBase: uriBase,
-          version: version
-        }
+        autoform: imageForm
       },
       width: {
         type: String,
@@ -197,13 +191,14 @@ export const TaskRenderers = {
         }
       }
     }),
-    label: 'taskRenderers.image',
+    label: 'taskRenderers.layout.image.title',
     icon: 'image',
     template: 'imageRenderer',
     async load () {
       return import('./image/imageRenderer')
     }
   },
+  /*
   h5p: {
     name: 'h5p',
     group: RendererGroups.items,
@@ -250,6 +245,7 @@ export const TaskRenderers = {
       RendererConfig.h5pRenderUrl = renderUrl
     }
   },
+  */
   cloze: {
     name: 'cloze',
     group: RendererGroups.items,
@@ -287,7 +283,7 @@ export const TaskRenderers = {
       }
     }),
     label: 'taskRenderers.items.cloze.title',
-    icon: 'align-left',
+    icon: 'edit',
     template: 'clozeItemRenderer',
     instructions: 'taskRenderers.items.cloze.instructions',
     async load () {
@@ -297,7 +293,7 @@ export const TaskRenderers = {
   singleChoice: {
     name: 'singleChoice',
     group: RendererGroups.items,
-    schema: ({ i18n, imagesCollection, version, uriBase }) => ({
+    schema: ({ i18n, imageForm }) => ({
       type: {
         type: String,
         defaultValue: 'item',
@@ -322,13 +318,7 @@ export const TaskRenderers = {
       'value.$.image': {
         type: String,
         optional: true,
-        autoform: {
-          type: 'imageSelect',
-          imagesCollection: imagesCollection,
-          save: 'url',
-          uriBase: uriBase,
-          version: version
-        }
+        autoform: imageForm
       },
       width: {
         type: String,
