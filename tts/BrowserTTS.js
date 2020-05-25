@@ -2,27 +2,35 @@ import { i18n } from '../i18n/i18n'
 
 export const BrowserTTS = {}
 
-let speechSynth
-const _voices = {}
-let _synthVoices
+let _speechSynth
+let _voices
+const _cache = {}
+
+/**
+ * retries until there have been voices loaded. No stopper flag included in this example.
+ */
 
 function loadVoicesWhenAvailable (onComplete = () => {}) {
-  speechSynth = window.speechSynthesis
-  const voices = speechSynth.getVoices()
+  _speechSynth = window.speechSynthesis
+  const voices = _speechSynth.getVoices()
 
   if (voices.length !== 0) {
-    _synthVoices = voices
+    _voices = voices
     onComplete()
   } else {
     return setTimeout(function () { loadVoicesWhenAvailable(onComplete) }, 100)
   }
 }
 
+/**
+ * Returns the first found voice for a given language code.
+ */
+
 const getVoices = (locale) => {
-  if (!speechSynth) {
+  if (!_speechSynth) {
     throw new Error('Browser does not support speech synthesis')
   }
-  if (_voices[locale]) return _voices[locale]
+  if (_cache[locale]) return _cache[locale]
 
   let loadedVoices
   let count = 0
@@ -34,9 +42,16 @@ const getVoices = (locale) => {
     throw new Error('Could not load voices!')
   }
 
-  _voices[locale] = _synthVoices.filter(voice => voice.lang === locale)
-  return _voices[locale]
+  _cache[locale] = _voices.filter(voice => voice.lang === locale)
+  return _cache[locale]
 }
+
+/**
+ * Speak a certain text
+ * @param locale the locale this voice requires
+ * @param text the text to speak
+ * @param onEnd callback if tts is finished
+ */
 
 function playByText (locale, text, { onEnd }) {
   const voices = getVoices(locale)
@@ -58,8 +73,8 @@ function playByText (locale, text, { onEnd }) {
     utterance.onend = onEnd
   }
 
-  speechSynth.cancel()
-  speechSynth.speak(utterance)
+  _speechSynth.cancel() // cancel current speak, if any is running
+  _speechSynth.speak(utterance)
 }
 
 function playById (locale, id, { onEnd }) {
@@ -80,7 +95,7 @@ BrowserTTS.play = function ({ id, text, onEnd }) {
 }
 
 BrowserTTS.stop = function () {
-  speechSynth.cancel()
+  _speechSynth.cancel()
 }
 
 BrowserTTS.load = loadVoicesWhenAvailable
