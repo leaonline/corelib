@@ -7,10 +7,13 @@
       },
       "image": {
         "title": "Bild"
+      },
+      "markdown": {
+        "title": "Markdown"
       }
     },
     "items": {
-      "title": "Items",
+      "title": "Aufgabenformate",
       "singleChoice": {
         "title": "Single Choice",
         "instruction": "Bilder und TTS sind optional. TTS kann sich vom Text unterscheiden"
