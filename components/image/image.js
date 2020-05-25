@@ -15,9 +15,17 @@ Template.image.helpers({
     const instance = Template.instance()
     const { data } = instance
     const customClasses = data.class || ''
-    const classes = `${imageClass} ${customClasses}`
+    const shadowClass = data.shadow ? 'shadow' : ''
+    const classes = `${imageClass} ${shadowClass} ${customClasses}`
+    const obj = {}
 
-    return {
+    Object.keys(data).forEach(key => {
+      if (key.includes('data-') || key.includes('aria-')) {
+        obj[key] = data[key]
+      }
+    })
+
+    return Object.assign(obj, {
       'data-id': instance.id,
       title: data.title,
       alt: data.alt,
@@ -26,7 +34,7 @@ Template.image.helpers({
       height: data.height,
       class: classes,
       'data-src': data.src
-    }
+    })
   }
 })
 
