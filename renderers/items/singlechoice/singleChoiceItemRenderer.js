@@ -10,6 +10,7 @@ Template.singleChoiceItemRenderer.onCreated(function () {
   instance.state = new ReactiveDict()
   instance.values = new ReactiveVar()
   instance.selected = new ReactiveVar(null)
+  instance.hovered = new ReactiveVar(null)
   instance.color = new ReactiveVar('secondary')
   instance.responseCache = new ReactiveVar(null)
 
@@ -51,13 +52,20 @@ Template.singleChoiceItemRenderer.onRendered(function () {
 
 Template.singleChoiceItemRenderer.helpers({
   values () {
-    return Template.instance().values.get()
+    const instance = Template.instance()
+    return instance.values && instance.values.get()
+  },
+  hovered (index) {
+    const instance = Template.instance()
+    return instance.hovered && instance.hovered.get() === index
   },
   selected (index) {
-    return Template.instance().selected.get() === index
+    const instance = Template.instance()
+    return instance.selected && instance.selected.get() === index
   },
   color () {
-    return Template.instance().color.get()
+    const instance = Template.instance()
+    return instance.color && instance.color.get()
   }
 })
 
@@ -80,6 +88,14 @@ Template.singleChoiceItemRenderer.events({
     templateInstance.selected.set(index)
     templateInstance.$(`#${name}-${index}`).prop('checked', true)
     submitValues(templateInstance)
+  },
+  'mouseenter .choice-entry' (event, templateInstance) {
+    const index = templateInstance.$(event.currentTarget).data('index')
+    const hovered = Number.parseInt(index, 10)
+    templateInstance.hovered.set(hovered)
+  },
+  'mouseleave .choice-entry' (event, templateInstance) {
+    templateInstance.hovered.set(null)
   }
 })
 

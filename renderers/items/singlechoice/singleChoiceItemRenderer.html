@@ -1,7 +1,7 @@
 <template name="singleChoiceItemRenderer">
 	<div class="single-choice-container w-100 pl-5 my-2">
 		{{#each entry in values}}
-			<div class="d-flex align-items-baseline w-100 my-2 p-2 choice-entry {{#if selected @index}}border border-{{color}}{{/if}}"
+			<div class="d-flex align-items-baseline w-100 my-2 p-2 choice-entry {{#if hovered @index}}bg-light{{/if}} {{#if selected @index}}border border-{{color}}{{/if}}"
 				 data-index="{{@index}}" data-name="{{entry.name}}">
 				<input type="radio" id="{{entry.name}}-{{@index}}" name="{{entry.name}}" value="{{entry.index}}" class="mx-2 radio-group-button">
 				{{#if entry.tts}}

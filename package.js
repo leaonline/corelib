@@ -18,7 +18,8 @@ Package.onUse(function (api) {
   api.use('reactive-dict')
   api.use('templating')
   api.use('http')
-  api.mainModule('core.js')
+  api.mainModule('core-client.js', 'client')
+  api.mainModule('core-server.js', 'server')
 })
 
 Package.onTest(function (api) {
