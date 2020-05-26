@@ -14,12 +14,17 @@ Package.describe({
 Package.onUse(function (api) {
   api.versionsFrom('1.8.1')
   api.use('ecmascript')
-  api.use('dynamic-import')
-  api.use('reactive-dict')
-  api.use('templating')
-  api.use('http')
-  api.mainModule('core-client.js', 'client')
+
   api.mainModule('core-server.js', 'server')
+
+  // client-only definitions are set as weak
+  // so we let the project decide, which package to load
+  // therefore ensure a minimum package footprint
+  api.use('dynamic-import', 'client', {weak: true})
+  api.use('reactive-dict', 'client', {weak: true})
+  api.use('templating', 'client', {weak: true})
+  api.use('http', 'client', {weak: true})
+  api.mainModule('core-client.js', 'client')
 })
 
 Package.onTest(function (api) {

@@ -1,7 +1,7 @@
 import { Field } from './Field'
 import { Status } from '../types/Status'
 import { Dimension } from '../contexts/Dimension'
-import { Labels } from '../common/Labels'
+import { Labels } from '../i18n/Labels'
 import { getFieldName } from '../utils/getFieldName'
 
 export const UnitSet = {}

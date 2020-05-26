@@ -1,4 +1,4 @@
-import { Labels } from '../common/Labels'
+import { Labels } from '../i18n/Labels'
 import { Status } from '../types/Status'
 import { UnitSet } from './UnitSet'
 import { MediaLib } from './MediaLib'

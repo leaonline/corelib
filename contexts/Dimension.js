@@ -1,6 +1,6 @@
 import { ColorType } from '../types/ColorType'
 import { Status } from '../types/Status'
-import { Labels } from '../common/Labels'
+import { Labels } from '../i18n/Labels'
 
 export const Dimension = {}
 

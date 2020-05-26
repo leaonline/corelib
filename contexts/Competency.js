@@ -1,5 +1,5 @@
 import { Dimension } from './Dimension'
-import { Labels } from '../common/Labels'
+import { Labels } from '../i18n/Labels'
 import { Status } from '../types/Status'
 
 export const Competency = {
