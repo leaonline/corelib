@@ -11,46 +11,45 @@ const log = (...args) => {
   }
 }
 
-const _loaded = {}
+const loaded = {}
+const internal = {}
 
-const _comps = {}
-
-_comps.soundbutton = {
+internal.soundbutton = {
   template: 'soundbutton',
   async load () {
     return import('./soundbutton/soundbutton')
   }
 }
 
-_comps.actionButton = {
+internal.actionButton = {
   template: 'actionButton',
   async load () {
     return import('./actionButton/actionButton')
   }
 }
 
-_comps.text = {
+internal.text = {
   template: 'text',
   async load () {
     return import('./text/text')
   }
 }
 
-_comps.textGroup = {
+internal.textGroup = {
   template: 'textGroup',
   async load () {
     return import('./textgroup/textgroup')
   }
 }
 
-_comps.image = {
+internal.image = {
   template: 'image',
   async load () {
     return import('./image/image')
   }
 }
 
-_comps.icon = {
+internal.icon = {
   template: 'icon',
   async load () {
     return import('./icon/icon')
@@ -58,25 +57,25 @@ _comps.icon = {
 }
 
 Components.template = {
-  soundbutton: _comps.soundbutton.template,
-  actionButton: _comps.actionButton.template,
-  text: _comps.text.template,
-  textGroup: _comps.textGroup.template,
-  image: _comps.image.template,
-  icon: _comps.icon.template
+  soundbutton: internal.soundbutton.template,
+  actionButton: internal.actionButton.template,
+  text: internal.text.template,
+  textGroup: internal.textGroup.template,
+  image: internal.image.template,
+  icon: internal.icon.template
 }
 
 async function _load (name) {
   log(`[Components]: try to load <${name}>`)
-  if (!_comps[name]) return false
-  if (_loaded[name]) {
+  if (!internal[name]) return false
+  if (loaded[name]) {
     log(`[Components]: already loaded <${name}>`)
     return true
   } else {
     log(`[Components]: load <${name}>`)
-    _loaded[name] = true
+    loaded[name] = true
   }
-  return _comps[name].load()
+  return internal[name].load()
 }
 
 async function loadAll (names) {
@@ -90,6 +89,9 @@ Components.load = function (names) {
     .then(() => {
       loaded.set(true)
     })
-    .catch(e => console.error(e))
+    .catch(e => {
+      console.error('Error while loaing', names)
+      console.error(e)
+    })
   return loaded
 }

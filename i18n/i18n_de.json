@@ -1,4 +1,53 @@
 {
+  "common": {
+    "title": "Titel",
+    "description": "Beschreibung",
+    "icon": "Symbol",
+    "shortCode": "Kurzform",
+    "shortNum": "Nummer",
+    "entry": "Eintrag"
+  },
+  "status": {
+    "title": "Bearbeitungsstatus",
+    "inProgress": "In Bearbeitung",
+    "inReview": "In Revision",
+    "deprecated": "Veraltet / Überholt",
+    "published": "Veröffentlicht"
+  },
+  "competency": {
+    "title": "Kannbeschreibung",
+    "competencyId": "KB",
+    "descriptionSimple": "Rückmeldung TN",
+    "shortCode_legacy": "Id alt",
+    "description_legacy": "Beschreibung alt",
+    "descriptionSimple_legacy": "Rückmeldung TN alt"
+  },
+  "colorType": {
+    "title": "Farb-Typ",
+    "primary": "Primär",
+    "secondary": "Sekundär",
+    "success": "Erfolgreich",
+    "warning": "Warnung",
+    "danger": "Fehler",
+    "info": "Info",
+    "light": "Hell",
+    "dark": "Dunkel"
+  },
+  "field": {
+    "title": "Berufsfeld",
+    "jobs": "Berufe"
+  },
+  "unit": {
+    "title": "Unit",
+    "legacyId": "Id-Alt",
+    "story": "Kontextuelle Einleitung",
+    "stimuli": "Stimulus",
+    "instructions": "Arbeitsanweisungen",
+    "pages": "Aufgabenseiten"
+  },
+  "unitSet": {
+    "title": "Unit-Set"
+  },
   "taskRenderers": {
     "layout": {
       "title": "Layout",

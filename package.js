@@ -12,19 +12,25 @@ Package.describe({
 })
 
 Package.onUse(function (api) {
-  api.versionsFrom('1.8.1')
+  api.versionsFrom('1.6')
   api.use('ecmascript')
-
-  api.mainModule('core-server.js', 'server')
 
   // client-only definitions are set as weak
   // so we let the project decide, which package to load
   // therefore ensure a minimum package footprint
-  api.use('dynamic-import', 'client', {weak: true})
-  api.use('reactive-dict', 'client', {weak: true})
-  api.use('templating', 'client', {weak: true})
-  api.use('http', 'client', {weak: true})
-  api.mainModule('core-client.js', 'client')
+  const arch = ['server', 'client']
+  const options = { weak: true }
+
+  api.use('reactive-dict', arch, options)
+  api.use('http', arch, options)
+
+  // special case is when using dynamic imports
+  // because we then need templaing to exist in the first place
+  const USE_DYNAMIC_IMPORTS = process.env.USE_DYNAMIC_IMPORTS
+  if (USE_DYNAMIC_IMPORTS) {
+    api.use('templating')
+    api.use('dynamic-import')
+  }
 })
 
 Package.onTest(function (api) {
