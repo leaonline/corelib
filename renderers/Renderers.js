@@ -1,5 +1,3 @@
-import { RendererConfig } from './RendererConfig'
-
 const widthOptions = (i18n) => [
   { value: '12', label: i18n('grid.12') },
   { value: '8', label: i18n('grid.8') },
@@ -249,39 +247,6 @@ export const TaskRenderers = {
   cloze: {
     name: 'cloze',
     group: RendererGroups.items,
-    schema: ({ i18n }) => ({
-      type: {
-        type: String,
-        defaultValue: 'item',
-        autoform: {
-          type: 'hidden'
-        }
-      },
-      subtype: {
-        type: String,
-        defaultValue: 'cloze',
-        autoform: {
-          type: 'hidden'
-        }
-      },
-      value: {
-        type: String,
-        autoform: {
-          type: 'textarea',
-          rows: 8
-        }
-      },
-      width: {
-        type: String,
-        defaultValue: 'col-12',
-        autoform: {
-          firstOption: false,
-          options () {
-            return widthOptions(i18n)
-          }
-        }
-      }
-    }),
     label: 'taskRenderers.items.cloze.title',
     icon: 'edit',
     template: 'clozeItemRenderer',
@@ -293,44 +258,6 @@ export const TaskRenderers = {
   singleChoice: {
     name: 'singleChoice',
     group: RendererGroups.items,
-    schema: ({ i18n, imageForm }) => ({
-      type: {
-        type: String,
-        defaultValue: 'item',
-        autoform: {
-          type: 'hidden'
-        }
-      },
-      subtype: {
-        type: String,
-        defaultValue: 'singleChoice',
-        autoform: {
-          type: 'hidden'
-        }
-      },
-      value: Array,
-      'value.$': Object,
-      'value.$.text': String,
-      'value.$.tts': {
-        type: String,
-        optional: true
-      },
-      'value.$.image': {
-        type: String,
-        optional: true,
-        autoform: imageForm
-      },
-      width: {
-        type: String,
-        defaultValue: 'col-12',
-        autoform: {
-          firstOption: false,
-          options () {
-            return widthOptions(i18n)
-          }
-        }
-      }
-    }),
     label: 'taskRenderers.items.singleChoice.title',
     icon: 'list-ul',
     template: 'singleChoiceItemRenderer',
@@ -338,5 +265,13 @@ export const TaskRenderers = {
     async load () {
       return import('./items/singlechoice/singleChoiceItemRenderer')
     }
+  },
+  scoring: {
+    name: 'scoring',
+    template: 'itemScoringRenderer',
+    async load () {
+      return import('./scoring/scoring')
+    },
+    exclude: true
   }
 }

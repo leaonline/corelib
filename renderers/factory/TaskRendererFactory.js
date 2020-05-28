@@ -10,7 +10,7 @@ const loaded = new ReactiveDict()
 
 Template.TaskRendererFactory.onCreated(function () {
   const instance = this
-
+  instance.state.set('loadComplete', false)
   instance.autorun(() => {
     const data = Template.currentData()
     const { content } = data
@@ -28,14 +28,19 @@ Template.TaskRendererFactory.onCreated(function () {
       return
     }
 
-    rendererContext
-      .load()
-      .then(() => loaded.set(content.subtype, rendererContext.template))
+    rendererContext.load()
+      .then(() => {
+        loaded.set(content.subtype, rendererContext.template)
+        instance.state.set('loadComplete', true)
+      })
       .catch(e => console.error(e))
   })
 })
 
 Template.TaskRendererFactory.helpers({
+  loadComplete () {
+    return Template.getState('loadComplete')
+  },
   templateContext () {
     const data = Template.currentData()
     const { content } = data

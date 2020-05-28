@@ -8,7 +8,7 @@ ScoringRule.schema = () => ({
   itemId: String,
   competency: String,
   selection: {
-    type: String,
+    type: Number,
     optional: true
   },
   regExp: {

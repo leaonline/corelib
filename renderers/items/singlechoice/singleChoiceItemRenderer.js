@@ -1,6 +1,8 @@
 import { Template } from 'meteor/templating'
 import { ReactiveVar } from 'meteor/reactive-var'
 import { ReactiveDict } from 'meteor/reactive-dict'
+import { shuffle } from '../../../utils/shuffle'
+import '../../../components/image/image'
 import '../../../components/soundbutton/soundbutton'
 import './singleChoiceItemRenderer.css'
 import './singleChoiceItemRenderer.html'
@@ -14,13 +16,6 @@ Template.singleChoiceItemRenderer.onCreated(function () {
   instance.color = new ReactiveVar('secondary')
   instance.responseCache = new ReactiveVar(null)
 
-  //const { collector } = instance.data
-  //if (collector) {
-  //  collector.addEventListener('collect', function () {
-  //    submitValues(instance)
-  //  })
-  //}
-
   instance.autorun(function () {
     const data = Template.currentData()
     const { value } = data
@@ -30,12 +25,29 @@ Template.singleChoiceItemRenderer.onCreated(function () {
       instance.color.set(color)
     }
 
+    if (typeof value !== 'object') {
+      return
+    }
+
+    // then we process the choices to ensure that
+    // event when shuffled, thier original index remains
     const name = Math.floor(Math.random() * 10000)
-    instance.values.set(value.map((entry, index) => {
+    const mapped = value.choices.map((entry, index) => {
       entry.name = name
       entry.index = index
+      if (entry.tts) loadSoundbutton = true
+      if (entry.image) loadImage = true
       return entry
-    }))
+    })
+
+    // assign the values plain or shuffled
+    if (data.value.shuffle) {
+      instance.values.set(shuffle(mapped))
+    }
+    else {
+      instance.values.set(mapped)
+    }
+
   })
 })
 
@@ -116,13 +128,13 @@ function submitValues (templateInstance) {
 
   const userId = templateInstance.data.userId
   const sessionId = templateInstance.data.sessionId
-  const taskId = templateInstance.data.taskId
+  const unitId = templateInstance.data.unitId
   const page = templateInstance.data.page
   const type = templateInstance.data.subtype
 
   // also return if our identifier values
   // are not set, which also can occur in item-dev
-  if (!userId || !sessionId || !taskId) {
+  if (!userId || !sessionId || !unitId) {
     return
   }
 
@@ -133,7 +145,6 @@ function submitValues (templateInstance) {
     responses.push('__undefined__')
   }
 
-
   // we use a simple stringified cache as we have fixed
   // positions, so we can easily skip sending same repsonses
   const cache = templateInstance.responseCache.get()
@@ -143,5 +154,5 @@ function submitValues (templateInstance) {
   }
 
   templateInstance.responseCache.set(strResponses)
-  templateInstance.data.onInput({ userId, sessionId, taskId, page, type, responses })
+  templateInstance.data.onInput({ userId, sessionId, unitId, page, type, responses })
 }

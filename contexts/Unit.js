@@ -125,10 +125,20 @@ Unit.schema = {
 }
 
 const pageSchema = (fieldBase) => {
+/*
   Unit.schema[`${fieldBase}.type`] = { type: String }
   Unit.schema[`${fieldBase}.subtype`] = { type: String }
   Unit.schema[`${fieldBase}.value`] = { type: String }
-  Unit.schema[`${fieldBase}.width`] = { type: String }
+  Unit.schema[`${fieldBase}.style`] = { type: Object }
+  Unit.schema[`${fieldBase}.style.width`] = { type: String, optional: true }
+  */
+  Unit.schema[`${fieldBase}`] = {
+    type: Object,
+    blackbox: true,
+    custom (...args) {
+      // TODO validate based on element type/subtype
+    }
+  }
 }
 
 pageSchema('story.$')

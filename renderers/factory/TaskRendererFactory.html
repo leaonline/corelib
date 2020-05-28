@@ -1,7 +1,13 @@
 <template name="TaskRendererFactory">
-	{{#with templateContext}}
-		{{> Template.dynamic template=this.template data=this.data }}
-	{{else}}
-		<span class="text-danger"><i class="fa fas fa-fw fa-exclamation-triangle"></i></span>
-	{{/with}}
+    {{#with templateContext}}
+        {{> Template.dynamic template=this.template data=this.data }}
+    {{else}}
+        {{#unless loadComplete}}
+            <div class="d-block p-3">
+            {{> loading title="common.loading"}}
+            </div>
+        {{else}}
+            <span class="text-danger"><i class="fa fas fa-fw fa-exclamation-triangle"></i></span>
+        {{/unless}}
+    {{/with}}
 </template>

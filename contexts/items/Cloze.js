@@ -3,13 +3,21 @@ export const Cloze = {}
 Cloze.name = 'cloze'
 Cloze.label = 'cloze.title'
 Cloze.icon = 'align-left'
-Cloze.isInteraction = true
+Cloze.isItem = true
 
-Cloze.schema = () => ({
-  text: String,
-  inputs: Array,
-  'inputs.$': Object,
-  'inputs.$.expectedText': String,
+Cloze.schema = {
+  text: {
+    type: String
+  },
+  inputs: {
+    type: Array
+  },
+  'inputs.$': {
+    type: Object
+  },
+  'inputs.$.expectedText': {
+    type: String
+  },
   'inputs.$.prefix': {
     type: String,
     optional: true
@@ -22,6 +30,7 @@ Cloze.schema = () => ({
     type: String,
     optional: true
   },
-  'inputs.$.rules': Array,
-  'inputs.$.rules.$': String
-})
+  'inputs.$.correctResponse': {
+    type: String
+  },
+}

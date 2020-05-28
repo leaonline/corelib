@@ -1,0 +1,33 @@
+<template name="itemScoringRenderer">
+    <ul class="list-group">
+        {{#each entry in scores}}
+            {{#let competency=(getCompetency entry.competency) isUndefined=entry.isUndefined accomplished=entry.score}}
+                {{#if isUndefined}}
+                    <li class="list-group-item border-light d-flex">
+                        {{competency}}
+
+                        <span class="ml-auto">
+                            {{> icon name="question"}}
+                        </span>
+                    </li>
+                {{else if accomplished}}
+                    <li class="list-group-item text-success border-success d-flex">
+                        {{competency}}
+
+                        <span class="ml-auto">
+                            {{> icon name="check"}}
+                        </span>
+                    </li>
+                {{else}}
+                    <li class="list-group-item text-danger border-danger d-flex">
+                        {{competency}}
+
+                        <span class="ml-auto">
+                            {{> icon name="times"}}
+                        </span>
+                    </li>
+                {{/if}}
+            {{/let}}
+        {{/each}}
+    </ul>
+</template>
