@@ -1,8 +1,8 @@
+import { Template } from 'meteor/templating'
 import { Competency } from '../../contexts/Competency'
+import { getCollection } from '../../utils/collection'
 import '../../components/icon/icon'
 import './scoring.html'
-import { getCollection } from '../../utils/collection'
-
 
 Template.itemScoringRenderer.helpers({
   getCompetency (_id) {

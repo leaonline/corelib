@@ -1,7 +1,6 @@
 import { MediaLib } from '../MediaLib'
 import { Labels } from '../../i18n/Labels'
 import { Competency } from '../Competency'
-import { RendererGroups } from '../../renderers/Renderers'
 
 export const SingleChoice = {}
 
@@ -45,7 +44,7 @@ SingleChoice.schema = {
     defaultValue: false
   },
   scoring: {
-    type: Array,
+    type: Array
     // optional: true // todo remove after trial phase
   },
   'scoring.$': {
@@ -72,7 +71,7 @@ SingleChoice.schema = {
   }
 }
 
-SingleChoice.renderer =   {
+SingleChoice.renderer = {
   template: 'singleChoiceItemRenderer',
   async load () {
     return import('../../renderers/items/singlechoice/singleChoiceItemRenderer')

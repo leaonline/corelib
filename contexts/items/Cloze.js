@@ -32,5 +32,5 @@ Cloze.schema = {
   },
   'inputs.$.correctResponse': {
     type: String
-  },
+  }
 }

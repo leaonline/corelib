@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor'
 import { Template } from 'meteor/templating'
 import { ReactiveDict } from 'meteor/reactive-dict'
 import { TaskRenderers } from '../Renderers'
@@ -25,7 +26,7 @@ Template.TaskRendererFactory.onCreated(function () {
     const rendererContext = TaskRenderers.get(content.subtype)
     if (!rendererContext) {
       // something weirdly failed, we set an error context here
-      const error = new Meteor.Error(`taskRenderers.error`, `taskRenderers.missing`, content.subtype)
+      const error = new Meteor.Error('taskRenderers.error', 'taskRenderers.missing', content.subtype)
       instance.state.set({ error })
       if (content.onLoadError) content.onLoadError(error, content.subtype)
       return
@@ -38,7 +39,7 @@ Template.TaskRendererFactory.onCreated(function () {
         instance.state.set('loadComplete', true)
       })
       .catch(error => {
-        if (content.onLoadError) content.onLoadError(err, content.subtype)
+        if (content.onLoadError) content.onLoadError(error, content.subtype)
         instance.state.set({ error })
       })
   })

@@ -1,5 +1,5 @@
 let _shuffle = x => {
-  console.warn(`[shuffle]: no shuffle function defined, fallback to non-transform mdoe`)
+  console.warn('[shuffle]: no shuffle function defined, fallback to non-transform mdoe')
   return x
 }
 

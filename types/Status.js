@@ -13,7 +13,7 @@ Status.types = {
     name: 'inProgress',
     label: 'status.inProgress',
     type: 'secondary',
-    icon: 'edit',
+    icon: 'edit'
   },
   inReview: {
     index: 1,

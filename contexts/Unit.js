@@ -94,7 +94,7 @@ Unit.schema = {
     }
   },
   'stimuli.$': {
-    type: Object,
+    type: Object
   },
   instructions: {
     type: Array,
@@ -105,7 +105,7 @@ Unit.schema = {
     }
   },
   'instructions.$': {
-    type: Object,
+    type: Object
   },
   pages: {
     type: Array,

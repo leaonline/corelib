@@ -35,19 +35,15 @@ Template.singleChoiceItemRenderer.onCreated(function () {
     const mapped = value.choices.map((entry, index) => {
       entry.name = name
       entry.index = index
-      if (entry.tts) loadSoundbutton = true
-      if (entry.image) loadImage = true
       return entry
     })
 
     // assign the values plain or shuffled
     if (data.value.shuffle) {
       instance.values.set(shuffle(mapped))
-    }
-    else {
+    } else {
       instance.values.set(mapped)
     }
-
   })
 })
 

@@ -1,7 +1,7 @@
 import { check } from 'meteor/check'
 
 let _translator
-let _thisContext
+
 export const i18n = {}
 
 async function autoLoadLocale (lang) {
@@ -28,7 +28,7 @@ i18n.load = function ({ get, set, getLocale, thisContext }) {
   _translator = {
     get: get.bind(thisContext),
     set: set.bind(thisContext),
-    getLocale: getLocale.bind(thisContext),
+    getLocale: getLocale.bind(thisContext)
   }
   const locale = _translator.getLocale()
   autoLoadLocale(locale)
