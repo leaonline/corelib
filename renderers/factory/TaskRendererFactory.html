@@ -6,8 +6,17 @@
             <div class="d-block p-3">
             {{> loading title="common.loading"}}
             </div>
-        {{else}}
-            <span class="text-danger"><i class="fa fas fa-fw fa-exclamation-triangle"></i></span>
         {{/unless}}
+    {{/with}}
+    {{#with error}}
+        <div class="alert alert-danger">
+            <div class="alert-heading">
+                <i class="fa fas fa-fw fa-exclamation-triangle"></i>
+                {{i18n this.error}}
+            </div>
+            <div class="w-100">
+                {{i18n this.reason}}
+            </div>
+        </div>
     {{/with}}
 </template>

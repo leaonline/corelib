@@ -17,7 +17,7 @@ export const RendererGroups = {
   }
 }
 
-export const TaskRenderers = {
+const defaults = {
   factory: {
     name: 'factory',
     label: 'taskRenderers.factory',
@@ -32,7 +32,6 @@ export const TaskRenderers = {
     label: 'taskRenderers.page',
     template: 'taskPageRenderer',
     async load () {
-      console.log('load task page renderer')
       return import('./page/taskPageRenderer.js')
     },
     exclude: true
@@ -244,28 +243,6 @@ export const TaskRenderers = {
     }
   },
   */
-  cloze: {
-    name: 'cloze',
-    group: RendererGroups.items,
-    label: 'taskRenderers.items.cloze.title',
-    icon: 'edit',
-    template: 'clozeItemRenderer',
-    instructions: 'taskRenderers.items.cloze.instructions',
-    async load () {
-      return import('./items/cloze/clozeItemRenderer')
-    }
-  },
-  singleChoice: {
-    name: 'singleChoice',
-    group: RendererGroups.items,
-    label: 'taskRenderers.items.singleChoice.title',
-    icon: 'list-ul',
-    template: 'singleChoiceItemRenderer',
-    instructions: 'taskRenderers.items.singleChoice.instructions',
-    async load () {
-      return import('./items/singlechoice/singleChoiceItemRenderer')
-    }
-  },
   scoring: {
     name: 'scoring',
     template: 'itemScoringRenderer',
@@ -274,4 +251,36 @@ export const TaskRenderers = {
     },
     exclude: true
   }
+}
+
+const rendererMap = new Map(Object.entries(defaults))
+let _initialized = false
+
+export const TaskRenderers = {
+  groups: RendererGroups,
+  get: key => rendererMap.get(key),
+  getGroup: (group) => {
+    // should we do caching here or on a component level?
+    return Array.from(rendererMap.values()).filter(el => el.group === group)
+  },
+  init: async function () {
+    if (_initialized) return true
+
+    // register the default item renderers
+    const { SingleChoice } = await import('../contexts/items/SingleChoice')
+    TaskRenderers.registerItemRenderer(SingleChoice)
+
+    // load the factory
+    const factory = TaskRenderers.get(defaults.factory.name)
+    await factory.load()
+
+    _initialized = true
+    return true
+  },
+  registerItemRenderer: ({ name, renderer: { template, load } }) => rendererMap.set(name, {
+    name,
+    group: RendererGroups.items.name,
+    template,
+    load
+  })
 }

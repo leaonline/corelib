@@ -13,7 +13,7 @@ Template.TaskRendererFactory.onCreated(function () {
   instance.state.set('loadComplete', false)
   instance.autorun(() => {
     const data = Template.currentData()
-    const { content } = data
+    const content = data.content || {}
 
     // skip current autorun if we have no content
     // or the template has already been loaded
@@ -22,24 +22,34 @@ Template.TaskRendererFactory.onCreated(function () {
       return
     }
 
-    const rendererContext = TaskRenderers[content.subtype]
+    const rendererContext = TaskRenderers.get(content.subtype)
     if (!rendererContext) {
-      // something weirdly failed, what to do here? FIXME
+      // something weirdly failed, we set an error context here
+      const error = new Meteor.Error(`taskRenderers.error`, `taskRenderers.missing`, content.subtype)
+      instance.state.set({ error })
+      if (content.onLoadError) content.onLoadError(error, content.subtype)
       return
     }
 
     rendererContext.load()
       .then(() => {
         loaded.set(content.subtype, rendererContext.template)
+        if (content.onLoadComplete) content.onLoadComplete(content.subtype)
         instance.state.set('loadComplete', true)
       })
-      .catch(e => console.error(e))
+      .catch(error => {
+        if (content.onLoadError) content.onLoadError(err, content.subtype)
+        instance.state.set({ error })
+      })
   })
 })
 
 Template.TaskRendererFactory.helpers({
   loadComplete () {
     return Template.getState('loadComplete')
+  },
+  error () {
+    return Template.getState('error')
   },
   templateContext () {
     const data = Template.currentData()
