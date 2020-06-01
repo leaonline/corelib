@@ -9,7 +9,7 @@ SingleChoice.label = 'singleChoice.title'
 SingleChoice.icon = 'list-ul'
 SingleChoice.isItem = true
 
-SingleChoice.schema =  {
+SingleChoice.schema = {
   choices: {
     type: Array,
     label: 'item.choices',
@@ -69,4 +69,17 @@ SingleChoice.schema =  {
       labelField: 'text'
     }
   }
+}
+
+SingleChoice.score = function (itemDoc, { responses = [] }, { isUndefined }) {
+  const { scoring } = itemDoc
+  return scoring.map(({ competency, correctResponse }) => {
+    const value = responses[0]
+    if (isUndefined(value)) {
+      return { competency, correctResponse, value, score: false, isUndefined: true }
+    }
+    const intValue = Number.parseInt(value, 10)
+    const score = correctResponse === intValue
+    return { competency, correctResponse, value, score, isUndefined: false }
+  })
 }
