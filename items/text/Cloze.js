@@ -3,7 +3,7 @@ import { Labels } from '../../i18n/Labels'
 export const Cloze = {}
 
 Cloze.name = 'cloze'
-Cloze.label = 'cloze.title'
+Cloze.label = 'item.cloze.title'
 Cloze.icon = 'align-left'
 Cloze.isItem = true
 

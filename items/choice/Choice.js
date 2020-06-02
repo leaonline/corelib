@@ -5,7 +5,7 @@ import { Competency } from '../../contexts/Competency'
 export const Choice = {}
 
 Choice.name = 'choice'
-Choice.label = 'choice.title'
+Choice.label = 'item.choice.title'
 Choice.icon = 'list-ul'
 Choice.isItem = true
 
