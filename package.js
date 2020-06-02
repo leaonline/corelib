@@ -21,7 +21,6 @@ Package.onUse(function (api) {
   const arch = ['server', 'client']
   const options = { weak: true }
 
-  api.use('reactive-dict', arch, options)
   api.use('http', arch, options)
 
   // special case is when using dynamic imports

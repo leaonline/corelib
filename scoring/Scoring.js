@@ -13,8 +13,10 @@ export const Scoring = {
   },
   async init () {
     if (_initialized) return true
-    const { SingleChoice } = await import('../contexts/items/SingleChoice')
-    Scoring.register(SingleChoice.name, SingleChoice.score)
+    const { Choice } = await import('../items/choice/score')
+    const { Cloze } = await import('../items/text/score')
+    Scoring.register(Choice.name, Choice.score)
+    Scoring.register(Cloze.name, Cloze.score)
     _initialized = true
     return true
   }
