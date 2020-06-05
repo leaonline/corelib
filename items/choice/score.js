@@ -1,16 +1,17 @@
 import { Choice } from './Choice'
+import { Scoring } from '../../scoring/Scoring'
 import { toInteger } from '../../utils/toInteger'
 
-Choice.score = function (itemDoc, responseDoc, options) {
+Choice.score = function (itemDoc, responseDoc) {
   const { scoring } = itemDoc
   const { flavor } = itemDoc
 
   return scoring.map(entry => {
     switch (flavor) {
       case Choice.flavors.single.value:
-        return scoreSingle(entry, responseDoc, options)
+        return scoreSingle(entry, responseDoc)
       case Choice.flavors.multiple.value:
-        return scoreMultiple(entry, responseDoc, options)
+        return scoreMultiple(entry, responseDoc)
       default:
         throw new Error(`Unexpected undefined choice flavor ${flavor}`)
     }
@@ -19,14 +20,14 @@ Choice.score = function (itemDoc, responseDoc, options) {
 
 
 
-function scoreSingle ({ competency, correctResponse, requires }, { responses = [] }, { isUndefined }) {
+function scoreSingle ({ competency, correctResponse, requires }, { responses = [] }) {
   // single choice have only one selected value
   let value = responses[0]
   let score = false
-  let valueIsUndefined = isUndefined(value)
+  let isUndefined = Scoring.isUndefined(value)
 
-  if (valueIsUndefined) {
-    return { competency, correctResponse, value, score, isUndefined: valueIsUndefined }
+  if (isUndefined) {
+    return { competency, correctResponse, value, score, isUndefined }
   }
 
   // values are always sent as string
@@ -37,25 +38,25 @@ function scoreSingle ({ competency, correctResponse, requires }, { responses = [
   // use the first defined expected value
   score = correctResponse.includes(value)
 
-  return { competency, correctResponse, value, score, isUndefined: valueIsUndefined }
+  return { competency, correctResponse, value, score, isUndefined }
 }
 
-function scoreMultiple ({ competency, correctResponse, requires }, { responses = [] }, { isUndefined }) {
-  if (isUndefined(responses) || isUndefined(responses[0])) {
+function scoreMultiple ({ competency, correctResponse, requires }, { responses = [] }) {
+  if (Scoring.isUndefined(responses) || Scoring.isUndefined(responses[0])) {
     return { competency, correctResponse, value: responses, score: false, isUndefined: true }
   }
 
   switch (requires) {
-    case Choice.scoringTypes.all.value:
-      return scoreMultipleAll({ competency, correctResponse, requires }, { responses }, { isUndefined })
-    case Choice.scoringTypes.any.value:
-      return scoreMultipleAny({ competency, correctResponse, requires }, { responses }, { isUndefined })
+    case Scoring.types.all.value:
+      return scoreMultipleAll({ competency, correctResponse, requires }, { responses })
+    case Scoring.types.any.value:
+      return scoreMultipleAny({ competency, correctResponse, requires }, { responses })
     default:
       throw new Error(`Unexpected scoring type ${requires}`)
   }
 }
 
-function scoreMultipleAll ({ competency, correctResponse, requires }, { responses }, { isUndefined }) {
+function scoreMultipleAll ({ competency, correctResponse, requires }, { responses }) {
   const mappedResponses = responses.map(toInteger).sort()
   let score = false
 
@@ -73,10 +74,10 @@ function scoreMultipleAll ({ competency, correctResponse, requires }, { response
   return { competency, correctResponse, value: responses, score }
 }
 
-function scoreMultipleAny ({ competency, correctResponse, requires }, { responses }, { isUndefined }) {
+function scoreMultipleAny ({ competency, correctResponse, requires }, { responses }) {
   const score = correctResponse.some(responseIndex => {
     const value = responses[responseIndex]
-    return !isUndefined(value) && Number.parseInt(value, 10) === responseIndex
+    return !Scoring.isUndefined(value) && Number.parseInt(value, 10) === responseIndex
   })
   return { competency, correctResponse, value: responses, score }
 }

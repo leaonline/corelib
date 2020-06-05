@@ -1,6 +1,7 @@
 import { MediaLib } from '../../contexts/MediaLib'
 import { Labels } from '../../i18n/Labels'
 import { Competency } from '../../contexts/Competency'
+import { Scoring } from '../../scoring/Scoring'
 
 export const Choice = {}
 
@@ -19,19 +20,6 @@ Choice.flavors = {
     name: 'multiple',
     value: 2,
     label: 'item.choice.multiple'
-  }
-}
-
-Choice.scoringTypes = {
-  all: {
-    name: 'all',
-    value: 1,
-    label: 'scoring.requires.all'
-  },
-  any: {
-    name: 'any',
-    value: 2,
-    label: 'scoring.requires.any'
   }
 }
 
@@ -101,8 +89,8 @@ Choice.schema = {
     label: 'scoring.requires.title',
     allowedValues: [1, 2],
     options: [
-      Choice.scoringTypes.all,
-      Choice.scoringTypes.any
+      Scoring.types.all,
+      Scoring.types.any
     ],
     defaultValue: 1
   },
