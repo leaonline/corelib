@@ -1,4 +1,6 @@
 import { Labels } from '../../i18n/Labels'
+import { Competency } from '../../contexts/Competency'
+import { Scoring } from '../../scoring/Scoring'
 
 export const Cloze = {}
 
@@ -11,17 +13,12 @@ Cloze.flavor = {
   select: {
     name: 'select',
     value: 1,
-    label: 'item.cloze.flavor.select'
-  },
-  highlight: {
-    name: 'highlight',
-    value: 2,
-    label: 'item.cloze.flavor.highlight'
+    label: 'item.cloze.select'
   },
   blanks: {
     name: 'blanks',
-    value: 3,
-    label: 'item.cloze.flavor.blanks'
+    value: 2,
+    label: 'item.cloze.blanks'
   },
 }
 
@@ -39,28 +36,40 @@ Cloze.schema = {
     label: Labels.text,
     max: 10000
   },
-  inputs: {
-    type: Array
+  /*
+  scoring: {
+    type: Array,
+    label: 'scoring.title'
+    // optional: true // todo remove after trial phase
   },
-  'inputs.$': {
-    type: Object
+  'scoring.$': {
+    type: Object,
+    label: Labels.entry
   },
-  'inputs.$.expectedText': {
-    type: String
-  },
-  'inputs.$.prefix': {
+  'scoring.$.competency': {
     type: String,
-    optional: true
+    label: Competency.label,
+    dependency: {
+      collection: Competency.name,
+      field: Competency.representative
+    }
   },
-  'inputs.$.suffix': {
-    type: String,
-    optional: true
+  'scoring.$.target': {
+    type: Number
   },
-  'inputs.$.tts': {
-    type: String,
-    optional: true
+  'scoring.$.requires': {
+    type: Number,
+    label: 'scoring.requires.title',
+    allowedValues: [1, 2],
+    options: [
+      Scoring.types.all,
+      Scoring.types.any
+    ],
+    defaultValue: 1
   },
-  'inputs.$.correctResponse': {
-    type: String
+  'scoring.$.correctResponse': {
+    type: RegExp,
+    label: Labels.entry
   }
+  */
 }
