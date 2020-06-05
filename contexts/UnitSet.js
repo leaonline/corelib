@@ -2,7 +2,9 @@ import { Field } from './Field'
 import { Status } from '../types/Status'
 import { Dimension } from '../contexts/Dimension'
 import { Labels } from '../i18n/Labels'
+import { MediaLib } from './MediaLib'
 import { getFieldName } from '../utils/getFieldName'
+import { createPageSchema } from '../utils/pageSchema'
 
 export const UnitSet = {}
 
@@ -99,8 +101,18 @@ UnitSet.schema = {
       ]
     }
   },
-  level: {
-    type: String,
-    optional: true
+  story: {
+    type: Array,
+    optional: true,
+    dependency: {
+      filesCollection: MediaLib.name,
+      version: 'original'
+    }
+  },
+  'story.$': {
+    type: Object
   }
 }
+
+const pageSchema = createPageSchema(UnitSet)
+pageSchema('story.$')

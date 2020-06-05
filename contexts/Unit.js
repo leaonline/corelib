@@ -3,6 +3,7 @@ import { Status } from '../types/Status'
 import { UnitSet } from './UnitSet'
 import { MediaLib } from './MediaLib'
 import { getFieldName } from '../utils/getFieldName'
+import { createPageSchema } from '../utils/pageSchema'
 
 export const Unit = {}
 
@@ -74,17 +75,6 @@ Unit.schema = {
     type: String,
     label: Labels.title
   },
-  story: {
-    type: Array,
-    optional: true,
-    dependency: {
-      filesCollection: MediaLib.name,
-      version: 'original'
-    }
-  },
-  'story.$': {
-    type: Object
-  },
   stimuli: {
     type: Array,
     optional: true,
@@ -124,24 +114,7 @@ Unit.schema = {
   }
 }
 
-const pageSchema = (fieldBase) => {
-/*
-  Unit.schema[`${fieldBase}.type`] = { type: String }
-  Unit.schema[`${fieldBase}.subtype`] = { type: String }
-  Unit.schema[`${fieldBase}.value`] = { type: String }
-  Unit.schema[`${fieldBase}.style`] = { type: Object }
-  Unit.schema[`${fieldBase}.style.width`] = { type: String, optional: true }
-  */
-  Unit.schema[`${fieldBase}`] = {
-    type: Object,
-    blackbox: true,
-    custom (...args) {
-      // TODO validate based on element type/subtype
-    }
-  }
-}
-
-pageSchema('story.$')
+const pageSchema = createPageSchema(Unit)
 pageSchema('stimuli.$')
 pageSchema('instructions.$')
 pageSchema('pages.$.$')
