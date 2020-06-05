@@ -91,6 +91,9 @@
       "select": "Dropdowns",
       "highlight": "Markieren",
       "blanks": "Fill-in-the-blanks"
+    },
+    "highlight": {
+      "title": "Markieren"
     }
   },
   "scoring": {
@@ -98,7 +101,8 @@
     "correctResponse": "Muster-Antwort",
     "requires": {
       "title": "Match-Typ",
-      "all": "Alle",
+      "all": "Außschließlich folgende",
+      "allInclusive": "Alle der folgenden",
       "any": "Eins der folgenden"
     }
   }

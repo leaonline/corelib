@@ -1,6 +1,7 @@
 import { Choice } from './Choice'
 import { Scoring } from '../../scoring/Scoring'
 import { toInteger } from '../../utils/toInteger'
+import { isUndefinedResponse } from '../../utils/isUndefinedResponse'
 
 Choice.score = function (itemDoc, responseDoc) {
   const { scoring } = itemDoc
@@ -24,7 +25,7 @@ function scoreSingle ({ competency, correctResponse, requires }, { responses = [
   // single choice have only one selected value
   let value = responses[0]
   let score = false
-  let isUndefined = Scoring.isUndefined(value)
+  let isUndefined = isUndefinedResponse(value)
 
   if (isUndefined) {
     return { competency, correctResponse, value, score, isUndefined }
@@ -42,7 +43,7 @@ function scoreSingle ({ competency, correctResponse, requires }, { responses = [
 }
 
 function scoreMultiple ({ competency, correctResponse, requires }, { responses = [] }) {
-  if (Scoring.isUndefined(responses) || Scoring.isUndefined(responses[0])) {
+  if (isUndefinedResponse(responses)) {
     return { competency, correctResponse, value: responses, score: false, isUndefined: true }
   }
 
@@ -77,7 +78,7 @@ function scoreMultipleAll ({ competency, correctResponse, requires }, { response
 function scoreMultipleAny ({ competency, correctResponse, requires }, { responses }) {
   const score = correctResponse.some(responseIndex => {
     const value = responses[responseIndex]
-    return !Scoring.isUndefined(value) && Number.parseInt(value, 10) === responseIndex
+    return !isUndefinedResponse(value) && Number.parseInt(value, 10) === responseIndex
   })
   return { competency, correctResponse, value: responses, score }
 }
