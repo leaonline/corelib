@@ -14,6 +14,7 @@ Package.describe({
 Package.onUse(function (api) {
   api.versionsFrom('1.6')
   api.use('ecmascript')
+  api.use('jkuester:ejson-regexp')
 
   // client-only definitions are set as weak
   // so we let the project decide, which package to load
