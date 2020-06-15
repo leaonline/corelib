@@ -5,5 +5,6 @@ export const Labels = {
   shortCode: 'common.shortCode',
   shortNum: 'common.shortNum',
   entry: 'common.entry',
-  text: 'common.text'
+  text: 'common.text',
+  legacy: 'common.legacy'
 }
