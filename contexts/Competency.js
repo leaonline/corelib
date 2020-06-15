@@ -41,25 +41,29 @@ Competency.schema = {
   },
   descriptionSimple: {
     type: String,
-    max: 2500
+    max: 2500,
+    optional: true
   },
   shortCode_legacy: {
     type: String,
     optional: true,
     list: false,
-    max: 10
+    max: 10,
+    group: Labels.legacy
   },
   description_legacy: {
     type: String,
     optional: true,
     list: false,
-    max: 2500
+    max: 2500,
+    group: Labels.legacy
   },
   descriptionSimple_legacy: {
     type: String,
     optional: true,
     list: false,
-    max: 2500
+    max: 2500,
+    group: Labels.legacy
   }
 }
 
