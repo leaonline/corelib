@@ -42,13 +42,14 @@
   "unit": {
     "title": "Unit",
     "legacyId": "Id-Alt",
-    "story": "Kontextuelle Einleitung",
     "stimuli": "Stimulus",
     "instructions": "Arbeitsanweisungen",
     "pages": "Aufgabenseiten"
   },
   "unitSet": {
-    "title": "Unit-Set"
+    "title": "Unit-Set",
+    "story": "Kontextuelle Einleitung",
+    "job": "Beruf"
   },
   "tts": {
     "title":"Text-To-Speech",

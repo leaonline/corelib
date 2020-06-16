@@ -25,6 +25,36 @@ UnitSet.schema = {
       field: Status.representative
     }
   },
+  title: {
+    type: String,
+    label: Labels.title
+  },
+  dimension: {
+    type: String,
+    label: Dimension.label,
+    dependency: {
+      collection: Dimension.name,
+      field: Dimension.representative
+    }
+  },
+  field: {
+    type: String,
+    label: Field.label,
+    dependency: {
+      collection: Field.name,
+      field: Field.representative
+    }
+  },
+  job: {
+    type: Number,
+    optional: true,
+    dependency: {
+      collection: Field.name,
+      field: getFieldName(Field.schema, Field.schema.jobs),
+      requires: 'field',
+      isArray: true
+    }
+  },
   [UnitSet.representative]: {
     type: String,
     label: Labels[UnitSet.representative],
@@ -53,37 +83,6 @@ UnitSet.schema = {
           collection: UnitSet.name
         }
       ]
-    }
-  },
-  title: {
-    type: String,
-    optional: true,
-    label: Labels.title
-  },
-  field: {
-    type: String,
-    label: Field.label,
-    dependency: {
-      collection: Field.name,
-      field: Field.representative
-    }
-  },
-  job: {
-    type: Number,
-    optional: true,
-    dependency: {
-      collection: Field.name,
-      field: getFieldName(Field.schema, Field.schema.jobs),
-      requires: 'field',
-      isArray: true
-    }
-  },
-  dimension: {
-    type: String,
-    label: Dimension.label,
-    dependency: {
-      collection: Dimension.name,
-      field: Dimension.representative
     }
   },
   dimensionShort: {
