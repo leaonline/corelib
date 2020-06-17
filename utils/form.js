@@ -9,9 +9,12 @@
  * @return {Object|null} form document if form is valid, otherwise null
  */
 export const formIsValid = function formIsValid (formId, schema, isUpdate) {
+  // xxx: in some rare cases on insert forms there is no return value from
+  // AutoForm.getFormValues, so we trick the validation into using an empty doc
+  const formValues = AutoForm.getFormValues(formId) || { insertDoc: {}, updateDoc: {} }
   const formDoc = isUpdate
-    ? AutoForm.getFormValues(formId).updateDoc
-    : AutoForm.getFormValues(formId).insertDoc
+    ? formValues.updateDoc
+    : formValues.insertDoc
   let options
   if (isUpdate) {
     options = {}
