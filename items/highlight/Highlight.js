@@ -15,6 +15,9 @@ Highlight.schema = {
     label: Labels.text,
     max: 10000
   },
+  tts: {
+    type: Boolean
+  },
   scoring: {
     type: Array,
     label: Scoring.label
