@@ -1,13 +1,13 @@
 import { Dimension } from './Dimension'
 import { Labels } from '../i18n/Labels'
 import { Status } from '../types/Status'
+import { CompetencyCategory } from './CompetencyCategory'
 
 export const Competency = {
   name: 'competency',
   label: 'competency.title',
   icon: 'star',
-  representative: 'shortCode',
-  useHistory: true
+  representative: 'shortCode'
 }
 
 Competency.schema = {
@@ -23,7 +23,6 @@ Competency.schema = {
   },
   [Competency.representative]: {
     type: String,
-    label: Labels[Competency.representative],
     max: 25
   },
   dimension: {
@@ -34,12 +33,33 @@ Competency.schema = {
       field: Dimension.representative
     }
   },
+  category: {
+    type: String,
+    label: CompetencyCategory.label,
+    dependency: {
+      collection: CompetencyCategory.name,
+      field: CompetencyCategory.representative,
+      filter: {
+        byField: Dimension.name
+      }
+    }
+  },
+  level: {
+    type: Number,
+    min: 1,
+    max: Number.MAX_SAFE_INTEGER
+  },
   description: {
     type: String,
     label: Labels.description,
     max: 2500
   },
   descriptionSimple: {
+    type: String,
+    max: 2500,
+    optional: true
+  },
+  example: {
     type: String,
     max: 2500,
     optional: true

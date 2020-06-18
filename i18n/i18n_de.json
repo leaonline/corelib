@@ -17,12 +17,18 @@
     "published": "Veröffentlicht"
   },
   "competency": {
-    "title": "Kannbeschreibung",
+    "title": "Kann-Beschreibung",
     "competencyId": "KB",
+    "shortCode":"KB-ID",
     "descriptionSimple": "Rückmeldung TN",
     "shortCode_legacy": "Id alt",
     "description_legacy": "Beschreibung alt",
-    "descriptionSimple_legacy": "Rückmeldung TN alt"
+    "descriptionSimple_legacy": "Rückmeldung TN alt",
+    "level": "Alphalevel",
+    "example": "Beispiel / Übersetzung"
+  },
+  "competencyCategory": {
+    "title": "KB-Kategorie"
   },
   "colorType": {
     "title": "Farb-Typ",
@@ -43,7 +49,7 @@
     "title": "Unit",
     "legacyId": "Id-Alt",
     "stimuli": "Stimulus",
-    "instructions": "Arbeitsanweisungen",
+    "instructions": "Bearbeitungshinweis",
     "pages": "Aufgabenseiten"
   },
   "unitSet": {
