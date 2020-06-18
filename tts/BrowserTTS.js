@@ -2,45 +2,47 @@ import { i18n } from '../i18n/i18n'
 
 export const BrowserTTS = {}
 
+const MAX_LOAD_VOICES = 5
+let loadVoiceCount = 0
 let _speechSynth
 let _voices
 const _cache = {}
 
 /**
  * retries until there have been voices loaded. No stopper flag included in this example.
+ * Note that this function assumes, that there are voices installed on the host system.
  */
 
-function loadVoicesWhenAvailable (onComplete = () => {}) {
+function loadVoicesWhenAvailable ({ onComplete = () => {}, onError = err => console.error(err) } = {}) {
   _speechSynth = window.speechSynthesis
   const voices = _speechSynth.getVoices()
 
   if (voices.length !== 0) {
     _voices = voices
-    onComplete()
-  } else {
-    return setTimeout(function () { loadVoicesWhenAvailable(onComplete) }, 100)
+    return onComplete()
   }
+  if (loadVoiceCount >= MAX_LOAD_VOICES) {
+    return onError(new Error(`Failed to load speech synthesis voices, after ${loadVoiceCount} retries.`))
+  }
+
+  loadVoiceCount++
+  return setTimeout(function () { loadVoicesWhenAvailable(onComplete, onError) }, 100)
 }
 
 /**
  * Returns the first found voice for a given language code.
  */
 
-const getVoices = (locale) => {
+function getVoices (locale) {
   if (!_speechSynth) {
     throw new Error('Browser does not support speech synthesis')
   }
-  if (_cache[locale]) return _cache[locale]
 
-  let loadedVoices
-  let count = 0
-  const secure = 100
-  while (!loadedVoices && count++ < secure) {
-    loadedVoices = global.speechSynthesis.getVoices()
+  if (!_voices || _voices.length === 0) {
+    throw new Error('No voices installed for speech synthesis')
   }
-  if (!loadedVoices) {
-    throw new Error('Could not load voices!')
-  }
+
+  if (_cache[locale]) return _cache[locale]
 
   _cache[locale] = _voices.filter(voice => voice.lang === locale)
   return _cache[locale]
@@ -54,7 +56,7 @@ const getVoices = (locale) => {
  */
 
 function playByText (locale, text, { onEnd }) {
-  const voices = getVoices(locale)
+  const voices = [] //getVoices(locale)
 
   // TODO load preference here, e.g. male / female etc.
   // TODO but for now we just use the first occurrence

@@ -16,11 +16,24 @@ const log = (...args) => Meteor.isDevelopment && console.log('[TTSEngine]:', ...
 TTSEngine.configure = function ({ ttsUrl, mode }) {
   check(ttsUrl, String)
 
-  TTSEngine.mode = mode || TTSEngine.modes.server
-  log('set mode to', TTSEngine.mode)
   TTSConfig.url(ttsUrl)
   log('set url to', TTSConfig.url())
-  BrowserTTS.load()
+  TTSEngine.setMode(mode || TTSEngine.mode || TTSEngine.modes.server)
+
+  BrowserTTS.load({
+    onError (err) {
+      console.warn(err)
+      TTSEngine.mode = TTSEngine.modes.server
+    },
+    onComplete () {
+      log('successfully loaded')
+    }
+  })
+}
+
+TTSEngine.setMode = (mode) => {
+  TTSEngine.mode = mode
+  log('set mode to', TTSEngine.mode)
 }
 
 TTSEngine.play = function ({ id, text, onEnd }) {
