@@ -2,6 +2,7 @@ import { Labels } from '../i18n/Labels'
 import { Status } from '../types/Status'
 import { UnitSet } from './UnitSet'
 import { MediaLib } from './MediaLib'
+import { Dimension } from './Dimension'
 import { getFieldName } from '../utils/getFieldName'
 import { createPageSchema } from '../utils/pageSchema'
 
@@ -62,7 +63,10 @@ Unit.schema = {
         {
           type: 'increment',
           decimals: 4,
-          collection: Unit.name
+          collection: Unit.name,
+          filter: {
+            fields: ['unitSet']
+          }
         }
       ]
     }

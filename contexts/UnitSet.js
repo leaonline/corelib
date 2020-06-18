@@ -80,7 +80,10 @@ UnitSet.schema = {
         {
           type: 'increment',
           decimals: 3,
-          collection: UnitSet.name
+          collection: UnitSet.name,
+          filter: {
+            fields: ['field', 'dimension']
+          }
         }
       ]
     }
