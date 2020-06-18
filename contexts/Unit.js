@@ -44,7 +44,7 @@ Unit.schema = {
       method: 'concat',
       input: [
         {
-          type: 'field',
+          type: 'document',
           source: 'unitSet',
           collection: UnitSet.name,
           field: UnitSet.representative
@@ -54,7 +54,7 @@ Unit.schema = {
           value: '_'
         },
         {
-          type: 'field',
+          type: 'document',
           source: 'unitSet',
           collection: UnitSet.name,
           field: getFieldName(UnitSet.schema, UnitSet.schema.dimensionShort)

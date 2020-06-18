@@ -62,7 +62,7 @@ UnitSet.schema = {
       method: 'concat',
       input: [
         {
-          type: 'field',
+          type: 'document',
           source: 'field',
           collection: Field.name,
           field: getFieldName(Field.schema, Field.schema.shortCode)
@@ -72,7 +72,7 @@ UnitSet.schema = {
           value: '_'
         },
         {
-          type: 'field',
+          type: 'document',
           source: 'dimension',
           collection: Dimension.name,
           field: getFieldName(Dimension.schema, Dimension.schema.shortNum)
@@ -92,7 +92,7 @@ UnitSet.schema = {
       method: 'concat',
       input: [
         {
-          type: 'field',
+          type: 'document',
           source: 'dimension',
           collection: Dimension.name,
           field: getFieldName(Dimension.schema, Dimension.schema.shortCode)
