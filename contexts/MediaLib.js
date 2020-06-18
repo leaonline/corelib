@@ -7,7 +7,7 @@ export const MediaLib = {
   preview: 'thumbnail',
   icon: 'images',
   accept: 'image/*',
-  extensions: ['.png', '.jpg', '.jpeg', '.gif', '.svg', '.webp', '.bpm']
+  extensions: ['png', 'jpg', 'jpeg', 'gif', 'svg', 'webp', 'bmp']
 }
 
 MediaLib.schema = {}
