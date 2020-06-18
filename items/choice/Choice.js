@@ -96,7 +96,7 @@ Choice.schema = {
   },
   'scoring.$.correctResponse': {
     type: Array,
-    label: 'scoring.correctResponse',
+    label: 'scoring.correctResponse'
   },
   'scoring.$.correctResponse.$': {
     type: Number,

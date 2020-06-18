@@ -1,6 +1,4 @@
 import { Labels } from '../../i18n/Labels'
-import { Competency } from '../../contexts/Competency'
-import { Scoring } from '../../scoring/Scoring'
 
 export const Cloze = {}
 
@@ -19,7 +17,7 @@ Cloze.flavor = {
     name: 'blanks',
     value: 2,
     label: 'item.cloze.blanks'
-  },
+  }
 }
 
 Cloze.schema = {
@@ -35,7 +33,7 @@ Cloze.schema = {
     type: String,
     label: Labels.text,
     max: 10000
-  },
+  }
   /*
   scoring: {
     type: Array,

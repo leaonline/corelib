@@ -21,10 +21,6 @@ Competency.schema = {
       field: Status.representative
     }
   },
-  [Competency.representative]: {
-    type: String,
-    max: 25
-  },
   dimension: {
     type: String,
     label: Dimension.label,
@@ -48,6 +44,10 @@ Competency.schema = {
     type: Number,
     min: 1,
     max: Number.MAX_SAFE_INTEGER
+  },
+  [Competency.representative]: {
+    type: String,
+    max: 25
   },
   description: {
     type: String,

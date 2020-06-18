@@ -13,7 +13,7 @@ Highlight.schema = {
   text: {
     type: String,
     label: Labels.text,
-    max: 10000,
+    max: 10000
   },
   scoring: {
     type: Array,
@@ -45,7 +45,7 @@ Highlight.schema = {
   },
   'scoring.$.correctResponse': {
     type: Array,
-    label: 'scoring.correctResponse',
+    label: 'scoring.correctResponse'
   },
   'scoring.$.correctResponse.$': {
     type: Number,

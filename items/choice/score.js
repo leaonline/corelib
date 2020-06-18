@@ -19,13 +19,11 @@ Choice.score = function (itemDoc, responseDoc) {
   })
 }
 
-
-
 function scoreSingle ({ competency, correctResponse, requires }, { responses = [] }) {
   // single choice have only one selected value
   let value = responses[0]
   let score = false
-  let isUndefined = isUndefinedResponse(value)
+  const isUndefined = isUndefinedResponse(value)
 
   if (isUndefined) {
     return { competency, correctResponse, value, score, isUndefined }
