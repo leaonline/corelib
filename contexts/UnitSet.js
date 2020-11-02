@@ -1,10 +1,12 @@
 import { Field } from './Field'
 import { Status } from '../types/Status'
 import { Dimension } from '../contexts/Dimension'
+import { Level } from './Level'
 import { Labels } from '../i18n/Labels'
 import { MediaLib } from './MediaLib'
 import { getFieldName } from '../utils/getFieldName'
 import { createPageSchema } from '../utils/pageSchema'
+import { createGetAllRoute } from '../decorators/routes/getAll'
 
 export const UnitSet = {}
 
@@ -25,10 +27,6 @@ UnitSet.schema = {
       field: Status.representative
     }
   },
-  title: {
-    type: String,
-    label: Labels.title
-  },
   dimension: {
     type: String,
     label: Dimension.label,
@@ -37,9 +35,28 @@ UnitSet.schema = {
       field: Dimension.representative
     }
   },
+  level: {
+    type: String,
+    label: Level.label,
+    dependency: {
+      collection: Level.name,
+      field: Level.representative
+    }
+  },
+  title: {
+    type: String,
+    label: Labels.title,
+    optional: true
+  },
+  description: {
+    type: String,
+    label: Labels.description,
+    optional: true
+  },
   field: {
     type: String,
     label: Field.label,
+    optional: true,
     dependency: {
       collection: Field.name,
       field: Field.representative
@@ -118,3 +135,15 @@ UnitSet.schema = {
 
 const pageSchema = createPageSchema(UnitSet)
 pageSchema('story.$')
+
+UnitSet.routes = {}
+UnitSet.routes.all = createGetAllRoute({
+  context: UnitSet,
+  schema: {
+    fields: {
+      type: Array,
+      optional: true
+    },
+    'fields.$': String
+  }
+})

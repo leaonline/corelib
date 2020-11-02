@@ -8,7 +8,7 @@ export const Competency = {
   name: 'competency',
   label: 'competency.title',
   icon: 'star',
-  representative: 'shortCode'
+  representative: ['shortCode', 'description'],
 }
 
 Competency.schema = {
@@ -22,20 +22,7 @@ Competency.schema = {
       field: Status.representative
     }
   },
-  dimension: {
-    type: String,
-    label: Dimension.label,
-    dependency: {
-      collection: Dimension.name,
-      field: Dimension.representative
-    }
-  },
-  level: {
-    type: Number,
-    min: 1,
-    max: Number.MAX_SAFE_INTEGER
-  },
-  [Competency.representative]: {
+  [Competency.representative[0]]: {
     type: String,
     max: 25,
     value: {
@@ -63,6 +50,24 @@ Competency.schema = {
       ]
     }
   },
+  isLegacy: {
+    type: Boolean,
+    label: Labels.legacy,
+    optional: true
+  },
+  [Competency.representative[1]]: {
+    type: String,
+    label: Dimension.label,
+    dependency: {
+      collection: Dimension.name,
+      field: Dimension.representative
+    }
+  },
+  level: {
+    type: Number,
+    min: 1,
+    max: Number.MAX_SAFE_INTEGER
+  },
   category: {
     type: String,
     optional: true,
@@ -80,36 +85,10 @@ Competency.schema = {
     label: Labels.description,
     max: 2500
   },
-  descriptionSimple: {
-    type: String,
-    max: 2500,
-    optional: true
-  },
   example: {
     type: String,
     max: 2500,
     optional: true
-  },
-  shortCode_legacy: {
-    type: String,
-    optional: true,
-    list: false,
-    max: 10,
-    group: Labels.legacy
-  },
-  description_legacy: {
-    type: String,
-    optional: true,
-    list: false,
-    max: 2500,
-    group: Labels.legacy
-  },
-  descriptionSimple_legacy: {
-    type: String,
-    optional: true,
-    list: false,
-    max: 2500,
-    group: Labels.legacy
   }
 }
 

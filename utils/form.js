@@ -17,10 +17,15 @@ const defaultCleanOptions = {
  * @param isUpdate
  * @return {Object|null} form document if form is valid, otherwise null
  */
-export const formIsValid = function formIsValid (formId, schema, { isUpdate, template, clean } = {}) {
+export const formIsValid = function formIsValid (formId, schema, { isUpdate, template, clean, fallback } = {}) {
+  let formValues = AutoForm.getFormValues(formId, template, schema)
+
   // xxx: in some rare cases on insert forms there is no return value from
   // AutoForm.getFormValues, so we trick the validation into using an empty doc
-  const formValues = AutoForm.getFormValues(formId, template, schema) || { insertDoc: {}, updateDoc: {} }
+  if (!formValues && fallback !== false) {
+    formValues = { insertDoc: {}, updateDoc: {} }
+  }
+
   const formDoc = isUpdate
     ? formValues.updateDoc
     : formValues.insertDoc
@@ -32,6 +37,10 @@ export const formIsValid = function formIsValid (formId, schema, { isUpdate, tem
     options.clean = Object.assign({}, clean, defaultCleanOptions)
   }
 
+  return validateFormData(formId, formDoc, schema, options)
+}
+
+export const validateFormData = (formId, formDoc, schema, options) => {
   const context = schema.newContext()
   context.validate(formDoc, options)
 

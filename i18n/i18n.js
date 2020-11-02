@@ -1,6 +1,10 @@
 import { check } from 'meteor/check'
 
-let _translator
+let _translator = {
+  get: label => label,
+  set: () => {},
+  getLocale: () => ''
+}
 
 export const i18n = {}
 

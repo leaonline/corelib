@@ -13,14 +13,12 @@ export const MediaLib = {
 MediaLib.schema = {}
 
 MediaLib.publications = {}
-
 MediaLib.publications.all = {
   name: 'mediaLib.publications.all',
   schema: {}
 }
 
 MediaLib.methods = {}
-
 MediaLib.methods.remove = {
   name: 'mediaLib.methods.remove',
   schema: {
@@ -29,7 +27,6 @@ MediaLib.methods.remove = {
 }
 
 MediaLib.routes = {}
-
 MediaLib.routes.mediaUrl = {
   path: '/media/url',
   method: 'get',

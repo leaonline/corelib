@@ -7,10 +7,11 @@
     "shortNum": "Nummer",
     "entry": "Eintrag",
     "text": "Text",
-    "preview": "Vorschau"
+    "preview": "Vorschau",
+    "legacy": "Alt*"
   },
   "status": {
-    "title": "Bearbeitungsstatus",
+    "title": "Status",
     "inProgress": "In Bearbeitung",
     "inReview": "In Revision",
     "deprecated": "Veraltet / Überholt",
@@ -45,12 +46,18 @@
     "title": "Berufsfeld",
     "jobs": "Berufe"
   },
+  "level": {
+    "title": "Level"
+  },
   "unit": {
     "title": "Unit",
     "legacyId": "Id-Alt",
     "stimuli": "Stimulus",
     "instructions": "Bearbeitungshinweis",
-    "pages": "Aufgabenseiten"
+    "pages": "Aufgabenseiten",
+    "page": "Aufgabenseite",
+    "pageInstructions": "Bearbeitungshinweis (nur diese Seite)",
+    "pageContent": "Aufgabeninhalt"
   },
   "unitSet": {
     "title": "Unit-Set",

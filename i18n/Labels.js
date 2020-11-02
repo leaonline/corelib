@@ -6,5 +6,6 @@ export const Labels = {
   shortNum: 'common.shortNum',
   entry: 'common.entry',
   text: 'common.text',
-  legacy: 'common.legacy'
+  legacy: 'common.legacy',
+  app: "common.app"
 }

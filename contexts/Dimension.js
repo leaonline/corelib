@@ -1,6 +1,7 @@
 import { ColorType } from '../types/ColorType'
 import { Status } from '../types/Status'
 import { Labels } from '../i18n/Labels'
+import { createGetAllRoute } from '../decorators/routes/getAll'
 
 export const Dimension = {}
 
@@ -57,3 +58,8 @@ Dimension.schema = {
     unique: true
   }
 }
+
+Dimension.routes = {}
+Dimension.routes.all = createGetAllRoute({
+  context: Dimension
+})

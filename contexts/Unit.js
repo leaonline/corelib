@@ -2,9 +2,9 @@ import { Labels } from '../i18n/Labels'
 import { Status } from '../types/Status'
 import { UnitSet } from './UnitSet'
 import { MediaLib } from './MediaLib'
-import { Dimension } from './Dimension'
 import { getFieldName } from '../utils/getFieldName'
 import { createPageSchema } from '../utils/pageSchema'
+import { createGetAllRoute } from '../decorators/routes/getAll'
 
 export const Unit = {}
 
@@ -73,7 +73,8 @@ Unit.schema = {
   },
   legacyId: {
     type: String,
-    optional: true
+    optional: true,
+    label: 'unit.legacyId',
   },
   title: {
     type: String,
@@ -82,38 +83,60 @@ Unit.schema = {
   stimuli: {
     type: Array,
     optional: true,
+    label: 'unit.stimuli',
     dependency: {
       filesCollection: MediaLib.name,
       version: 'original'
     }
   },
   'stimuli.$': {
-    type: Object
+    type: Object,
+    label: Labels.entry,
   },
   instructions: {
     type: Array,
     optional: true,
+    label: 'unit.instructions',
     dependency: {
       filesCollection: MediaLib.name,
       version: 'original'
     }
   },
   'instructions.$': {
-    type: Object
+    type: Object,
+    label: Labels.entry,
   },
   pages: {
     type: Array,
-    optional: true,
-    list: false
+    label: 'unit.pages',
+    optional: true
   },
   'pages.$': {
+    type: Object,
+    label: 'unit.page'
+  },
+  'pages.$.instructions': {
     type: Array,
+    optional: true,
+    label: 'unit.pageInstructions',
     dependency: {
       filesCollection: MediaLib.name,
       version: 'original'
     }
   },
-  'pages.$.$': {
+  'pages.$.instructions.$': {
+    type: Object
+  },
+  'pages.$.content': {
+    type: Array,
+    optional: true,
+    label: 'unit.pageContent',
+    dependency: {
+      filesCollection: MediaLib.name,
+      version: 'original'
+    }
+  },
+  'pages.$.content.$': {
     type: Object
   }
 }
@@ -121,4 +144,18 @@ Unit.schema = {
 const pageSchema = createPageSchema(Unit)
 pageSchema('stimuli.$')
 pageSchema('instructions.$')
-pageSchema('pages.$.$')
+pageSchema('pages.$.instructions.$')
+pageSchema('pages.$.content.$')
+
+console.log(Unit.schema)
+
+Unit.routes = {}
+Unit.routes.all = createGetAllRoute({
+  context: Unit,
+  schema: {
+    unitSet: {
+      type: String,
+      optional: true
+    }
+  }
+})
