@@ -6,6 +6,7 @@ const MAX_LOAD_VOICES = 5
 let loadVoiceCount = 0
 let _speechSynth
 let _voices
+let _voicesLoaded = false
 const _cache = {}
 
 /**
@@ -19,6 +20,7 @@ function loadVoicesWhenAvailable ({ onComplete = () => {}, onError = err => cons
 
   if (voices.length !== 0) {
     _voices = voices
+    _voicesLoaded = true
     return onComplete()
   }
   if (loadVoiceCount >= MAX_LOAD_VOICES) {
@@ -38,6 +40,9 @@ function getVoices (locale) {
     throw new Error('Browser does not support speech synthesis')
   }
 
+  // skip until voices loader is complete
+  if (!_voicesLoaded) return []
+
   if (!_voices || _voices.length === 0) {
     throw new Error('No voices installed for speech synthesis')
   }
@@ -56,7 +61,7 @@ function getVoices (locale) {
  */
 
 function playByText (locale, text, { onEnd }) {
-  const voices = [] //getVoices(locale)
+  const voices = getVoices(locale)
 
   // TODO load preference here, e.g. male / female etc.
   // TODO but for now we just use the first occurrence
