@@ -8,7 +8,7 @@ export const Competency = {
   name: 'competency',
   label: 'competency.title',
   icon: 'star',
-  representative: ['shortCode', 'description'],
+  representative: ['shortCode', 'description']
 }
 
 Competency.schema = {

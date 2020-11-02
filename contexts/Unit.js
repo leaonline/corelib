@@ -74,7 +74,7 @@ Unit.schema = {
   legacyId: {
     type: String,
     optional: true,
-    label: 'unit.legacyId',
+    label: 'unit.legacyId'
   },
   title: {
     type: String,
@@ -91,7 +91,7 @@ Unit.schema = {
   },
   'stimuli.$': {
     type: Object,
-    label: Labels.entry,
+    label: Labels.entry
   },
   instructions: {
     type: Array,
@@ -104,7 +104,7 @@ Unit.schema = {
   },
   'instructions.$': {
     type: Object,
-    label: Labels.entry,
+    label: Labels.entry
   },
   pages: {
     type: Array,

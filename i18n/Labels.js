@@ -7,5 +7,5 @@ export const Labels = {
   entry: 'common.entry',
   text: 'common.text',
   legacy: 'common.legacy',
-  app: "common.app"
+  app: 'common.app'
 }
