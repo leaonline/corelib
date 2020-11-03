@@ -62,7 +62,8 @@
   "unitSet": {
     "title": "Unit-Set",
     "story": "Kontextuelle Einleitung",
-    "job": "Beruf"
+    "job": "Beruf",
+    "units": "Units"
   },
   "tts": {
     "title":"Text-To-Speech",

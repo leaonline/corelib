@@ -7,6 +7,7 @@ import { MediaLib } from './MediaLib'
 import { getFieldName } from '../utils/getFieldName'
 import { createPageSchema } from '../utils/pageSchema'
 import { createGetAllRoute } from '../decorators/routes/getAll'
+import { trapCircular } from '../utils/trapCircular'
 
 export const UnitSet = {}
 
@@ -130,6 +131,23 @@ UnitSet.schema = {
   },
   'story.$': {
     type: Object
+  },
+
+  units: {
+    type: Array,
+    optional: true,
+    isSortable: true,
+    dependency: trapCircular(function () {
+      const { Unit } = require('./Unit')
+
+      return {
+        collection: Unit.name,
+        field: Unit.representative
+      }
+    })
+  },
+  'units.$': {
+    type: String
   }
 }
 
