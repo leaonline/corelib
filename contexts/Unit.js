@@ -78,7 +78,8 @@ Unit.schema = {
   },
   title: {
     type: String,
-    label: Labels.title
+    label: Labels.title,
+    optional: true
   },
   stimuli: {
     type: Array,
