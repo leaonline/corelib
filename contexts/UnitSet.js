@@ -139,10 +139,15 @@ UnitSet.schema = {
     isSortable: true,
     dependency: trapCircular(function () {
       const { Unit } = require('./Unit')
-
+      import { getFieldName } from '../utils/getFieldName'
       return {
         collection: Unit.name,
-        field: Unit.representative
+        field: Unit.representative,
+        filter: {
+          // filter units with by field unitSet with value _id
+          // of this current edited unitSet doc (= self)
+          self: getFieldName(Unit.schema, Unit.schema.unitSet)
+        }
       }
     })
   },
