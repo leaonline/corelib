@@ -65,7 +65,9 @@ Unit.schema = {
           decimals: 4,
           collection: Unit.name,
           filter: {
-            fields: ['unitSet']
+            fields: [
+              'unitSet'
+            ]
           }
         }
       ]
