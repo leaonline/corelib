@@ -28,51 +28,6 @@ UnitSet.schema = {
       field: Status.representative
     }
   },
-  dimension: {
-    type: String,
-    label: Dimension.label,
-    dependency: {
-      collection: Dimension.name,
-      field: Dimension.representative
-    }
-  },
-  level: {
-    type: String,
-    label: Level.label,
-    dependency: {
-      collection: Level.name,
-      field: Level.representative
-    }
-  },
-  title: {
-    type: String,
-    label: Labels.title,
-    optional: true
-  },
-  description: {
-    type: String,
-    label: Labels.description,
-    optional: true
-  },
-  field: {
-    type: String,
-    label: Field.label,
-    optional: true,
-    dependency: {
-      collection: Field.name,
-      field: Field.representative
-    }
-  },
-  job: {
-    type: Number,
-    optional: true,
-    dependency: {
-      collection: Field.name,
-      field: getFieldName(Field.schema, Field.schema.jobs),
-      requires: 'field',
-      isArray: true
-    }
-  },
   [UnitSet.representative]: {
     type: String,
     label: Labels[UnitSet.representative],
@@ -106,6 +61,14 @@ UnitSet.schema = {
       ]
     }
   },
+  dimension: {
+    type: String,
+    label: Dimension.label,
+    dependency: {
+      collection: Dimension.name,
+      field: Dimension.representative
+    }
+  },
   dimensionShort: {
     type: String,
     label: Dimension.label,
@@ -121,6 +84,47 @@ UnitSet.schema = {
       ]
     }
   },
+  level: {
+    type: String,
+    label: Level.label,
+    dependency: {
+      collection: Level.name,
+      field: Level.representative
+    }
+  },
+  field: {
+    type: String,
+    label: Field.label,
+    dependency: {
+      collection: Field.name,
+      field: Field.representative
+    }
+  },
+  job: {
+    type: Number,
+    optional: true,
+    dependency: {
+      collection: Field.name,
+      field: getFieldName(Field.schema, Field.schema.jobs),
+      requires: 'field',
+      isArray: true
+    }
+  },
+  isLegacy: {
+    type: Boolean,
+    label: Labels.legacy,
+    optional: true
+  },
+  title: {
+    type: String,
+    label: Labels.title,
+    optional: true
+  },
+  description: {
+    type: String,
+    label: Labels.description,
+    optional: true
+  },
   story: {
     type: Array,
     optional: true,
@@ -132,7 +136,6 @@ UnitSet.schema = {
   'story.$': {
     type: Object
   },
-
   units: {
     type: Array,
     optional: true,
