@@ -7,7 +7,7 @@ export const Choice = {}
 
 Choice.name = 'choice'
 Choice.label = 'item.choice.title'
-Choice.icon = 'list-ul'
+Choice.icon = 'tasks'
 Choice.isItem = true
 
 Choice.flavors = {

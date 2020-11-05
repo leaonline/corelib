@@ -1,4 +1,6 @@
 import { Labels } from '../../i18n/Labels'
+import { Scoring } from '../../scoring/Scoring'
+import { Competency } from '../../contexts/Competency'
 
 export const Cloze = {}
 
@@ -33,8 +35,7 @@ Cloze.schema = {
     type: String,
     label: Labels.text,
     max: 10000
-  }
-  /*
+  },
   scoring: {
     type: Array,
     label: 'scoring.title'
@@ -69,5 +70,4 @@ Cloze.schema = {
     type: RegExp,
     label: Labels.entry
   }
-  */
 }
