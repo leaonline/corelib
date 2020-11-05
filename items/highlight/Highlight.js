@@ -1,6 +1,8 @@
 import { Labels } from '../../i18n/Labels'
 import { Competency } from '../../contexts/Competency'
 import { Scoring } from '../../scoring/Scoring'
+import { getFieldName } from '../../utils/getFieldName'
+import { Dimension } from '../../contexts/Dimension'
 
 export const Highlight = {}
 
@@ -16,7 +18,9 @@ Highlight.schema = {
     max: 10000
   },
   tts: {
-    type: Boolean
+    type: Boolean,
+    label: 'item.highlight.activateTTS',
+    optional: true,
   },
   scoring: {
     type: Array,
@@ -53,6 +57,14 @@ Highlight.schema = {
   'scoring.$.correctResponse.$': {
     type: Number,
     label: Labels.entry,
-    min: 0
+    min: 0,
+    options: {
+      // for this we need a list of text token from the original
+      method: 'tokenize',
+      input: {
+          type: 'self',
+          source: 'text'
+      }
+    }
   }
 }

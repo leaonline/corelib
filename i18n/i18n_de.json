@@ -70,6 +70,7 @@
     "text": "Text für Text-To-Speech"
   },
   "taskRenderers": {
+    "taskContent": "Aufgaben-Elemente",
     "layout": {
       "title": "Layout",
       "text": {
@@ -95,7 +96,7 @@
     "flavor": "Variante",
     "shuffle": "Zufällige Reihenfolge",
     "choice": {
-      "title": "Auswahl (single, multiple)",
+      "title": "Choice",
       "single": "Single-Choice",
       "multiple": "Multiple-Choice",
       "instruction": "Bilder und TTS sind optional. TTS kann sich vom Text unterscheiden"
@@ -108,7 +109,8 @@
       "blanks": "Fill-in-the-blanks"
     },
     "highlight": {
-      "title": "Markieren"
+      "title": "Markieren",
+      "activateTTS": "Text-To-Speech bei markieren aktivieren"
     }
   },
   "scoring": {
