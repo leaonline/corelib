@@ -56,16 +56,6 @@ Cloze.schema = {
   'scoring.$.target': {
     type: Number
   },
-  'scoring.$.requires': {
-    type: Number,
-    label: 'scoring.requires.title',
-    allowedValues: [1, 2],
-    options: [
-      Scoring.types.all,
-      Scoring.types.any
-    ],
-    defaultValue: 1
-  },
   'scoring.$.correctResponse': {
     type: RegExp,
     label: Labels.entry
