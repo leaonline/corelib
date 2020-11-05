@@ -142,7 +142,8 @@ UnitSet.schema = {
     isSortable: true,
     dependency: trapCircular(function () {
       const { Unit } = require('./Unit')
-      import { getFieldName } from '../utils/getFieldName'
+      const { getFieldName } = require('../utils/getFieldName')
+
       return {
         collection: Unit.name,
         field: Unit.representative,

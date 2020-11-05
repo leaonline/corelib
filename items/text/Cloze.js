@@ -1,5 +1,4 @@
 import { Labels } from '../../i18n/Labels'
-import { Scoring } from '../../scoring/Scoring'
 import { Competency } from '../../contexts/Competency'
 
 export const Cloze = {}
