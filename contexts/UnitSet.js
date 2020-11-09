@@ -3,9 +3,8 @@ import { Status } from '../types/Status'
 import { Dimension } from '../contexts/Dimension'
 import { Level } from './Level'
 import { Labels } from '../i18n/Labels'
-import { MediaLib } from './MediaLib'
 import { getFieldName } from '../utils/getFieldName'
-import { createPageSchema } from '../utils/pageSchema'
+import { createPageEntrySchema, createPageSchema } from '../utils/pageSchema'
 import { createGetAllRoute } from '../decorators/routes/getAll'
 import { trapCircular } from '../utils/trapCircular'
 
@@ -125,17 +124,8 @@ UnitSet.schema = {
     label: Labels.description,
     optional: true
   },
-  story: {
-    type: Array,
-    optional: true,
-    dependency: {
-      filesCollection: MediaLib.name,
-      version: 'original'
-    }
-  },
-  'story.$': {
-    type: Object
-  },
+  story: createPageSchema(),
+  'story.$': createPageEntrySchema(),
   units: {
     type: Array,
     optional: true,
@@ -159,9 +149,6 @@ UnitSet.schema = {
     type: String
   }
 }
-
-const pageSchema = createPageSchema(UnitSet)
-pageSchema('story.$')
 
 UnitSet.routes = {}
 UnitSet.routes.all = createGetAllRoute({

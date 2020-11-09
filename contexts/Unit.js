@@ -1,9 +1,8 @@
 import { Labels } from '../i18n/Labels'
 import { Status } from '../types/Status'
 import { UnitSet } from './UnitSet'
-import { MediaLib } from './MediaLib'
 import { getFieldName } from '../utils/getFieldName'
-import { createPageSchema } from '../utils/pageSchema'
+import { createPageEntrySchema, createPageSchema } from '../utils/pageSchema'
 import { createGetAllRoute } from '../decorators/routes/getAll'
 
 export const Unit = {}
@@ -83,32 +82,11 @@ Unit.schema = {
     label: Labels.title,
     optional: true
   },
-  stimuli: {
-    type: Array,
-    optional: true,
-    label: 'unit.stimuli',
-    dependency: {
-      filesCollection: MediaLib.name,
-      version: 'original'
-    }
-  },
-  'stimuli.$': {
-    type: Object,
-    label: Labels.entry
-  },
-  instructions: {
-    type: Array,
-    optional: true,
-    label: 'unit.instructions',
-    dependency: {
-      filesCollection: MediaLib.name,
-      version: 'original'
-    }
-  },
-  'instructions.$': {
-    type: Object,
-    label: Labels.entry
-  },
+  stimuli: createPageSchema(),
+  'stimuli.$': createPageEntrySchema(),
+
+  instructions: createPageSchema(),
+  'instructions.$': createPageEntrySchema(),
   pages: {
     type: Array,
     label: 'unit.pages',
@@ -118,39 +96,17 @@ Unit.schema = {
     type: Object,
     label: 'unit.page'
   },
-  'pages.$.instructions': {
-    type: Array,
-    optional: true,
-    label: 'unit.pageInstructions',
-    dependency: {
-      filesCollection: MediaLib.name,
-      version: 'original'
-    }
-  },
-  'pages.$.instructions.$': {
-    type: Object
-  },
-  'pages.$.content': {
-    type: Array,
-    optional: true,
+  'pages.$.instructions': createPageSchema({
+    label: 'unit.pageInstructions'
+  }),
+  'pages.$.instructions.$': createPageEntrySchema(),
+
+
+  'pages.$.content': createPageSchema({
     label: 'unit.pageContent',
-    dependency: {
-      filesCollection: MediaLib.name,
-      version: 'original'
-    }
-  },
-  'pages.$.content.$': {
-    type: Object
-  }
+  }),
+  'pages.$.content.$': createPageEntrySchema()
 }
-
-const pageSchema = createPageSchema(Unit)
-pageSchema('stimuli.$')
-pageSchema('instructions.$')
-pageSchema('pages.$.instructions.$')
-pageSchema('pages.$.content.$')
-
-console.log(Unit.schema)
 
 Unit.routes = {}
 Unit.routes.all = createGetAllRoute({
