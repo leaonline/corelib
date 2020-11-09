@@ -181,7 +181,7 @@ UnitSet.routes.all = createGetAllRoute({
       optional: true,
       allowedValues: ['true', 'false']
     }
-  },
+  }
 })
 
 UnitSet.routes.byId = createGetByIdRoute({

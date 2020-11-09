@@ -1,3 +1,5 @@
+import { Meteor } from 'meteor/meteor'
+
 export const createGetByIdRoute = ({ context, schema, run }) => {
   const definitions = {
     path: `/api/${context.name}/get/byId`,
