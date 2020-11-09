@@ -23,8 +23,4 @@ function scoreBlanks (entry, responseDoc) {
   return { competency, correctResponse, value, score, isUndefined }
 }
 
-function scoreSelect (entry, responseDoc) {
-  return scoreBlanks(entry, responseDoc)
-}
-
 export { Cloze }

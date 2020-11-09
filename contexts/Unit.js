@@ -101,9 +101,8 @@ Unit.schema = {
   }),
   'pages.$.instructions.$': createPageEntrySchema(),
 
-
   'pages.$.content': createPageSchema({
-    label: 'unit.pageContent',
+    label: 'unit.pageContent'
   }),
   'pages.$.content.$': createPageEntrySchema()
 }
