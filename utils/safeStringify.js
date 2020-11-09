@@ -1,3 +1,5 @@
+import { EJSON } from 'meteor/ejson'
+
 /**
  * Stringifies a JSON-able Object by preventing type errors due to
  * circular logic.
@@ -6,7 +8,7 @@
  */
 export const safeStringify = function safeStringify (any) {
   const cyclic = new Set()
-  return JSON.stringify(any, function (key, val) {
+  return EJSON.stringify(any, function (key, val) {
     if (val != null && typeof val === 'object') {
       if (cyclic.has(val)) {
         return 'cyclic'

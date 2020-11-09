@@ -22,14 +22,6 @@ Cloze.flavor = {
 }
 
 Cloze.schema = {
-  flavor: {
-    type: Number,
-    label: 'item.flavor',
-    min: 1,
-    max: 3,
-    defaultValue: 1,
-    options: Object.values(Cloze.flavor)
-  },
   text: {
     type: String,
     label: Labels.text,
@@ -53,7 +45,17 @@ Cloze.schema = {
     }
   },
   'scoring.$.target': {
-    type: Number
+    type: Number,
+    min: 0,
+    options: {
+      // for this we need a list of text token from the original
+      method: 'tokenize',
+      input: {
+        type: 'self',
+        source: 'text',
+        pattern: /{{\d\$\w*\$\w*\$\w*}}/g
+      }
+    }
   },
   'scoring.$.correctResponse': {
     type: RegExp,

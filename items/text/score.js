@@ -3,25 +3,14 @@ import { isUndefinedResponse } from '../../utils/isUndefinedResponse'
 
 Cloze.score = function (itemDoc, responseDoc) {
   const { scoring } = itemDoc
-  const { flavor } = itemDoc
-
-  return scoring.map(entry => {
-    switch (flavor) {
-      case Cloze.flavor.blanks.value:
-        return scoreBlanks(entry, responseDoc)
-      case Cloze.flavor.select.value:
-        return scoreSelect(entry, responseDoc)
-      default:
-        throw new Error(`Unexpected undefined choice flavor ${flavor}`)
-    }
-  })
+  return scoring.map(entry => scoreBlanks(entry, responseDoc))
 }
 
 function scoreBlanks (entry, responseDoc) {
   let score = false
-  const { correctResponse, competency } = entry
+  const { correctResponse, competency, target } = entry
   const { responses = [] } = responseDoc
-  const value = responses[0]
+  const value = responses[target]
   const isUndefined = isUndefinedResponse(value)
 
   if (isUndefined) {
@@ -35,7 +24,7 @@ function scoreBlanks (entry, responseDoc) {
 }
 
 function scoreSelect (entry, responseDoc) {
-  throw new Error('not implemented')
+  return scoreBlanks(entry, responseDoc)
 }
 
 export { Cloze }
