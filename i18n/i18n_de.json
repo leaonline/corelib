@@ -63,7 +63,8 @@
     "title": "Unit-Set",
     "story": "Kontextuelle Einleitung",
     "job": "Beruf",
-    "units": "Units"
+    "units": "Units",
+    "selfAssessment": "Selbsteinschätzung"
   },
   "tts": {
     "title":"Text-To-Speech",

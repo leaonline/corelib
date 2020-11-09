@@ -5,8 +5,9 @@ import { Level } from './Level'
 import { Labels } from '../i18n/Labels'
 import { getFieldName } from '../utils/getFieldName'
 import { createPageEntrySchema, createPageSchema } from '../utils/pageSchema'
-import { createGetAllRoute } from '../decorators/routes/getAll'
 import { trapCircular } from '../utils/trapCircular'
+import { createGetAllRoute } from '../decorators/routes/getAll'
+import { createGetByIdRoute } from '../decorators/routes/createGetByIdRoute'
 
 export const UnitSet = {}
 
@@ -119,10 +120,10 @@ UnitSet.schema = {
     label: Labels.title,
     optional: true
   },
-  description: {
+  selfAssessment: {
     type: String,
-    label: Labels.description,
-    optional: true
+    optional: true,
+    max: 5000
   },
   story: createPageSchema(),
   'story.$': createPageEntrySchema(),
@@ -154,10 +155,38 @@ UnitSet.routes = {}
 UnitSet.routes.all = createGetAllRoute({
   context: UnitSet,
   schema: {
-    fields: {
-      type: Array,
+
+    // there should always be only one field at a time to be queried
+
+    field: {
+      type: String,
       optional: true
     },
-    'fields.$': String
+
+    // there should also be only one job to be queried, note that the job
+    // makes only sense if the field is part of the query and the job is
+    // part of the field
+
+    job: {
+      type: Number,
+      optional: true
+    },
+
+    // the legacy flag is used to return all UnitSets, that are part of
+    // ot.lea (which is here defined as legacy, since the competency model
+    // is a legacy model)
+
+    isLegacy: {
+      type: String,
+      optional: true,
+      allowedValues: ['true', 'false']
+    }
+  },
+})
+
+UnitSet.routes.byId = createGetByIdRoute({
+  context: UnitSet,
+  schema: {
+    _id: String
   }
 })
