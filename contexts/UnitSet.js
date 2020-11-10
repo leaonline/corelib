@@ -129,7 +129,7 @@ UnitSet.schema = {
   'story.$': createPageEntrySchema(),
   units: {
     type: Array,
-    optional: true,
+    // optional: true,
     isSortable: true,
     dependency: trapCircular(function () {
       const { Unit } = require('./Unit')
