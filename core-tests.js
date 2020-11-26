@@ -1,11 +1,10 @@
-// Import Tinytest from the tinytest Meteor package.
-import { Tinytest } from 'meteor/tinytest'
-
-// Import and rename a variable exported by core.js.
-import { name as packageName } from 'meteor/leaonline:core'
-
-// Write your tests here!
-// Here is an example.
-Tinytest.add('core - example', function (test) {
-  test.equal(packageName, 'core')
-})
+import './contexts/tests/contexts.tests'
+import './contexts/tests/fileContexts.tests'
+import './decorators/routes/tests/createGetByIdRoute.tests'
+import './decorators/routes/tests/getAll.tests'
+import './i18n/tests/i18n.tests'
+import './logging/tests/createLog.tests'
+import './mixins/tests/checkPermissions.tests'
+import './schema/tests/SchemaOptions.test'
+import './scoring/tests/Scoring.tests'
+import './items/tests'
