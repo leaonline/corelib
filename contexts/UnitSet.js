@@ -4,7 +4,7 @@ import { Dimension } from '../contexts/Dimension'
 import { Level } from './Level'
 import { Labels } from '../i18n/Labels'
 import { getFieldName } from '../utils/getFieldName'
-import { createPageEntrySchema, createPageSchema } from '../utils/pageSchema'
+import { createPageEntrySchema, createPageSchema } from '../validation/pageSchema'
 import { trapCircular } from '../utils/trapCircular'
 import { createGetAllRoute } from '../decorators/routes/getAll'
 import { createGetByIdRoute } from '../decorators/routes/createGetByIdRoute'
@@ -129,7 +129,7 @@ UnitSet.schema = {
   'story.$': createPageEntrySchema(),
   units: {
     type: Array,
-    // optional: true,
+    optional: true,
     isSortable: true,
     dependency: trapCircular(function () {
       const { Unit } = require('./Unit')
@@ -185,8 +185,5 @@ UnitSet.routes.all = createGetAllRoute({
 })
 
 UnitSet.routes.byId = createGetByIdRoute({
-  context: UnitSet,
-  schema: {
-    _id: String
-  }
+  context: UnitSet
 })

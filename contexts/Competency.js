@@ -55,7 +55,7 @@ Competency.schema = {
     label: Labels.legacy,
     optional: true
   },
-  [Competency.representative[1]]: {
+  dimension: {
     type: String,
     label: Dimension.label,
     dependency: {
@@ -83,6 +83,11 @@ Competency.schema = {
   description: {
     type: String,
     label: Labels.description,
+    max: 2500
+  },
+  descriptionSimple: {
+    type: String,
+    optional: true,
     max: 2500
   },
   example: {

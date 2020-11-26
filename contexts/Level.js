@@ -1,6 +1,7 @@
 import { Status } from '../types/Status'
 import { Labels } from '../i18n/Labels'
 import { createGetAllRoute } from '../decorators/routes/getAll'
+import { createGetByIdRoute } from '../decorators/routes/createGetByIdRoute'
 
 export const Level = {}
 Level.name = 'level'
@@ -37,3 +38,4 @@ Level.schema = {
 
 Level.routes = {}
 Level.routes.all = createGetAllRoute({ context: Level })
+Level.routes.byId = createGetByIdRoute({ context: Level })

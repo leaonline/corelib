@@ -2,8 +2,9 @@ import { Labels } from '../i18n/Labels'
 import { Status } from '../types/Status'
 import { UnitSet } from './UnitSet'
 import { getFieldName } from '../utils/getFieldName'
-import { createPageEntrySchema, createPageSchema } from '../utils/pageSchema'
+import { createPageEntrySchema, createPageSchema } from '../validation/pageSchema'
 import { createGetAllRoute } from '../decorators/routes/getAll'
+import { createGetByIdRoute } from '../decorators/routes/createGetByIdRoute'
 
 export const Unit = {}
 
@@ -116,4 +117,8 @@ Unit.routes.all = createGetAllRoute({
       optional: true
     }
   }
+})
+
+Unit.routes.byId = createGetByIdRoute({
+  context: Unit
 })
