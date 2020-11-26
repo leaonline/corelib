@@ -10,7 +10,6 @@ export const trapCircular = function trapCircular (fct) {
   return new Proxy({}, {
     get: function (target, name, o) {
       const data = fct()
-      console.log('get trap', target, name, o, data)
 
       if (name === 'toJSON') {
         return () => data

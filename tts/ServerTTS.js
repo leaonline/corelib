@@ -1,4 +1,4 @@
-import { HTTP } from 'meteor/http'
+import { HTTP } from 'meteor/jkuester:http'
 import { i18n } from '../i18n/i18n'
 import { TTSConfig } from './TTSConfig'
 
