@@ -22,9 +22,6 @@
     "competencyId": "KB",
     "shortCode":"KB-ID",
     "descriptionSimple": "Rückmeldung TN",
-    "shortCode_legacy": "Id alt",
-    "description_legacy": "Beschreibung alt",
-    "descriptionSimple_legacy": "Rückmeldung TN alt",
     "level": "Alphalevel",
     "example": "Beispiel / Übersetzung"
   },

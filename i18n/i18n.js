@@ -1,12 +1,14 @@
 import { check } from 'meteor/check'
 
-let _translator = {
+export const i18n = {}
+
+const defaultTranslator = {
   get: label => label,
   set: () => {},
   getLocale: () => ''
 }
 
-export const i18n = {}
+let _translator = defaultTranslator
 
 async function autoLoadLocale (lang) {
   switch (lang) {
@@ -20,43 +22,46 @@ async function autoLoadLocale (lang) {
 /**
  * Inject your i18n provider, that implementes the interface, defined by the params of this method.
  * If your i18n framework does not implement them, you can create a wrapper around them.
- * @param get A function that takes a label String + options (optional) and returns the translated String
- * @param set A function that sets / extends translation for a given language by schema: { [langCode]: Object }
- * @param getLocale Returns the current locale
+ * @param get {Function} A function that takes a label String + options (optional) and returns the translated String
+ * @param set {Function} A function that sets / extends translation for a given language by schema: { [langCode]: Object }
+ * @param getLocale {Function} Returns the current locale
  */
 
-i18n.load = function ({ get, set, getLocale, thisContext }) {
+i18n.load = async function load ({ get, set, getLocale, thisContext }) {
   check(get, Function)
   check(set, Function)
   check(getLocale, Function)
+
+  let locale
+
   _translator = {
     get: get.bind(thisContext),
     set: set.bind(thisContext),
     getLocale: getLocale.bind(thisContext)
   }
-  const locale = _translator.getLocale()
-  autoLoadLocale(locale)
-    .then(module => {
-      _translator.set(locale, module.default)
-    })
-    .catch(e => {
-      console.error('Error loading locale!', locale)
-      console.error(e)
-    })
+  locale = _translator.getLocale()
+  const module = await autoLoadLocale(locale)
+  _translator.set(locale, module.default)
+
+  return this
 }
 
-i18n.get = function (...params) {
+i18n.get = function get (...params) {
   return _translator.get(...params)
 }
 
-i18n.reactive = function (...params) {
+i18n.reactive = function reactive (...params) {
   return () => _translator.get(...params)
 }
 
-i18n.set = function (lang, options) {
+i18n.set = function set (lang, options) {
   return _translator.set(lang, options)
 }
 
-i18n.getLocale = function () {
+i18n.getLocale = function getLocale () {
   return _translator.getLocale()
+}
+
+i18n.clear = function clear () {
+  _translator = defaultTranslator
 }
