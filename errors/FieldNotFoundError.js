@@ -1,11 +1,7 @@
-import { LeaError } from './LeaErorr'
+import { Meteor } from 'meteor/meteor'
 
-export class FieldNotFoundError extends LeaError {
-  static get TITLE () {
-    return 'errors.fieldNotFound.title'
-  }
-
+export class FieldNotFoundError extends Meteor.Error {
   constructor (reason, details) {
-    super(FieldNotFoundError.TITLE, reason, details)
+    super('errors.fieldNotFound', reason, details)
   }
 }
