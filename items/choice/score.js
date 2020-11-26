@@ -1,9 +1,18 @@
+import { check, Match } from 'meteor/check'
 import { Choice } from './Choice'
 import { Scoring } from '../../scoring/Scoring'
 import { toInteger } from '../../utils/toInteger'
 import { isUndefinedResponse } from '../../utils/isUndefinedResponse'
 
-Choice.score = function (itemDoc, responseDoc) {
+const isSafeInt = x => Number.isSafeInteger(x)
+
+Choice.score = function (itemDoc = {}, responseDoc = {}) {
+  check(itemDoc.flavor, Number)
+  check(itemDoc.scoring, [{
+    competency: String,
+    correctResponse: [Number],
+    requires: Number
+  }])
   const { scoring } = itemDoc
   const { flavor } = itemDoc
 
@@ -29,6 +38,10 @@ function scoreSingle ({ competency, correctResponse, requires }, { responses = [
     return { competency, correctResponse, value, score, isUndefined }
   }
 
+  // we need to check for value integrity, allowed are strings of integers
+  // or integers (which could also .0 floats, they are basically ints in JS)
+  check(value, Match.OneOf(String, Match.Where(isSafeInt)))
+
   // values are always sent as string
   // se we need to parse them first
   value = toInteger(value)
@@ -42,43 +55,86 @@ function scoreSingle ({ competency, correctResponse, requires }, { responses = [
 
 function scoreMultiple ({ competency, correctResponse, requires }, { responses = [] }) {
   if (isUndefinedResponse(responses)) {
-    return { competency, correctResponse, value: responses, score: false, isUndefined: true }
+    return {
+      competency,
+      correctResponse,
+      value: responses,
+      score: false,
+      isUndefined: true
+    }
   }
 
   switch (requires) {
     case Scoring.types.all.value:
-      return scoreMultipleAll({ competency, correctResponse, requires }, { responses })
+      return scoreMultipleAll({
+        competency,
+        correctResponse,
+        requires
+      }, { responses })
     case Scoring.types.any.value:
-      return scoreMultipleAny({ competency, correctResponse, requires }, { responses })
+      return scoreMultipleAny({
+        competency,
+        correctResponse,
+        requires
+      }, { responses })
     default:
       throw new Error(`Unexpected scoring type ${requires}`)
   }
 }
 
 function scoreMultipleAll ({ competency, correctResponse, requires }, { responses }) {
-  const mappedResponses = responses.map(toInteger).sort()
+  const mappedResponses = responses.map(value => {
+    // we need to check for value integrity, allowed are strings of integers
+    // or integers (which could also .0 floats, they are basically ints in JS)
+    check(value, Match.OneOf(String, Match.Where(isSafeInt)))
+    return toInteger(value)
+  }).sort()
   let score = false
 
   // if length does not match we can already return false
   // but use the mapped responses in order to not give the impression
   // that there is a false-negative due to missing value parsing
   if (responses.length !== correctResponse.length) {
-    return { competency, correctResponse, value: mappedResponses, score }
+    return {
+      competency,
+      correctResponse,
+      value: mappedResponses,
+      score,
+      isUndefined: false
+    }
   }
 
   // otherwise we assume, that multiple-all is true if the indices exactly match
   score = correctResponse.sort().every((responseIndex, positionIndex) => {
     return mappedResponses[positionIndex] === responseIndex
   })
-  return { competency, correctResponse, value: responses, score }
+  return {
+    competency,
+    correctResponse,
+    value: responses,
+    score,
+    isUndefined: false
+  }
 }
 
 function scoreMultipleAny ({ competency, correctResponse, requires }, { responses }) {
-  const score = correctResponse.some(responseIndex => {
-    const value = responses[responseIndex]
-    return !isUndefinedResponse(value) && Number.parseInt(value, 10) === responseIndex
-  })
-  return { competency, correctResponse, value: responses, score }
+  const score = responses
+    .map(value => {
+      if (isUndefinedResponse(value)) return
+      // we need to check for value integrity, allowed are strings of integers
+      // or integers (which could also .0 floats, they are basically ints in JS)
+      check(value, Match.OneOf(String, Match.Where(isSafeInt)))
+      return toInteger(value)
+    })
+    .some(value => correctResponse.includes(value))
+
+  return {
+    competency,
+    correctResponse,
+    value: responses,
+    score,
+    isUndefined: false
+  }
 }
 
 export { Choice }
