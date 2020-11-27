@@ -1,3 +1,5 @@
 import './Items.tests'
 import '../choice/tests/Choice.tests'
+import '../highlight/tests/Highlight.tests'
+import '../text/tests/Cloze.tests'
 import './validateItemDefinition.tests'
