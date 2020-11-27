@@ -1,26 +1,70 @@
 import { Cloze } from './Cloze'
 import { isUndefinedResponse } from '../../utils/isUndefinedResponse'
+import { check, Match } from "meteor/check"
 
-Cloze.score = function (itemDoc, responseDoc) {
-  const { scoring } = itemDoc
-  return scoring.map(entry => scoreBlanks(entry, responseDoc))
+const critical = /eval\s*\(|__proto__|require\s*\(|import\s*'|new function|\.prototype|function\s*\(/i
+const isSafeTextString = s => {
+  if (typeof s !== 'string') {
+    return false
+  }
+
+  if (s.length > Cloze.MAX_LENGTH) {
+    return false
+  }
+
+  return !critical.test(s)
 }
 
-function scoreBlanks (entry, responseDoc) {
+Cloze.score = function (itemDoc = {}, responseDoc = {}) {
+  check(itemDoc.scoring, [{
+    competency: String,
+    correctResponse: RegExp,
+    target: Number
+  }])
+
+  const { scoring } = itemDoc
+
+  // checks all entries for undefined so we skip further
+  // expensive computations and set all to false + undefined flag
+  const allUndefined = isUndefinedResponse(responseDoc.responses)
+
+  return scoring.map(entry => {
+    if (allUndefined) {
+      return {
+        competency: entry.competency,
+        correctResponse: entry.correctResponse,
+        value: responseDoc.responses,
+        score: false,
+        isUndefined: true
+      }
+    }
+
+    return scoreBlanks(entry, responseDoc)
+  })
+}
+
+function scoreBlanks (entry, { responses = [] }) {
+  if (!Array.isArray(responses)) {
+    throw new Error('Match error: Failed Match.Where validation')
+  }
+
   let score = false
   const { correctResponse, competency, target } = entry
-  const { responses = [] } = responseDoc
   const value = responses[target]
+
+  // we still may have individual undefined cases
   const isUndefined = isUndefinedResponse(value)
 
   if (isUndefined) {
     return { competency, correctResponse, value, score, isUndefined }
   }
 
+  check(value, Match.Where(isSafeTextString))
+
   // texts are scored against a RegExp pattern
   score = correctResponse.test(value)
 
-  return { competency, correctResponse, value, score, isUndefined }
+  return { competency, correctResponse, value, score, isUndefined: false }
 }
 
 export { Cloze }
