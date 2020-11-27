@@ -1,8 +1,8 @@
 import { check, Match } from 'meteor/check'
 import { Choice } from './Choice'
 import { Scoring } from '../../scoring/Scoring'
-import { toInteger } from '../../utils/toInteger'
-import { isUndefinedResponse } from '../../utils/isUndefinedResponse'
+import { toInteger } from '../../utils/numbers/toInteger'
+import { isUndefinedResponse } from '../../utils/response/isUndefinedResponse'
 import { isSafeInteger } from '../../utils/numbers/isSafeInteger'
 
 Choice.score = function (itemDoc = {}, responseDoc = {}) {

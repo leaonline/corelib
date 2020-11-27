@@ -10,7 +10,7 @@ import { Level } from '../Level'
 import { MediaLib } from '../MediaLib'
 import { Unit } from '../Unit'
 import { UnitSet } from '../UnitSet'
-import { getType } from '../../utils/getType'
+import { getType } from '../../utils/object/getType'
 
 const allContexts = [
   Competency,

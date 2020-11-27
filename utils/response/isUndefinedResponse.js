@@ -1,4 +1,4 @@
-import { Scoring } from '../scoring/Scoring'
+import { Scoring } from '../../scoring/Scoring'
 
 const isUndefined = value =>
   value === Scoring.UNDEFINED ||
