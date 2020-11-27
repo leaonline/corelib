@@ -3,9 +3,19 @@ import { Random } from 'meteor/random'
 import { expect } from 'chai'
 import { Choice } from '../Choice'
 import '../score'
-import { createSchema } from '../../../test-helpers.tests'
+import { createSchema, unsafeInt } from '../../../test-helpers.tests'
 import { UndefinedScore } from '../../../scoring/UndefinedScore'
 import { ScoringTypes } from '../../../scoring/ScoringTypes'
+
+const invalidInputs = [
+  [1.1], [true],
+  [new Date()], [new RegExp('1')],
+  [{}], [() => {}],
+  [unsafeInt()], [unsafeInt(true)],
+  [unsafeInt().toExponential()], [unsafeInt(true).toExponential()],
+  [String(unsafeInt())], [String(unsafeInt(true))],
+  [String(unsafeInt().toExponential())], [String(unsafeInt(true).toExponential())],
+]
 
 describe(Choice.name, function () {
   it('ensures the integrity of the basic structure', function () {
@@ -80,38 +90,38 @@ describe(Choice.name, function () {
           [null],
           [UndefinedScore]
         ].forEach(responses => {
-            const score = Choice.score(itemDoc, { responses })
-            const expectedValue = Array.isArray(responses)
-              ? responses[0]
-              : responses
+          const score = Choice.score(itemDoc, { responses })
+          const expectedValue = Array.isArray(responses)
+            ? responses[0]
+            : responses
 
-            expect(score[0]).to.deep.equal({
-              competency: itemDoc.scoring[0].competency,
-              correctResponse: itemDoc.scoring[0].correctResponse,
-              value: expectedValue,
-              score: false,
-              isUndefined: true
-            }, responses)
-          })
+          expect(score[0]).to.deep.equal({
+            competency: itemDoc.scoring[0].competency,
+            correctResponse: itemDoc.scoring[0].correctResponse,
+            value: expectedValue,
+            score: false,
+            isUndefined: true
+          }, responses)
+        })
       })
 
-      it ('throws on a faulty result format', function () {
-        const itemDoc = createItemDoc({
-            flavor: Choice.flavors.single.value,
-            correctResponse: 1
-          })
-
-        ;[[1.1], [true], [new Date()], [new RegExp('1')], [{}], [() => {}]].forEach(responses => {
-            expect(() => Choice.score(itemDoc, { responses }))
-              .to.throw('Match error: Failed Match.OneOf, Match.Maybe or Match.Optional validation')
-          })
-      })
-
-      it('correctly scores a true result', function () {
+      it('throws on a faulty result format', function () {
         const itemDoc = createItemDoc({
           flavor: Choice.flavors.single.value,
           correctResponse: 1
         })
+
+        invalidInputs.forEach(responses => {
+          expect(() => Choice.score(itemDoc, { responses }))
+            .to.throw('Match error: Failed Match.Where validation')
+        })
+      })
+
+      it('correctly scores a true result', function () {
+        const itemDoc = createItemDoc({
+            flavor: Choice.flavors.single.value,
+            correctResponse: 1
+          })
 
         ;[[1], ['1'], [1.0], ['1.0']]
           .forEach(responses => {
@@ -130,7 +140,7 @@ describe(Choice.name, function () {
           })
       })
 
-      it ('correctly scores a false result', function () {
+      it('correctly scores a false result', function () {
         const itemDoc = createItemDoc({
             flavor: Choice.flavors.single.value,
             correctResponse: 23
@@ -206,12 +216,12 @@ describe(Choice.name, function () {
               requires: ScoringTypes.any.value
             })
 
-          ;[[1.1], [true], [new Date()], [new RegExp('1')], [{}], [() => {}]].forEach(responses => {
-              expect(() => Choice.score(itemDoc, { responses }))
-                .to.throw('Match error: Failed Match.OneOf, Match.Maybe or Match.Optional validation')
+          invalidInputs.forEach(responses => {
+            expect(() => Choice.score(itemDoc, { responses }))
+              .to.throw('Match error: Failed Match.Where validation')
           })
         })
-        it ('correctly scores a false result', function () {
+        it('correctly scores a false result', function () {
           const itemDoc = createItemDoc({
               flavor: Choice.flavors.multiple.value,
               correctResponse: [2, 3],
@@ -231,7 +241,7 @@ describe(Choice.name, function () {
               }, responses)
             })
         })
-        it ('correctly scores a true result', function () {
+        it('correctly scores a true result', function () {
           const itemDoc = createItemDoc({
               flavor: Choice.flavors.multiple.value,
               correctResponse: [2, 3],
@@ -256,24 +266,24 @@ describe(Choice.name, function () {
       describe(ScoringTypes.all.name, function () {
         it('throws on a faulty result format', function () {
           const itemDoc = createItemDoc({
-              flavor: Choice.flavors.multiple.value,
-              correctResponse: [2, 3],
-              requires: ScoringTypes.all.value
-            })
+            flavor: Choice.flavors.multiple.value,
+            correctResponse: [2, 3],
+            requires: ScoringTypes.all.value
+          })
 
-          ;[[1.1], [true], [new Date()], [new RegExp('1')], [{}], [() => {}]].forEach(responses => {
+          invalidInputs.forEach(responses => {
             expect(() => Choice.score(itemDoc, { responses }))
-              .to.throw('Match error: Failed Match.OneOf, Match.Maybe or Match.Optional validation')
+              .to.throw('Match error: Failed Match.Where validation')
           })
         })
-        it ('correctly scores a false result', function () {
+        it('correctly scores a false result', function () {
           const itemDoc = createItemDoc({
               flavor: Choice.flavors.multiple.value,
               correctResponse: [2, 3],
               requires: ScoringTypes.all.value
             })
 
-          ;[[1,2,3], [2,3,4], [0, 1], [2], [3]]
+          ;[[1, 2, 3], [2, 3, 4], [0, 1], [2], [3]]
             .forEach(responses => {
               const score = Choice.score(itemDoc, { responses })
 
@@ -286,7 +296,7 @@ describe(Choice.name, function () {
               }, responses)
             })
         })
-        it ('correctly scores a true result', function () {
+        it('correctly scores a true result', function () {
           const itemDoc = createItemDoc({
               flavor: Choice.flavors.multiple.value,
               correctResponse: [2, 3],

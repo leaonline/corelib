@@ -3,8 +3,7 @@ import { Choice } from './Choice'
 import { Scoring } from '../../scoring/Scoring'
 import { toInteger } from '../../utils/toInteger'
 import { isUndefinedResponse } from '../../utils/isUndefinedResponse'
-
-const isSafeInt = x => Number.isSafeInteger(x)
+import { isSafeInteger } from '../../utils/numbers/isSafeInteger'
 
 Choice.score = function (itemDoc = {}, responseDoc = {}) {
   check(itemDoc.flavor, Number)
@@ -40,7 +39,7 @@ function scoreSingle ({ competency, correctResponse, requires }, { responses = [
 
   // we need to check for value integrity, allowed are strings of integers
   // or integers (which could also .0 floats, they are basically ints in JS)
-  check(value, Match.OneOf(String, Match.Where(isSafeInt)))
+  check(value, Match.Where(isSafeInteger))
 
   // values are always sent as string
   // se we need to parse them first
@@ -86,7 +85,7 @@ function scoreMultipleAll ({ competency, correctResponse, requires }, { response
   const mappedResponses = responses.map(value => {
     // we need to check for value integrity, allowed are strings of integers
     // or integers (which could also .0 floats, they are basically ints in JS)
-    check(value, Match.OneOf(String, Match.Where(isSafeInt)))
+    check(value, Match.Where(isSafeInteger))
     return toInteger(value)
   }).sort()
   let score = false
@@ -123,7 +122,7 @@ function scoreMultipleAny ({ competency, correctResponse, requires }, { response
       if (isUndefinedResponse(value)) return
       // we need to check for value integrity, allowed are strings of integers
       // or integers (which could also .0 floats, they are basically ints in JS)
-      check(value, Match.OneOf(String, Match.Where(isSafeInt)))
+      check(value, Match.Where(isSafeInteger))
       return toInteger(value)
     })
     .some(value => correctResponse.includes(value))
