@@ -15,7 +15,6 @@ describe(createGetAllRoute.name, function () {
       path: `/api/${context.name}/get/all`,
       method: 'get',
       schema: undefined,
-      run: undefined
     })
   })
 
@@ -33,7 +32,6 @@ describe(createGetAllRoute.name, function () {
       path: `/api/${context.name}/get/all`,
       method: 'get',
       schema: { bar: Number },
-      run: undefined
     })
   })
   it ('allows to optionally define a run function', function () {
@@ -41,18 +39,24 @@ describe(createGetAllRoute.name, function () {
     const context = {
       name: 'foo-bar'
     }
-    const run = function run () {
+    const runFct = function run () {
       return randomId
     }
 
-    const route = createGetAllRoute({ context, run })
+    const route = createGetAllRoute({ context, run: runFct })
     expect(route).to.deep.equal({
       path: `/api/${context.name}/get/all`,
       method: 'get',
       schema: undefined,
-      run: run
     })
 
-    expect(route.run()).to.equal(randomId)
+    if (Meteor.isServer) {
+      expect(route.run).to.equal(runFct)
+      expect(route.run()).to.equal(randomId)
+    }
+
+    if (Meteor.isClient) {
+      expect(route.run).to.equal(undefined)
+    }
   })
 })

@@ -39,18 +39,24 @@ describe(createGetByIdRoute.name, function () {
     const context = {
       name: 'foo-bar'
     }
-    const run = function run () {
+    const runFct = function run () {
       return randomId
     }
 
-    const route = createGetByIdRoute({ context, run })
+    const route = createGetByIdRoute({ context, run: runFct })
     expect(route).to.deep.equal({
       path: `/api/${context.name}/get/byId`,
       method: 'get',
       schema: { _id: String },
-      run: run
     })
 
-    expect(route.run()).to.equal(randomId)
+    if (Meteor.isServer) {
+      expect(route.run).to.equal(runFct)
+      expect(route.run()).to.equal(randomId)
+    }
+
+    if (Meteor.isClient) {
+      expect(route.run).to.equal(undefined)
+    }
   })
 })
