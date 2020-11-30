@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor'
 import { getProperty } from '../utils/object/getProperty'
 
 export const logTypes = ['log', 'info', 'debug', 'warn', 'error']
-const isDevelopment = Meteor.isDevelopment || !Meteor.isProduction
+const isDevelopment = () => Meteor.isDevelopment || !Meteor.isProduction
 
 export const createLog = ({ name, type = 'info', devOnly = false }) => {
   if (!name || typeof name !== 'string') throw new TypeError('Expected name.')
