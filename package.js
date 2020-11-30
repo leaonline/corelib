@@ -14,7 +14,6 @@ Package.describe({
 Package.onUse(function (api) {
   api.versionsFrom('1.6')
   api.use('ecmascript')
-  api.use('leaonline:ejson-regexp')
 
   // client-only definitions are set as weak
   // so we let the project decide, which package to load
@@ -22,7 +21,10 @@ Package.onUse(function (api) {
   const arch = ['server', 'client']
   const options = { weak: true }
 
-  api.use('jkuester:http', arch, options)
+  api.use([
+    'leaonline:ejson-regexp',
+    'jkuester:http'
+  ], arch, options)
 
   // special case is when using dynamic imports
   // because we then need templaing to exist in the first place
