@@ -6,8 +6,9 @@
     "setup": "mkdir -p packages && ln -sfn ../../ ./packages/corelib",
     "lint": "npm run setup && standardx -v ./packages/meteor-autoform/ | snazzy",
     "lint:fix": "npm run setup && standardx --fix ./packages/meteor-autoform/ | snazzy",
-    "test": "METEOR_PACKAGE_DIRS='../' TEST_BROWSER_DRIVER=puppeteer TEST_SERVER=0 meteor test-packages --once --raw-logs --driver-package meteortesting:mocha ../ --port=6776",
-    "test:watch": "METEOR_PACKAGE_DIRS='../' TEST_BROWSER_DRIVER=puppeteer TEST_SERVER=0 TEST_WATCH=1 meteor test-packages --raw-logs --extra-packages jkuester:http --driver-package meteortesting:mocha ../ --port=6776"
+    "test": "METEOR_PACKAGE_DIRS='../' TEST_BROWSER_DRIVER=puppeteer TEST_WATCH=1 meteor test-packages --once --raw-logs --extra-packages jkuester:http --driver-package meteortesting:mocha ../ --port=6776",
+    "test:watch": "METEOR_PACKAGE_DIRS='../' TEST_BROWSER_DRIVER=puppeteer TEST_WATCH=1 meteor test-packages --raw-logs --extra-packages jkuester:http --driver-package meteortesting:mocha ../ --port=6776",
+    "test:coverage": "meteor npm run setup && TEST_BROWSER_DRIVER=puppeteer COVERAGE=1 COVERAGE_OUT_LCOVONLY=1 COVERAGE_APP_FOLDER=$(pwd)/ meteor test-packages --once --driver-package meteortesting:mocha --extra-packages jkuester:http,lmieulet:meteor-legacy-coverage,lmieulet:meteor-coverage $(pwd)/packages/corelib --port=6776"
   },
   "dependencies": {
     "@babel/runtime": "^7.11.2",
@@ -16,13 +17,23 @@
   "devDependencies": {
     "@babel/core": "^7.12.9",
     "@babel/eslint-parser": "^7.12.1",
+    "babel-plugin-istanbul": "^6.0.0",
     "chai": "^4.2.0",
     "puppeteer": "^5.5.0",
     "simpl-schema": "^1.10.2",
+    "sinon": "^9.2.1",
     "snazzy": "^9.0.0",
     "standardx": "^7.0.0"
   },
-  "babel": {},
+  "babel": {
+    "env": {
+      "COVERAGE": {
+        "plugins": [
+          "istanbul"
+        ]
+      }
+    }
+  },
   "standardx": {
     "globals": [
       "AutoForm",

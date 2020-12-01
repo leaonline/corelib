@@ -14,17 +14,7 @@ Package.describe({
 Package.onUse(function (api) {
   api.versionsFrom('1.6')
   api.use('ecmascript')
-
-  // client-only definitions are set as weak
-  // so we let the project decide, which package to load
-  // therefore ensure a minimum package footprint
-  const arch = ['server', 'client']
-  const options = { weak: true }
-
-  api.use([
-    'leaonline:ejson-regexp',
-    'jkuester:http'
-  ], arch, options)
+  api.use('leaonline:ejson-regexp')
 
   // special case is when using dynamic imports
   // because we then need templaing to exist in the first place
@@ -36,15 +26,10 @@ Package.onUse(function (api) {
 })
 
 Package.onTest(function (api) {
-  Npm.depends({
-    chai: '4.2.0',
-    'simpl-schema': '1.6.2'
-  })
-
   api.use('ecmascript')
   api.use('mongo')
   api.use('random')
-  api.use('meteortesting:mocha')
+  api.use(['lmieulet:meteor-legacy-coverage', 'lmieulet:meteor-coverage','meteortesting:mocha'])
   api.use('leaonline:corelib')
   api.mainModule('core-tests.js')
 })
