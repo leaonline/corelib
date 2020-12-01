@@ -14,7 +14,8 @@ describe(createGetByIdRoute.name, function () {
     expect(route).to.deep.equal({
       path: `/api/${context.name}/get/byId`,
       method: 'get',
-      schema: { _id: String }
+      schema: { _id: String },
+      run: undefined
     })
   })
 
@@ -31,7 +32,8 @@ describe(createGetByIdRoute.name, function () {
     expect(route).to.deep.equal({
       path: `/api/${context.name}/get/byId`,
       method: 'get',
-      schema: { bar: Number }
+      schema: { bar: Number },
+      run: undefined
     })
   })
   it ('allows to optionally define a run function', function () {
@@ -44,19 +46,24 @@ describe(createGetByIdRoute.name, function () {
     }
 
     const route = createGetByIdRoute({ context, run: runFct })
-    expect(route).to.deep.equal({
-      path: `/api/${context.name}/get/byId`,
-      method: 'get',
-      schema: { _id: String },
-    })
 
     if (Meteor.isServer) {
-      expect(route.run).to.equal(runFct)
+      expect(route).to.deep.equal({
+        path: `/api/${context.name}/get/byId`,
+        method: 'get',
+        schema: { _id: String },
+        run: runFct
+      })
       expect(route.run()).to.equal(randomId)
     }
 
     if (Meteor.isClient) {
-      expect(route.run).to.equal(undefined)
+      expect(route).to.deep.equal({
+        path: `/api/${context.name}/get/byId`,
+        method: 'get',
+        schema: { _id: String },
+        run: undefined
+      })
     }
   })
 })
