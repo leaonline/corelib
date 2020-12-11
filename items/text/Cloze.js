@@ -9,6 +9,17 @@ Cloze.icon = 'align-left'
 Cloze.MAX_LENGTH = 10000
 Cloze.isItem = true
 
+Cloze.flavor = {
+  select: {
+    name: 'select',
+    value: 1
+  },
+  blanks: {
+    name: 'blanks',
+    value: 2
+  }
+}
+
 Cloze.schema = {
   text: {
     type: String,

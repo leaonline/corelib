@@ -16,5 +16,6 @@ export const validateMinimalPageEntryContentDefinition = content => {
   if (!_validator) {
     _validator = SchemaValidator.get(minimalPageEntryContentSchema)
   }
+
   return _validator(content)
 }

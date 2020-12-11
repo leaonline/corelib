@@ -4,11 +4,11 @@
   "scripts": {
     "start": "meteor run",
     "setup": "mkdir -p packages && ln -sfn ../../ ./packages/corelib",
-    "lint": "npm run setup && standardx -v ./packages/meteor-autoform/ | snazzy",
-    "lint:fix": "npm run setup && standardx --fix ./packages/meteor-autoform/ | snazzy",
+    "lint": "npm run setup && standardx -v ./packages/corelib | snazzy",
+    "lint:fix": "npm run setup && standardx --fix ./packages/corelib/ | snazzy",
     "test": "METEOR_PACKAGE_DIRS='../' TEST_BROWSER_DRIVER=puppeteer TEST_WATCH=1 meteor test-packages --once --raw-logs --extra-packages jkuester:http --driver-package meteortesting:mocha ../ --port=6776",
     "test:watch": "METEOR_PACKAGE_DIRS='../' TEST_BROWSER_DRIVER=puppeteer TEST_WATCH=1 meteor test-packages --raw-logs --extra-packages jkuester:http --driver-package meteortesting:mocha ../ --port=6776",
-    "test:coverage": "meteor npm run setup && TEST_BROWSER_DRIVER=puppeteer COVERAGE=1 COVERAGE_OUT_LCOVONLY=1 COVERAGE_APP_FOLDER=$(pwd)/ meteor test-packages --once --driver-package meteortesting:mocha --extra-packages jkuester:http,lmieulet:meteor-legacy-coverage,lmieulet:meteor-coverage $(pwd)/packages/corelib --port=6776"
+    "test:coverage": "meteor npm run setup && TEST_BROWSER_DRIVER=puppeteer COVERAGE=1 COVERAGE_OUT_HTML=1 COVERAGE_OUT_LCOVONLY=1 COVERAGE_APP_FOLDER=$(pwd)/ meteor test-packages --once --driver-package meteortesting:mocha --extra-packages jkuester:http,lmieulet:meteor-legacy-coverage,lmieulet:meteor-coverage $(pwd)/packages/corelib --port=6776"
   },
   "dependencies": {
     "@babel/runtime": "^7.11.2",
@@ -19,6 +19,7 @@
     "@babel/eslint-parser": "^7.12.1",
     "babel-plugin-istanbul": "^6.0.0",
     "chai": "^4.2.0",
+    "eslint-plugin-security": "^1.4.0",
     "puppeteer": "^5.5.0",
     "simpl-schema": "^1.10.2",
     "sinon": "^9.2.1",
@@ -43,7 +44,7 @@
       "deps"
     ],
     "ignore": [
-      "**/testdummy/"
+      "**/test-proxy/"
     ]
   },
   "eslintConfig": {
@@ -52,6 +53,12 @@
       "sourceType": "module",
       "allowImportExportEverywhere": false
     },
+    "plugins": [
+      "security"
+    ],
+    "extends": [
+      "plugin:security/recommended"
+    ],
     "rules": {
       "brace-style": [
         "error",

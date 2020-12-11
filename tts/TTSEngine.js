@@ -49,8 +49,7 @@ TTSEngine.configure = function configure ({ loader, mode = (TTSEngine.mode || TT
     throw new Error('TTS Engine is client-only')
   }
 
-  TTSConfig.url(ttsUrl)
-  log('set url to', TTSConfig.url())
+  TTSConfig.urlLoader(loader)
   TTSEngine.setMode(mode)
 
   if (mode === TTSEngine.modes.browser) {
@@ -58,17 +57,23 @@ TTSEngine.configure = function configure ({ loader, mode = (TTSEngine.mode || TT
       onError (err) {
         log(err)
         TTSEngine.mode = TTSEngine.modes.server
+        isConfigured = true
       },
       onComplete () {
         log('successfully loaded')
+        isConfigured = true
       }
     })
+  }
+
+  else {
+    isConfigured = true
   }
 }
 
 TTSEngine.setMode = function setMode (mode) {
+  log('set mode to', mode)
   TTSEngine.mode = mode
-  log('set mode to', TTSEngine.mode)
 }
 
 TTSEngine.play = function play ({ id, text, onEnd, onError }) {

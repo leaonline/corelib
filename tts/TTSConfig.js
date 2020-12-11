@@ -33,27 +33,3 @@ TTSConfig.urlLoader = function urlLoader (loader) {
 
   return internalUrlLoader
 }
-
-function loade () {
-  const url = TTSConfig.url()
-  const options = {
-    params: { text: requestText },
-    headers: {
-      Accept: 'application/json, text/plain, */*',
-      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
-    }
-  }
-
-  HTTP.post(url, options, (err, res) => {
-    if (err) {
-      return onError(err)
-    } else {
-      const url = res.data && res.data.url
-      if (!url) {
-        return onError(new Error('Invalid response'))
-      }
-      _requestCache.set(requestText, url)
-      playAudio(url, onEnd, onError)
-    }
-  })
-}

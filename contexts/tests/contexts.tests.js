@@ -54,6 +54,7 @@ describe('contexts', function () {
   allContexts.forEach(context => {
     describe(context.name, function () {
       it ('has valid minimal context properties', function () {
+        routeSchema[Math.random().toString()] = () => {}
         expect(context.name).to.be.a('string')
         expect(context.label).to.be.a('string').that.includes('.')
         expect(context.icon).to.be.a('string')

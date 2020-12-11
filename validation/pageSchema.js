@@ -22,6 +22,7 @@ export const createPageEntrySchema = () => ({
     const { Items } = require('../items/Items')
     const { validateItemDefinition } = require('../items/validateItemDefinition')
     const { validateMinimalPageEntryContentDefinition } = require('./validateMinimalPageEntryContentDefinition')
+
     return function () {
       const { value } = this
 
