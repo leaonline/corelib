@@ -3,6 +3,7 @@ import { Labels } from '../i18n/Labels'
 import { Status } from '../types/Status'
 import { CompetencyCategory } from './CompetencyCategory'
 import { getFieldName } from '../utils/getFieldName'
+import { createGetAllRoute } from '../decorators/routes/getAll'
 
 export const Competency = {
   name: 'competency',
@@ -100,3 +101,16 @@ Competency.schema = {
 Competency.helpers = {}
 Competency.methods = {}
 Competency.publications = {}
+
+Competency.routes = {}
+
+Competency.routes.all = createGetAllRoute({
+  context: Competency,
+  schema: {
+    ids: {
+      type: Array,
+      optional: true
+    },
+    'ids.$': String
+  }
+})
