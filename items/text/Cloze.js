@@ -52,7 +52,7 @@ Cloze.schema = {
       input: {
         type: 'self',
         source: 'text',
-        pattern: /{{\d\$\w*\$\w*\$\w*}}/g
+        pattern: /{{\w*\$([\w\d\[\]|])*\$\w*}}/g
       }
     }
   },
