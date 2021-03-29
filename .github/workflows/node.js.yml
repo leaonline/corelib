@@ -28,8 +28,8 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-node-
 
-    - run: npm install
-    - run: npm run lint:code
+    - run: cd test-proxy && npm ci
+    - run: cd test-proxy && npm run lint:code
 
   lintdocs:
     name: documentation lint
@@ -52,8 +52,8 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-node-
 
-    - run: npm install
-    - run: npm run lint:markdown
+    - run: cd test-proxy && npm ci
+    - run: cd test-proxy && npm run lint:markdown
 
   tests:
     name: Meteor ${{ matrix.meteor }} tests
