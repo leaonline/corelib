@@ -15,14 +15,6 @@ Package.onUse(function (api) {
   api.versionsFrom('1.6')
   api.use('ecmascript')
   api.use('leaonline:ejson-regexp')
-
-  // special case is when using dynamic imports
-  // because we then need templaing to exist in the first place
-  const USE_DYNAMIC_IMPORTS = process.env.USE_DYNAMIC_IMPORTS
-  if (USE_DYNAMIC_IMPORTS) {
-    api.use('templating')
-    api.use('dynamic-import')
-  }
 })
 
 Package.onTest(function (api) {
