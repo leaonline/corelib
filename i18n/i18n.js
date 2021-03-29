@@ -9,13 +9,20 @@ const defaultTranslator = {
 }
 
 let _translator = defaultTranslator
+let _localeOpts = undefined
 
 async function autoLoadLocale (lang) {
   switch (lang) {
-    case 'de':
-      return import('./i18n_de')
-    default:
-      return import('./i18n_de')
+    case 'de': {
+      const opts = await import('./de/i18n_de_localeoptions')
+      const lang = await import('./de/i18n_de')
+      return { lang: lang.default, opts: opts.default }
+    }
+    default: {
+      const opts = await import('./de/i18n_de_localeoptions')
+      const lang = await import('./de/i18n_de')
+      return { lang: lang.default, opts: opts.default }
+    }
   }
 }
 
@@ -40,9 +47,9 @@ i18n.load = async function load ({ get, set, getLocale, thisContext }) {
     getLocale: getLocale.bind(thisContext)
   }
   locale = _translator.getLocale()
-  const module = await autoLoadLocale(locale)
-  _translator.set(locale, module.default)
-
+  const { lang, opts } = await autoLoadLocale(locale)
+  _translator.set(locale, lang)
+  _localeOpts = opts
   return this
 }
 
@@ -64,4 +71,8 @@ i18n.getLocale = function getLocale () {
 
 i18n.clear = function clear () {
   _translator = defaultTranslator
+}
+
+i18n.localeDateOptions = function () {
+  return _localeOpts
 }

@@ -60,8 +60,7 @@
     "title": "Unit-Set",
     "story": "Kontextuelle Einleitung",
     "job": "Beruf",
-    "units": "Units",
-    "selfAssessment": "Selbsteinschätzung"
+    "units": "Units"
   },
   "tts": {
     "title":"Text-To-Speech",
@@ -87,6 +86,11 @@
   },
   "image": {
     "title": "Bild"
+  },
+  "testCycle": {
+    "title": "Test-Durchlauf",
+    "selfAssessment": "Selbsteinschätzung",
+    "unitSets": "Unit-Sets für diesen Durchlauf"
   },
   "item": {
     "choices": "Antwortmöglichkeiten",
