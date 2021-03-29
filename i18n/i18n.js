@@ -9,7 +9,7 @@ const defaultTranslator = {
 }
 
 let _translator = defaultTranslator
-let _localeOpts = undefined
+let _localeOpts
 
 async function autoLoadLocale (lang) {
   switch (lang) {
@@ -39,17 +39,18 @@ i18n.load = async function load ({ get, set, getLocale, thisContext }) {
   check(set, Function)
   check(getLocale, Function)
 
-  let locale
-
   _translator = {
     get: get.bind(thisContext),
     set: set.bind(thisContext),
     getLocale: getLocale.bind(thisContext)
   }
-  locale = _translator.getLocale()
+
+  const locale = _translator.getLocale()
   const { lang, opts } = await autoLoadLocale(locale)
+
   _translator.set(locale, lang)
   _localeOpts = opts
+
   return this
 }
 

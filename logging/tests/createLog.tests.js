@@ -11,7 +11,7 @@ describe(createLog.name, function () {
     id = Random.id()
   })
 
-  it ('throws on unsupported types', function () {
+  it('throws on unsupported types', function () {
     ['', 'foo', Random.id(), 0, 1, false, true].forEach(type => {
       expect(() => createLog({
         name: id,
@@ -20,11 +20,9 @@ describe(createLog.name, function () {
     })
   })
 
-
   logTypes.forEach(type => {
     describe(type, function () {
       it('creates a logger', function (done) {
-
         const value = Random.id()
         const target = getProperty(console, type)
         console[type] = function (...args) {

@@ -32,7 +32,7 @@ describe(Cloze.name, function () {
 
       expect(() => Cloze.score(createItemDoc({
         correctResponse: null
-      }))).to.throw(`Match error: Expected RegExp in field [0].correctResponse`)
+      }))).to.throw('Match error: Expected RegExp in field [0].correctResponse')
 
       expect(() => Cloze.score(createItemDoc({
         competency: null
@@ -73,7 +73,7 @@ describe(Cloze.name, function () {
       const itemDoc = createItemDoc()
       const invalidInputs = [
         [1.1], [true],
-        [new Date()], [new RegExp('1')],
+        [new Date()], [/1/],
         [{}], [() => {}],
         [unsafeInt()], [unsafeInt(true)],
         [Number(unsafeInt().toExponential())], [Number(unsafeInt(true).toExponential())],
@@ -97,7 +97,7 @@ describe(Cloze.name, function () {
       const invalidInputs = [
         ['', 'woa'],
         ['', 'foo bar'],
-        ['foo bar', 'bartz'],
+        ['foo bar', 'bartz']
       ]
 
       invalidInputs.forEach((responses) => {
@@ -120,7 +120,7 @@ describe(Cloze.name, function () {
       const invalidInputs = [
         ['', 'woa'],
         ['', 'foo bar'],
-        ['foo bar', 'bartz'],
+        ['foo bar', 'bartz']
       ]
 
       invalidInputs.forEach((responses) => {

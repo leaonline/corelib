@@ -7,7 +7,7 @@ SimpleSchema.extendOptions(Object.keys(SchemaOptions))
 
 export const createSchema = (schema, options) => new SimpleSchema(schema, options)
 
-export const multiSchema = (...defs) =>  SimpleSchema.oneOf(defs)
+export const multiSchema = (...defs) => SimpleSchema.oneOf(defs)
 
 export const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 export const iterate = (num, fct) => (new Array(num)).forEach(fct)
@@ -31,8 +31,7 @@ export const stub = (target, name, handler) => {
   const stubbedTarget = sinon.stub(target, name)
   if (typeof handler === 'function') {
     stubbedTarget.callsFake(handler)
-  }
-  else {
+  } else {
     stubbedTarget.value(handler)
   }
   stubs.set(stubbedTarget, name)

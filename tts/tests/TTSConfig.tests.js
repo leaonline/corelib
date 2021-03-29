@@ -4,7 +4,6 @@ import { expect } from 'chai'
 import { TTSConfig } from '../TTSConfig'
 
 describe(TTSConfig.name, function () {
-
   afterEach(function () {
     TTSConfig.urlLoader(null)
   })

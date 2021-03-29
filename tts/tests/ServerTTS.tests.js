@@ -4,8 +4,8 @@ import { expect } from 'chai'
 import { ServerTTS } from '../ServerTTS'
 import { TTSConfig } from '../TTSConfig'
 
-class CustomAudio extends EventTarget {
-  constructor (url){
+class CustomAudio extends window.EventTarget {
+  constructor (url) {
     super()
     this.url = url
     this.paused = false
@@ -13,7 +13,7 @@ class CustomAudio extends EventTarget {
 
   play () {
     setTimeout(() => {
-      this.dispatchEvent(new Event('ended', {
+      this.dispatchEvent(new window.Event('ended', {
         url: this.url,
         paused: this.paused
       }))
@@ -45,7 +45,7 @@ describe(ServerTTS.name, function () {
         .to.throw('Match error: Failed Match.OneOf, Match.Maybe or Match.Optional validation')
     })
 
-    it ('throws if no loader is defined', function () {
+    it('throws if no loader is defined', function () {
       TTSConfig.urlLoader(null)
 
       const text = Random.id()
@@ -53,7 +53,7 @@ describe(ServerTTS.name, function () {
         .to.throw(`Expected a function from ${TTSConfig.urlLoader.name}.`)
     })
 
-    it ('routes error to the callback', function (done) {
+    it('routes error to the callback', function (done) {
       const errMessage = Random.id()
       const expectedText = Random.id()
       const onError = err => {
@@ -69,7 +69,7 @@ describe(ServerTTS.name, function () {
       ServerTTS.play({ text: expectedText, onError })
     })
 
-    it ('routes to the audio playback on successful url load', function (done) {
+    it('routes to the audio playback on successful url load', function (done) {
       const expectedText = Random.id()
       const url = Random.id()
       const onEnd = () => {
@@ -80,7 +80,6 @@ describe(ServerTTS.name, function () {
         console.error('error callback', err)
         done(err)
       }
-
 
       TTSConfig.urlLoader(function (text, callback) {
         expect(text).to.equal(expectedText)
@@ -106,7 +105,6 @@ describe(ServerTTS.name, function () {
         done(err)
       }
 
-
       TTSConfig.urlLoader(function (text, callback) {
         expect(text).to.equal(expectedText)
         setTimeout(() => callback(null, url))
@@ -118,4 +116,3 @@ describe(ServerTTS.name, function () {
     })
   })
 })
-

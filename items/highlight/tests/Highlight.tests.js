@@ -20,7 +20,6 @@ describe(Highlight.name, function () {
   })
 
   describe('scoring', function () {
-
     const createItemDoc = ({ competency = Random.id(), correctResponse = 0, requires = 1 } = {}) => ({
       scoring: [{
         competency: competency,
@@ -37,7 +36,7 @@ describe(Highlight.name, function () {
 
         expect(() => Highlight.score(createItemDoc({
           correctResponse: null
-        }))).to.throw(`Match error: Expected number, got null in field [0].correctResponse[0]`)
+        }))).to.throw('Match error: Expected number, got null in field [0].correctResponse[0]')
 
         expect(() => Highlight.score(createItemDoc({
           competency: null
@@ -52,7 +51,7 @@ describe(Highlight.name, function () {
         const itemDoc = createItemDoc()
         const invalidInputs = [
           [1.1], [true],
-          [new Date()], [new RegExp('1')],
+          [new Date()], [/1/],
           [{}], [() => {}],
           [unsafeInt()], [unsafeInt(true)],
           [unsafeInt().toExponential()], [unsafeInt(true).toExponential()],
@@ -107,7 +106,7 @@ describe(Highlight.name, function () {
 
         const falseResponses = [
           [1], [6], [0, 1, 6], [1, 3, 6], [1, 6, 8],
-          ['1'], ['6'], ['0', '1', '6'], ['1', '3', '6'], ['1', '6', '8'],
+          ['1'], ['6'], ['0', '1', '6'], ['1', '3', '6'], ['1', '6', '8']
         ]
 
         falseResponses.forEach(responses => {
@@ -130,7 +129,7 @@ describe(Highlight.name, function () {
 
         const trueResponse = [
           [1, 6], [6, 1],
-          ['1', '6'], ['6', '1'],
+          ['1', '6'], ['6', '1']
         ]
 
         trueResponse.forEach(responses => {
@@ -228,7 +227,7 @@ describe(Highlight.name, function () {
 
         const trueResponse = [
           [1, 6], [6, 1], [6, 3, 1], [1, 3, 6],
-          ['1', '6'], ['6', '1'], ['1', '3', '6'], ['6', '3', '1'],
+          ['1', '6'], ['6', '1'], ['1', '3', '6'], ['6', '3', '1']
         ]
 
         trueResponse.forEach(responses => {

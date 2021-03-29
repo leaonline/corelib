@@ -4,8 +4,8 @@
   "scripts": {
     "start": "meteor run",
     "setup": "mkdir -p packages && ln -sfn ../../ ./packages/corelib",
-    "lint": "npm run setup && standardx -v ./packages/corelib | snazzy",
-    "lint:fix": "npm run setup && standardx --fix ./packages/corelib/ | snazzy",
+    "lint": "npm run setup && standardx -v ../ | snazzy",
+    "lint:fix": "npm run setup && standardx --fix ../ | snazzy",
     "test": "METEOR_PACKAGE_DIRS='../' TEST_BROWSER_DRIVER=puppeteer TEST_WATCH=1 meteor test-packages --once --raw-logs --extra-packages jkuester:http --driver-package meteortesting:mocha ../ --port=6776",
     "test:watch": "METEOR_PACKAGE_DIRS='../' TEST_BROWSER_DRIVER=puppeteer TEST_WATCH=1 meteor test-packages --raw-logs --extra-packages jkuester:http --driver-package meteortesting:mocha ../ --port=6776",
     "test:coverage": "meteor npm run setup && TEST_BROWSER_DRIVER=puppeteer COVERAGE=1 COVERAGE_OUT_HTML=1 COVERAGE_OUT_LCOVONLY=1 COVERAGE_APP_FOLDER=$(pwd)/ meteor test-packages --once --driver-package meteortesting:mocha --extra-packages jkuester:http,lmieulet:meteor-legacy-coverage,lmieulet:meteor-coverage $(pwd)/packages/corelib --port=6776"
@@ -51,7 +51,7 @@
     "parser": "@babel/eslint-parser",
     "parserOptions": {
       "sourceType": "module",
-      "allowImportExportEverywhere": false
+      "allowImportExportEverywhere": true
     },
     "plugins": [
       "security"

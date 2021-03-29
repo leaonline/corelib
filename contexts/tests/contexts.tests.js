@@ -55,18 +55,18 @@ const methodAndPublicationSchema = createSchema({
 describe('contexts', function () {
   allContexts.forEach(context => {
     describe(context.name, function () {
-      it ('has valid minimal context properties', function () {
+      it('has valid minimal context properties', function () {
         routeSchema[Math.random().toString()] = () => {}
         expect(context.name).to.be.a('string')
         expect(context.label).to.be.a('string').that.includes('.')
         expect(context.icon).to.be.a('string')
       })
-      it ('has a valid representative', function () {
+      it('has a valid representative', function () {
         if (typeof context.representative !== 'string' && !Array.isArray(context.representative)) {
           expect.fail('neither String, nor Array')
         }
       })
-      it ('has a valid schema', function () {
+      it('has a valid schema', function () {
         createSchema(context.schema, {
           clean: {
             autoConvert: false,
@@ -74,10 +74,10 @@ describe('contexts', function () {
             getAutoValues: false,
             removeEmptyStrings: false,
             removeNullsFromArrays: false,
-            trimStrings: false,
+            trimStrings: false
           },
           humanizeAutoLabels: false,
-          requiredByDefault: false,
+          requiredByDefault: false
         })
       })
 
@@ -102,13 +102,13 @@ describe('contexts', function () {
           })
       }
 
-      it ('has optional methods', function () {
+      it('has optional methods', function () {
         testMethodOrPublicationOrRoutes(context.methods, methodAndPublicationSchema)
       })
-      it ('has optional publications', function () {
+      it('has optional publications', function () {
         testMethodOrPublicationOrRoutes(context.publications, methodAndPublicationSchema)
       })
-      it ('has optional routes', function () {
+      it('has optional routes', function () {
         testMethodOrPublicationOrRoutes(context.routes, routeSchema)
       })
     })

@@ -119,7 +119,7 @@ function scoreMultipleAll ({ competency, correctResponse, requires }, { response
 function scoreMultipleAny ({ competency, correctResponse, requires }, { responses }) {
   const score = responses
     .map(value => {
-      if (isUndefinedResponse(value)) return
+      if (isUndefinedResponse(value)) return undefined
       // we need to check for value integrity, allowed are strings of integers
       // or integers (which could also .0 floats, they are basically ints in JS)
       check(value, Match.Where(isSafeInteger))

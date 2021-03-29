@@ -1,10 +1,11 @@
 /* eslint-env mocha */
+import { Meteor } from 'meteor/meteor'
 import { Random } from 'meteor/random'
 import { createGetAllRoute } from '../getAll'
 import { expect } from 'chai'
 
 describe(createGetAllRoute.name, function () {
-  it ('defines a route for a given context', function () {
+  it('defines a route for a given context', function () {
     const context = {
       name: 'foo-bar',
       schema: { bar: Number } // should be ignored
@@ -19,7 +20,7 @@ describe(createGetAllRoute.name, function () {
     })
   })
 
-  it ('allows to optionally define a custom schema', function () {
+  it('allows to optionally define a custom schema', function () {
     const context = {
       name: 'foo-bar'
     }
@@ -36,7 +37,7 @@ describe(createGetAllRoute.name, function () {
       run: undefined
     })
   })
-  it ('allows to optionally define a run function', function () {
+  it('allows to optionally define a run function', function () {
     const randomId = Random.id()
     const context = {
       name: 'foo-bar'

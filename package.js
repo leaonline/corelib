@@ -21,7 +21,7 @@ Package.onTest(function (api) {
   api.use('ecmascript')
   api.use('mongo')
   api.use('random')
-  api.use(['lmieulet:meteor-legacy-coverage', 'lmieulet:meteor-coverage','meteortesting:mocha'])
+  api.use(['lmieulet:meteor-legacy-coverage', 'lmieulet:meteor-coverage', 'meteortesting:mocha'])
   api.use('leaonline:corelib')
   api.mainModule('core-tests.js')
 })

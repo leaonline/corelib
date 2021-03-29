@@ -1,6 +1,6 @@
 import { Cloze } from './Cloze'
 import { isUndefinedResponse } from '../../utils/response/isUndefinedResponse'
-import { check, Match } from "meteor/check"
+import { check, Match } from 'meteor/check'
 
 const critical = /eval\s*\(|__proto__|require\s*\(|import\s*'|new function|\.prototype|function\s*\(/i
 const isSafeTextString = s => {

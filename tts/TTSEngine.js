@@ -64,9 +64,7 @@ TTSEngine.configure = function configure ({ loader, mode = (TTSEngine.mode || TT
         isConfigured = true
       }
     })
-  }
-
-  else {
+  } else {
     isConfigured = true
   }
 }

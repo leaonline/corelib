@@ -4,13 +4,13 @@ import { expect } from 'chai'
 import { checkPermissions } from '../checkPermissions'
 
 describe(checkPermissions.name, function () {
-  it ('throws on non-logged in users', function () {
+  it('throws on non-logged in users', function () {
     const { run } = checkPermissions({
       run: function () {}
     })
     expect(() => run.call({})).to.throw('errors.permissionDenied')
   })
-  it ('passes when a userId exists', function () {
+  it('passes when a userId exists', function () {
     const id = Random.id()
     const { run } = checkPermissions({
       run: function () {
@@ -19,7 +19,7 @@ describe(checkPermissions.name, function () {
     })
     expect(run.call({ userId: Random.id() })).to.equal(id)
   })
-  it ('skips, if isPublic flag is set', function () {
+  it('skips, if isPublic flag is set', function () {
     const id = Random.id()
     const { run } = checkPermissions({
       isPublic: true,

@@ -24,14 +24,13 @@ const getTranslator = prefix => {
   }
 }
 
-
 describe('i18n', function () {
   afterEach(function () {
     i18n.clear()
   })
 
   describe(i18n.load.name, function () {
-    it ('injects the i18n provider', function (done) {
+    it('injects the i18n provider', function (done) {
       const id = Random.id()
       const translator = getTranslator(id)
       i18n.load({
@@ -45,14 +44,14 @@ describe('i18n', function () {
         })
         .catch(e => done(e))
     })
-    it ('passes errors to the promise catch', function (done) {
+    it('passes errors to the promise catch', function (done) {
       const id = Random.id()
       const errId = Random.id()
       const translator = getTranslator(id)
       i18n.load({
         get: translator.get,
         set: translator.set,
-        getLocale() {
+        getLocale () {
           throw new Error(errId)
         },
         thisContext: translator
@@ -68,11 +67,11 @@ describe('i18n', function () {
   })
 
   describe(i18n.get.name, function () {
-    it ('returns the value itself per default', function () {
+    it('returns the value itself per default', function () {
       const id = Random.id()
       expect(i18n.get(id)).to.equal(id)
     })
-    it ('passes the params to the provider', async function () {
+    it('passes the params to the provider', async function () {
       const prefix = Random.id()
       const suffix = Random.id()
       const translator = getTranslator(prefix)
@@ -87,7 +86,7 @@ describe('i18n', function () {
     })
   })
   describe(i18n.set.name, function () {
-    it ('passes the params to the provider', async function () {
+    it('passes the params to the provider', async function () {
       const prefix = Random.id()
       const suffix = Random.id()
       const translator = getTranslator(prefix)
@@ -104,7 +103,7 @@ describe('i18n', function () {
     })
   })
   describe(i18n.reactive.name, function () {
-    it ('returns a function that resolves to the getter', async function () {
+    it('returns a function that resolves to the getter', async function () {
       const prefix = Random.id()
       const suffix = Random.id()
       const translator = getTranslator(prefix)
@@ -123,7 +122,7 @@ describe('i18n', function () {
     })
   })
   describe(i18n.getLocale.name, function () {
-    it ('returns the result from the provider', async function () {
+    it('returns the result from the provider', async function () {
       const prefix = Random.id()
       const translator = getTranslator(prefix)
       await i18n.load({

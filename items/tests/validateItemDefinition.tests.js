@@ -12,12 +12,11 @@ SchemaValidator.set(function (...args) {
 })
 
 describe(validateItemDefinition.name, function () {
-
-  it ('throws if the given Item is not registered', function () {
+  it('throws if the given Item is not registered', function () {
     expect(() => validateItemDefinition(Random.id(), {})).to.throw('items.unknownType [validation.failed]')
   })
 
-  it ('validates an item from schema', function () {
+  it('validates an item from schema', function () {
     expect(() => validateItemDefinition(Choice, {})).to.throw('item.flavor is required')
     expect(() => validateItemDefinition(Choice.name, {
       flavor: 1

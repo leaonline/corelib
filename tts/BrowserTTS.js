@@ -132,4 +132,3 @@ BrowserTTS.load = function loadVoicesWhenAvailable ({ onComplete = () => {}, onE
 
   return setTimeout(() => BrowserTTS.load({ onComplete, onError }), 100)
 }
-

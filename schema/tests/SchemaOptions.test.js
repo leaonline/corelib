@@ -1,11 +1,10 @@
 /* eslint-env mocha */
-import { Random } from 'meteor/random'
 import { expect } from 'chai'
 
-import {SchemaOptions} from '../SchemaOptions'
+import { SchemaOptions } from '../SchemaOptions'
 
 describe('SchemaOptions', function () {
-  it ('keeps integrity of the structure', function () {
+  it('keeps integrity of the structure', function () {
     expect(SchemaOptions).to.deep.equal({
       unique: Boolean,
       list: Boolean,

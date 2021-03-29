@@ -22,7 +22,7 @@ const log = createLog({
   name: ServerTTS.name
 })
 
-let audio = undefined
+let audio
 
 function playAudio (url, onEnd, onError) {
   ServerTTS.stop()
@@ -85,7 +85,7 @@ ServerTTS.play = function play ({ id, text, onEnd, onError } = {}) {
 ServerTTS.stop = function stop () {
   if (audio) {
     audio.pause()
-    const event = new Event('ended')
+    const event = new window.Event('ended')
     audio.dispatchEvent(event)
   }
 }

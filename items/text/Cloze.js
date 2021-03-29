@@ -52,6 +52,7 @@ Cloze.schema = {
       input: {
         type: 'self',
         source: 'text',
+        // eslint-disable-next-line no-useless-escape
         pattern: /{{\w*\$([\w\d\[\]|])*\$\w*}}/g
       }
     }

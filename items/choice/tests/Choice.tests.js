@@ -9,12 +9,12 @@ import { ScoringTypes } from '../../../scoring/ScoringTypes'
 
 const invalidInputs = [
   [1.1], [true],
-  [new Date()], [new RegExp('1')],
+  [new Date()], [/1/],
   [{}], [() => {}],
   [unsafeInt()], [unsafeInt(true)],
   [unsafeInt().toExponential()], [unsafeInt(true).toExponential()],
   [String(unsafeInt())], [String(unsafeInt(true))],
-  [String(unsafeInt().toExponential())], [String(unsafeInt(true).toExponential())],
+  [String(unsafeInt().toExponential())], [String(unsafeInt(true).toExponential())]
 ]
 
 describe(Choice.name, function () {
@@ -42,7 +42,6 @@ describe(Choice.name, function () {
   })
 
   describe('scoring', function () {
-
     const createItemDoc = ({ flavor = 0, correctResponse = 0, requires = 0 } = {}) => ({
       flavor: flavor,
       scoring: [{
@@ -68,7 +67,7 @@ describe(Choice.name, function () {
           flavor: Choice.flavors.single.value,
           correctResponse: null
         })
-        expect(() => Choice.score(itemDoc)).to.throw(`Match error: Expected number, got null in field [0].correctResponse[0]`)
+        expect(() => Choice.score(itemDoc)).to.throw('Match error: Expected number, got null in field [0].correctResponse[0]')
         expect(() => Choice.score({
           flavor: Choice.flavors.single.value
         })).to.throw('Match error: Expected array, got undefined')
@@ -78,9 +77,9 @@ describe(Choice.name, function () {
     describe(Choice.flavors.single.name, function () {
       it('correctly scores an undefined result', function () {
         const itemDoc = createItemDoc({
-            flavor: Choice.flavors.single.value,
-            correctResponse: 1
-          })
+          flavor: Choice.flavors.single.value,
+          correctResponse: 1
+        })
         ;[
           undefined,
           [],
@@ -119,9 +118,9 @@ describe(Choice.name, function () {
 
       it('correctly scores a true result', function () {
         const itemDoc = createItemDoc({
-            flavor: Choice.flavors.single.value,
-            correctResponse: 1
-          })
+          flavor: Choice.flavors.single.value,
+          correctResponse: 1
+        })
 
         ;[[1], ['1'], [1.0], ['1.0']]
           .forEach(responses => {
@@ -142,9 +141,9 @@ describe(Choice.name, function () {
 
       it('correctly scores a false result', function () {
         const itemDoc = createItemDoc({
-            flavor: Choice.flavors.single.value,
-            correctResponse: 23
-          })
+          flavor: Choice.flavors.single.value,
+          correctResponse: 23
+        })
 
         ;[[22], ['22'], [1.0], ['1']]
           .forEach(responses => {
@@ -174,13 +173,13 @@ describe(Choice.name, function () {
           responses: ['2']
         }
         expect(() => Choice.score(itemDoc, responseDoc))
-          .to.throw(`Unexpected scoring type -10`)
+          .to.throw('Unexpected scoring type -10')
       })
       it('correctly scores an undefined result', function () {
         const itemDoc = createItemDoc({
-            flavor: Choice.flavors.single.value,
-            correctResponse: 1
-          })
+          flavor: Choice.flavors.single.value,
+          correctResponse: 1
+        })
         ;[
           undefined,
           [],
@@ -211,10 +210,10 @@ describe(Choice.name, function () {
       describe(ScoringTypes.any.name, function () {
         it('throws on a faulty result format', function () {
           const itemDoc = createItemDoc({
-              flavor: Choice.flavors.multiple.value,
-              correctResponse: [2, 3],
-              requires: ScoringTypes.any.value
-            })
+            flavor: Choice.flavors.multiple.value,
+            correctResponse: [2, 3],
+            requires: ScoringTypes.any.value
+          })
 
           invalidInputs.forEach(responses => {
             expect(() => Choice.score(itemDoc, { responses }))
@@ -223,10 +222,10 @@ describe(Choice.name, function () {
         })
         it('correctly scores a false result', function () {
           const itemDoc = createItemDoc({
-              flavor: Choice.flavors.multiple.value,
-              correctResponse: [2, 3],
-              requires: ScoringTypes.any.value
-            })
+            flavor: Choice.flavors.multiple.value,
+            correctResponse: [2, 3],
+            requires: ScoringTypes.any.value
+          })
 
           ;[[0], [1], [0, 1], [-1, 0, 4]]
             .forEach(responses => {
@@ -243,10 +242,10 @@ describe(Choice.name, function () {
         })
         it('correctly scores a true result', function () {
           const itemDoc = createItemDoc({
-              flavor: Choice.flavors.multiple.value,
-              correctResponse: [2, 3],
-              requires: ScoringTypes.any.value
-            })
+            flavor: Choice.flavors.multiple.value,
+            correctResponse: [2, 3],
+            requires: ScoringTypes.any.value
+          })
 
           ;[[1, 2], [1, 2, 3], [1, 3.0], ['2.0', '3']]
             .forEach(responses => {
@@ -278,10 +277,10 @@ describe(Choice.name, function () {
         })
         it('correctly scores a false result', function () {
           const itemDoc = createItemDoc({
-              flavor: Choice.flavors.multiple.value,
-              correctResponse: [2, 3],
-              requires: ScoringTypes.all.value
-            })
+            flavor: Choice.flavors.multiple.value,
+            correctResponse: [2, 3],
+            requires: ScoringTypes.all.value
+          })
 
           ;[[1, 2, 3], [2, 3, 4], [0, 1], [2], [3]]
             .forEach(responses => {
@@ -298,10 +297,10 @@ describe(Choice.name, function () {
         })
         it('correctly scores a true result', function () {
           const itemDoc = createItemDoc({
-              flavor: Choice.flavors.multiple.value,
-              correctResponse: [2, 3],
-              requires: ScoringTypes.all.value
-            })
+            flavor: Choice.flavors.multiple.value,
+            correctResponse: [2, 3],
+            requires: ScoringTypes.all.value
+          })
 
           ;[[2, 3], ['2.0', '3']]
             .forEach(responses => {
@@ -317,7 +316,6 @@ describe(Choice.name, function () {
             })
         })
       })
-
     })
   })
 })
