@@ -120,11 +120,6 @@ UnitSet.schema = {
     label: Labels.title,
     optional: true
   },
-  selfAssessment: {
-    type: String,
-    optional: true,
-    max: 5000
-  },
   story: createPageSchema(),
   'story.$': createPageEntrySchema(),
   units: {
@@ -151,6 +146,12 @@ UnitSet.schema = {
   }
 }
 
+/**
+ * Routes are a "contract" between apps to have the same knowledge about
+ * where to get the data from.
+ * TODO: routes should be exchanged when services "talk" to each other,
+ * TODO: thus there is no tight coupling.
+ */
 UnitSet.routes = {}
 UnitSet.routes.all = createGetAllRoute({
   context: UnitSet,

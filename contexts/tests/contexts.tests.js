@@ -11,6 +11,7 @@ import { MediaLib } from '../MediaLib'
 import { Unit } from '../Unit'
 import { UnitSet } from '../UnitSet'
 import { getType } from '../../utils/object/getType'
+import { TestCycle } from '../TestCycle'
 
 const allContexts = [
   Competency,
@@ -20,7 +21,8 @@ const allContexts = [
   Level,
   MediaLib,
   Unit,
-  UnitSet
+  UnitSet,
+  TestCycle
 ]
 
 const routeSchema = createSchema({

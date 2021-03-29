@@ -9,7 +9,8 @@ export const Competency = {
   name: 'competency',
   label: 'competency.title',
   icon: 'star',
-  representative: ['shortCode', 'description']
+  representative: ['shortCode', 'description'],
+  filter: ['dimension', 'level', 'category', 'isLegacy']
 }
 
 Competency.schema = {
@@ -23,7 +24,7 @@ Competency.schema = {
       field: Status.representative
     }
   },
-  [Competency.representative[0]]: {
+  shortCode: {
     type: String,
     max: 25,
     value: {
