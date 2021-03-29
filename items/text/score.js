@@ -29,7 +29,6 @@ Cloze.score = function (itemDoc = {}, responseDoc = {}) {
   const allUndefined = isUndefinedResponse(responseDoc.responses)
 
   return scoring.map(entry => {
-    console.info('entry', JSON.stringify(entry))
     if (allUndefined) {
       return {
         competency: entry.competency,
