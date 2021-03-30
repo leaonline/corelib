@@ -108,7 +108,8 @@
       "instruction": "Lückentexte werden durch {{Wort oder Satz$TTS Ausgabe}} definiert. Dabei bestimmt die Länge von 'Wort oder Satz' die anfängliche Länge des Eingabefelds.",
       "select": "Dropdowns",
       "highlight": "Markieren",
-      "blanks": "Fill-in-the-blanks"
+      "blanks": "Fill-in-the-blanks",
+      "target": "Ziel-Feld"
     },
     "highlight": {
       "title": "Markieren",

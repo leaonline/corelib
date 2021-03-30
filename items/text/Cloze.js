@@ -45,6 +45,7 @@ Cloze.schema = {
   },
   'scoring.$.target': {
     type: Number,
+    label: 'item.cloze.target',
     min: 0,
     options: {
       // for this we need a list of text token from the original
@@ -53,7 +54,7 @@ Cloze.schema = {
         type: 'self',
         source: 'text',
         // eslint-disable-next-line no-useless-escape
-        pattern: /{{\w*\$([\w\d\[\]|])*\$\w*}}/g
+        pattern: /{{\w+\$([\w\d\[\]|\s])*\$([\w\s,])*}}/g
       }
     }
   },
