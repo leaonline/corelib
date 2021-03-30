@@ -11,19 +11,10 @@ const defaultTranslator = {
 let _translator = defaultTranslator
 let _localeOpts
 
-async function autoLoadLocale (lang) {
-  switch (lang) {
-    case 'de': {
-      const opts = await import('./de/i18n_de_localeoptions')
-      const lang = await import('./de/i18n_de')
-      return { lang: lang.default, opts: opts.default }
-    }
-    default: {
-      const opts = await import('./de/i18n_de_localeoptions')
-      const lang = await import('./de/i18n_de')
-      return { lang: lang.default, opts: opts.default }
-    }
-  }
+async function autoLoadLocale (/* lang */) {
+  const opts = await import('./de/i18n_de_localeoptions')
+  const currentLang = await import('./de/i18n_de')
+  return { lang: currentLang.default, opts: opts.default }
 }
 
 /**
