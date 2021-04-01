@@ -50,7 +50,8 @@ Choice.schema = {
   },
   'choices.$.text': {
     type: String,
-    label: Labels.text
+    label: Labels.text,
+    optional: true
   },
   'choices.$.tts': {
     type: String,

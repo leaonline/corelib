@@ -5,6 +5,21 @@ import { CompetencyCategory } from './CompetencyCategory'
 import { getFieldName } from '../utils/getFieldName'
 import { createGetAllRoute } from '../decorators/routes/getAll'
 
+/**
+ * Describes a facet of skills for a given Dimension and alpha-level.
+ *
+ * @type {{
+ *  name: string,
+ *  label: string,
+ *  icon: string,
+ *  representative: string
+ *  schema: Object,
+ *  helpers: Object,
+ *  methods: Object,
+ *  publications: Object,
+ *  routes: Object
+ *  }}
+ */
 export const Competency = {
   name: 'competency',
   label: 'competency.title',

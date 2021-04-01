@@ -7,6 +7,7 @@ export const Level = {}
 Level.name = 'level'
 Level.label = 'level.title'
 Level.icon = 'chart-line'
+Level.info = 'level.info'
 Level.representative = 'index'
 Level.useHistory = true
 
@@ -27,7 +28,7 @@ Level.schema = {
   },
   title: {
     type: String,
-    label: Labels[Level.representative]
+    label: Labels.title
   },
   description: {
     type: String,

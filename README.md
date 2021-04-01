@@ -41,7 +41,7 @@ The following overview tries to summarize this relationship:
 
 ![package overview](./docs/overview.svg)
 
-## This creates coupling
+### Doesn't this design create coupling?
 
 Yes and no. On the one hand it clearly couples apps to this library. On the
 other hand this is just a reference implementation for common behavior in the
@@ -51,6 +51,24 @@ Meteor we use this library in all of them.
 
 Second, the apps don't import the whole library but only those modules that
 are used in separate files.
+
+## Domain model
+
+### Summary
+ 
+The domain of LEA is shaped by a "Competency Model" that is realized
+by executing certain actionable "Units". These Units contain several tasks and
+items, that are in turn linked to the competencies.
+
+Scoring the items leads to estimations of fulfilled competencies and 
+alpha-levels, where thresholds define the level of accomplishment.
+
+Units are grouped in UnitSets, which usually group Units with same contextual
+background (story, characters) together.
+
+Users will work through one or more UnitSets in a TestCycle, which
+bundles these UnitSets in regards to a certain Dimension, Level or 
+Field (of work).
 
 ## Installation and initialization
 

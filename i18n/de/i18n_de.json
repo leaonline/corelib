@@ -1,4 +1,18 @@
 {
+  "alphaLevel": {
+    "title": "Alpha-Level",
+    "level": "Level",
+    "shortCode": "ID",
+    "thresholds": "Schwellenwerte Alpha-Level"
+  },
+  "thresholds": {
+    "title": "Schwellenwerte",
+    "minCountCompetency": "Min. Anzahl Kompetenzen",
+    "accomplished": "Voll erfüllt",
+    "nearAccomplished": "Mit Einschränkungen erfüllt",
+    "partialAccomplished": "Teilweise erfüllt",
+    "notAccomplished": "Noch nicht erfüllt"
+  },
   "common": {
     "title": "Titel",
     "description": "Beschreibung",
@@ -23,7 +37,8 @@
     "shortCode":"KB-ID",
     "descriptionSimple": "Rückmeldung TN",
     "level": "Alphalevel",
-    "example": "Beispiel / Übersetzung"
+    "example": "Beispiel / Übersetzung",
+    "thresholds": "Schwellenwerte Kompetenz"
   },
   "competencyCategory": {
     "title": "KB-Kategorie"
@@ -44,7 +59,9 @@
     "jobs": "Berufe"
   },
   "level": {
-    "title": "Level"
+    "title": "Aufgaben-Level",
+    "index": "Schwierigkeit",
+    "info": "Kategorisierung von Aufgaben nach Schwierigkeit. Nicht mit Alpha-Level verwechseln."
   },
   "unit": {
     "title": "Unit",
