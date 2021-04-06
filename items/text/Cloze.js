@@ -54,7 +54,7 @@ Cloze.schema = {
         type: 'self',
         source: 'text',
         // eslint-disable-next-line no-useless-escape
-        pattern: /{{\w+\$([\w\d\[\]|\s])*\$([\w\s,])*}}/g
+        pattern: /\{\{(blanks|select)\$([\[\]\s,\.\?!:;"'%/()*\p{L}\p{M}])*\$([\[\]\s,\.\?!:;"'%/()*\p{L}\p{M}])*[\$\w=&]*\}\}/gu
       }
     }
   },
