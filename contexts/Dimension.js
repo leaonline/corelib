@@ -61,5 +61,14 @@ Dimension.schema = {
 }
 
 Dimension.routes = {}
-Dimension.routes.all = createGetAllRoute({ context: Dimension })
+Dimension.routes.all = createGetAllRoute({
+  context: Dimension,
+  schema: {
+    ids: {
+      type: Array,
+      optional: true
+    },
+    'ids.$': String
+  }
+})
 Dimension.routes.byId = createGetByIdRoute({ context: Dimension })

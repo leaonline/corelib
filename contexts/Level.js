@@ -38,5 +38,14 @@ Level.schema = {
 }
 
 Level.routes = {}
-Level.routes.all = createGetAllRoute({ context: Level })
+Level.routes.all = createGetAllRoute({
+  context: Level,
+  schema: {
+    ids: {
+      type: Array,
+      optional: true
+    },
+    'ids.$': String
+  }
+})
 Level.routes.byId = createGetByIdRoute({ context: Level })
