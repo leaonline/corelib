@@ -17,7 +17,7 @@ const isSafeTextString = s => {
 
 Cloze.score = function (itemDoc = {}, responseDoc = {}) {
   check(itemDoc.scoring, [{
-    competency: String,
+    competency: [String],
     correctResponse: RegExp,
     target: Number
   }])

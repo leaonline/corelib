@@ -36,8 +36,12 @@ Cloze.schema = {
     label: Labels.entry
   },
   'scoring.$.competency': {
-    type: String,
+    type: Array,
     label: Competency.label,
+  },
+  'scoring.$.competency.$': {
+    type: String,
+    label: Labels.entry,
     dependency: {
       collection: Competency.name,
       field: Competency.representative
