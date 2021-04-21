@@ -38,14 +38,14 @@ Cloze.schema = {
   'scoring.$.competency': {
     type: Array,
     label: Competency.label,
-  },
-  'scoring.$.competency.$': {
-    type: String,
-    label: Labels.entry,
     dependency: {
       collection: Competency.name,
       field: Competency.representative
     }
+  },
+  'scoring.$.competency.$': {
+    type: String,
+    label: Labels.entry
   },
   'scoring.$.target': {
     type: Number,
