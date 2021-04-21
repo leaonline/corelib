@@ -21,7 +21,7 @@ describe(Cloze.name, function () {
   describe('scoring', function () {
     const createItemDoc = ({ competency = Random.id(), correctResponse = /foo/, target = 0 } = {}) => ({
       scoring: [{
-        competency: competency,
+        competency: [competency],
         correctResponse: correctResponse,
         target: target
       }]
