@@ -138,10 +138,13 @@ The client part of this package consists of the common / shared
 
 ## Testing
 
-To run the tests you can cd into this package and execute the following:
+We use a proxy project for testing. Please follow the steps for setup and run:
 
 ```bash
-TEST_WATCH=1 TEST_CLIENT=0 meteor test-packages ./ --driver-package meteortesting:mocha
+$ cd test-proxy
+$ meteor npm install
+$ meteor npm run setup
+$ meteor npm run test:watch
 ```
 
 ## License
