@@ -102,6 +102,11 @@ TestCycle.schema = {
     max: 5000
   },
 
+  progress: {
+    type: Number,
+    optional: true
+  },
+
   unitSets: {
     type: Array,
     optional: true,

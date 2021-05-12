@@ -120,6 +120,10 @@ UnitSet.schema = {
     label: Labels.title,
     optional: true
   },
+  progress: {
+    type: Number,
+    optional: true
+  },
   story: createPageSchema(),
   'story.$': createPageEntrySchema(),
   units: {
