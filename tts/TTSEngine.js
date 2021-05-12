@@ -72,9 +72,7 @@ TTSEngine.configure = function configure ({ loader, mode = (TTSEngine.mode || TT
         if (onComplete) onComplete()
       }
     })
-  }
-
-  else {
+  } else {
     isConfigured = true
     if (onComplete) onComplete()
   }
@@ -100,7 +98,7 @@ TTSEngine.play = function play ({ id, text, volume, onEnd, onError }) {
 
     try {
       BrowserTTS.play({ id, text, volume, onEnd, onError: onBrowserError })
-    } catch(playbackError) {
+    } catch (playbackError) {
       onBrowserError(playbackError)
     }
     TTSEngine.mode = TTSEngine.modes.browser

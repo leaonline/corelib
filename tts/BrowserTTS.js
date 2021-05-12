@@ -46,7 +46,6 @@ function getVoices (locale) {
       throw new Error(`No voices found for locale [${locale}]`)
     }
 
-
     console.debug('[BrowserTTS]: found voices for locale', locale, voicesForLocale)
     internal.cache.set(locale, voicesForLocale)
   }
@@ -73,12 +72,12 @@ function playByText (locale, text, { volume, onEnd, onError }) {
   // TODO but for now we just use the first occurrence
   const utterance = new global.SpeechSynthesisUtterance(text)
   utterance.voice = voices[0]
-  //utterance.pitch = 1
-  //utterance.rate = 1
-  //utterance.voiceURI = 'native'
-  //utterance.rate = 1
-  //utterance.pitch = 0.8
-  //utterance.lang = voices[0].lang || locale
+  // utterance.pitch = 1
+  // utterance.rate = 1
+  // utterance.voiceURI = 'native'
+  // utterance.rate = 1
+  // utterance.pitch = 0.8
+  // utterance.lang = voices[0].lang || locale
 
   if (onEnd) {
     utterance.onend = onEnd
@@ -117,7 +116,7 @@ function playById (locale, id, { volume, onEnd, onError }) {
 // /////////////////////////////////////////////////////////////////////////////
 
 BrowserTTS.play = function play ({ id, text, volume, onEnd, onError }) {
-  let locale = i18n.getLocale()
+  const locale = i18n.getLocale()
 
   if (text) {
     return playByText(locale, text, { volume, onEnd, onError })
@@ -129,7 +128,6 @@ BrowserTTS.play = function play ({ id, text, volume, onEnd, onError }) {
 BrowserTTS.stop = function stop () {
   internal.speechSynth.cancel()
 }
-
 
 const MAX_LOAD_VOICES = 5
 
