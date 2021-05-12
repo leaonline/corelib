@@ -1,5 +1,5 @@
 import { Meteor } from 'meteor/meteor'
-import { check } from 'meteor/check'
+import { check, Match } from 'meteor/check'
 import { BrowserTTS } from './BrowserTTS'
 import { ServerTTS } from './ServerTTS'
 import { TTSConfig } from './TTSConfig'
@@ -34,6 +34,7 @@ const log = createLog({
 })
 
 let isConfigured = false
+let globalErrorHandler = (err, details) => console.error(err, details)
 
 // /////////////////////////////////////////////////////////////////////////////
 //
@@ -41,9 +42,10 @@ let isConfigured = false
 //
 // /////////////////////////////////////////////////////////////////////////////
 
-TTSEngine.configure = function configure ({ loader, mode = (TTSEngine.mode || TTSEngine.modes.browser) }) {
+TTSEngine.configure = function configure ({ loader, mode = (TTSEngine.mode || TTSEngine.modes.browser), onComplete, onError }) {
   check(loader, Function)
   check(mode, String)
+  check(onError, Match.Maybe(Function))
 
   if (Meteor.isServer) {
     throw new Error('TTS Engine is client-only')
@@ -52,20 +54,29 @@ TTSEngine.configure = function configure ({ loader, mode = (TTSEngine.mode || TT
   TTSConfig.urlLoader(loader)
   TTSEngine.setMode(mode)
 
+  if (onError) {
+    globalErrorHandler = onError
+  }
+
   if (mode === TTSEngine.modes.browser) {
     BrowserTTS.load({
       onError (err) {
         log(err)
+        globalErrorHandler(err)
         TTSEngine.mode = TTSEngine.modes.server
         isConfigured = true
       },
       onComplete () {
         log('successfully loaded')
         isConfigured = true
+        if (onComplete) onComplete()
       }
     })
-  } else {
+  }
+
+  else {
     isConfigured = true
+    if (onComplete) onComplete()
   }
 }
 
@@ -74,21 +85,33 @@ TTSEngine.setMode = function setMode (mode) {
   TTSEngine.mode = mode
 }
 
-TTSEngine.play = function play ({ id, text, onEnd, onError }) {
+TTSEngine.isConfigured = () => isConfigured
+
+TTSEngine.play = function play ({ id, text, volume, onEnd, onError }) {
   if (!isConfigured) {
     throw new Error('TTS needs to be configured, first!')
   }
 
   const fallback = () => {
-    BrowserTTS.play({ id, text, onEnd, onError })
+    const onBrowserError = err => {
+      globalErrorHandler(err)
+      if (onError) onError(err)
+    }
+
+    try {
+      BrowserTTS.play({ id, text, volume, onEnd, onError: onBrowserError })
+    } catch(playbackError) {
+      onBrowserError(playbackError)
+    }
     TTSEngine.mode = TTSEngine.modes.browser
   }
   if (TTSEngine.mode === TTSEngine.modes.server) {
     const onErrorInternal = err => {
       log('failed with an error. Attempt fallback. Error details:', err)
+      globalErrorHandler(err)
       fallback()
     }
-    ServerTTS.play({ id, text, onEnd, onError: onErrorInternal })
+    ServerTTS.play({ id, text, volume, onEnd, onError: onErrorInternal })
   } else {
     fallback()
   }

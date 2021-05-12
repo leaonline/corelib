@@ -10,19 +10,21 @@ BrowserTTS.name = 'ttsBrowser'
 //
 // /////////////////////////////////////////////////////////////////////////////
 
-const MAX_LOAD_VOICES = 5
 let loadVoiceCount = 0
-let speechSynth
-let voices
 let voicesLoaded = false
-const cache = new Map()
+
+const internal = {
+  voices: undefined,
+  speechSynth: undefined,
+  cache: new Map()
+}
 
 /**
  * Returns the first found voice for a given language code.
  */
 
 function getVoices (locale) {
-  if (!speechSynth) {
+  if (!internal.speechSynth) {
     throw new Error('Browser does not support speech synthesis')
   }
 
@@ -31,20 +33,25 @@ function getVoices (locale) {
     return []
   }
 
-  if (!voices || voices.length === 0) {
+  if (!internal.voices || internal.voices.length === 0) {
     throw new Error('No voices installed for speech synthesis')
   }
 
-  if (!cache.has(locale)) {
-    const voicesForLocale = voices.filter(voice => voice.lang === locale)
+  if (!internal.cache.has(locale)) {
+    const lowerCaseLocale = locale.toLocaleLowerCase()
+    console.debug('[BrowserTTS]: find voice for locale', locale)
+    const voicesForLocale = internal.voices.filter(voice => voice.lang.toLocaleLowerCase().includes(lowerCaseLocale))
+
     if (!voicesForLocale.length === 0) {
       throw new Error(`No voices found for locale [${locale}]`)
     }
 
-    cache.set(locale, voicesForLocale)
+
+    console.debug('[BrowserTTS]: found voices for locale', locale, voicesForLocale)
+    internal.cache.set(locale, voicesForLocale)
   }
 
-  return cache.get(locale)
+  return internal.cache.get(locale)
 }
 
 /**
@@ -52,30 +59,39 @@ function getVoices (locale) {
  * @param locale the locale this voice requires
  * @param text the text to speak
  * @param onEnd callback if tts is finished
+ * @param onError callback if tts has an internal error
  */
 
-function playByText (locale, text, { onEnd }) {
+function playByText (locale, text, { volume, onEnd, onError }) {
   const voices = getVoices(locale)
+
+  if (!voices?.length) {
+    throw new Error('No voices found to create utterance')
+  }
 
   // TODO load preference here, e.g. male / female etc.
   // TODO but for now we just use the first occurrence
-  const utterance = new global.SpeechSynthesisUtterance()
+  const utterance = new global.SpeechSynthesisUtterance(text)
   utterance.voice = voices[0]
-  utterance.pitch = 1
-  utterance.rate = 1
-  utterance.voiceURI = 'native'
-  utterance.volume = 1
-  utterance.rate = 1
-  utterance.pitch = 0.8
-  utterance.text = text
-  utterance.lang = i18n.getLocale() || 'de-DE'
+  //utterance.pitch = 1
+  //utterance.rate = 1
+  //utterance.voiceURI = 'native'
+  //utterance.rate = 1
+  //utterance.pitch = 0.8
+  //utterance.lang = voices[0].lang || locale
 
   if (onEnd) {
     utterance.onend = onEnd
   }
 
-  speechSynth.cancel() // cancel current speak, if any is running
-  speechSynth.speak(utterance)
+  if (onError) {
+    utterance.onerror = function (event) {
+      onError(event.error || event)
+    }
+  }
+
+  internal.speechSynth.cancel() // cancel current speak, if any is running
+  internal.speechSynth.speak(utterance)
 }
 
 /**
@@ -83,13 +99,15 @@ function playByText (locale, text, { onEnd }) {
  * @param locale
  * @param id
  * @param onEnd
+ * @param onError
  */
-function playById (locale, id, { onEnd }) {
+function playById (locale, id, { volume, onEnd, onError }) {
   const translated = i18n.get(id)
   if (!translated || translated === `${locale}.${id}`) {
     throw new Error(`Unknown TTS by id [${id}]`)
   }
-  return playByText(locale, translated, { onEnd })
+
+  return playByText(locale, translated, { volume, onEnd, onError })
 }
 
 // /////////////////////////////////////////////////////////////////////////////
@@ -98,30 +116,34 @@ function playById (locale, id, { onEnd }) {
 //
 // /////////////////////////////////////////////////////////////////////////////
 
-BrowserTTS.play = function play ({ id, text, onEnd }) {
-  const locale = i18n.getLocale()
+BrowserTTS.play = function play ({ id, text, volume, onEnd, onError }) {
+  let locale = i18n.getLocale()
+
   if (text) {
-    return playByText(locale, text, { onEnd })
+    return playByText(locale, text, { volume, onEnd, onError })
   } else {
-    return playById(locale, id, { onEnd })
+    return playById(locale, id, { volume, onEnd, onError })
   }
 }
 
 BrowserTTS.stop = function stop () {
-  speechSynth.cancel()
+  internal.speechSynth.cancel()
 }
+
+
+const MAX_LOAD_VOICES = 5
 
 /**
  * retries until there have been voices loaded. No stopper flag included in this example.
  * Note that this function assumes, that there are voices installed on the host system.
  */
-
 BrowserTTS.load = function loadVoicesWhenAvailable ({ onComplete = () => {}, onError = err => console.error(err) } = {}) {
-  speechSynth = window.speechSynthesis
-  const loadedVoices = speechSynth.getVoices()
+  internal.speechSynth = window.speechSynthesis
+  const loadedVoices = internal.speechSynth.getVoices()
 
   if (loadedVoices.length !== 0) {
-    voices = loadedVoices
+    internal.voices = loadedVoices
+    console.debug('[BrowserTTS]: voices loaded', internal.voices)
     voicesLoaded = true
     return onComplete()
   }
