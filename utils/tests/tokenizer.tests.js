@@ -2,9 +2,9 @@
 import { expect } from 'chai'
 import { createSimpleTokenizer } from '../tokenizer'
 
-    const start = '['
-    const end = ']'
-    const tokenizer = createSimpleTokenizer(start, end)
+const start = '['
+const end = ']'
+const tokenizer = createSimpleTokenizer(start, end)
 describe(createSimpleTokenizer.name, function () {
   it('tokenizes a simple field', function () {
     const tokens = tokenizer('[this is interesting]')
@@ -12,7 +12,7 @@ describe(createSimpleTokenizer.name, function () {
       index: 0,
       length: 0,
       value: ''
-    },{
+    }, {
       index: 1,
       isToken: true,
       length: 19,
@@ -28,7 +28,7 @@ describe(createSimpleTokenizer.name, function () {
       index: 0,
       length: 4,
       value: 'foo '
-    },{
+    }, {
       index: 1,
       isToken: true,
       length: 3,
@@ -43,7 +43,7 @@ describe(createSimpleTokenizer.name, function () {
       index: 0,
       length: 4,
       value: 'foo '
-    },{
+    }, {
       index: 1,
       isToken: true,
       length: 3,
@@ -58,7 +58,7 @@ describe(createSimpleTokenizer.name, function () {
       index: 0,
       length: 0,
       value: ''
-    },{
+    }, {
       index: 1,
       isToken: true,
       length: 3,
@@ -75,7 +75,7 @@ describe(createSimpleTokenizer.name, function () {
       index: 0,
       length: 4,
       value: 'foo '
-    },{
+    }, {
       index: 1,
       isToken: true,
       length: 3,
