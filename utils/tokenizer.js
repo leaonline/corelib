@@ -6,12 +6,16 @@
  * @param closePattern A unique pattern indicate the previous content was part of our token
  * @returns {Array<Object>} An array of token-objects
  */
-export const createSimpleTokenizer = (openPattern, closePattern) => (value) => {
+export const createSimpleTokenizer = (openPattern, closePattern) => value => {
   if (typeof value !== 'string' || value.length === 0) {
     return []
   }
 
-  let startIndex = 0; let endIndex = 0; let index = 0; let substr
+  let startIndex = 0
+  let endIndex = 0
+  let index = 0
+  let substr
+
   const tokens = []
 
   while (startIndex < value.length && startIndex > -1) {
