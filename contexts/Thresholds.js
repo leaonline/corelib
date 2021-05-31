@@ -86,6 +86,11 @@ Thresholds.schema = {
     defaultValue: 0
   },
 
+  minCountAlphaLevel: {
+    type: Number,
+    min: 0
+  },
+
   thresholdsAlphaLevel: {
     type: Object,
     label: 'alphaLevel.thresholds'
@@ -99,6 +104,14 @@ Thresholds.schema = {
     label: 'thresholds.accomplished',
     min: 0,
     max: 1
+  },
+
+  'thresholdsAlphaLevel.notAccomplished': {
+    type: Number,
+    label: 'thresholds.notAccomplished',
+    min: 0,
+    max: 1,
+    defaultValue: 0
   }
 }
 

@@ -8,6 +8,7 @@ Highlight.name = 'highlight'
 Highlight.label = 'item.highlight.title'
 Highlight.icon = 'highlighter'
 Highlight.isItem = true
+Highlight.pattern = /\w+|{{[^{]+}}|\S|\s{2,}/g
 
 Highlight.schema = {
   text: {
@@ -61,7 +62,8 @@ Highlight.schema = {
       method: 'tokenize',
       input: {
         type: 'self',
-        source: 'text'
+        source: 'text',
+        pattern: Highlight.pattern
       }
     }
   }

@@ -4,6 +4,7 @@ import { Status } from '../types/Status'
 import { CompetencyCategory } from './CompetencyCategory'
 import { getFieldName } from '../utils/getFieldName'
 import { createGetAllRoute } from '../decorators/routes/getAll'
+import { AlphaLevel } from './AlphaLevel'
 
 /**
  * Describes a facet of skills for a given Dimension and alpha-level.
@@ -81,9 +82,14 @@ Competency.schema = {
     }
   },
   level: {
-    type: Number,
-    min: 1,
-    max: Number.MAX_SAFE_INTEGER
+    type: String,
+    dependency: {
+      collection: AlphaLevel.name,
+      field: AlphaLevel.representative,
+      filter: {
+        fields: [Dimension.name]
+      }
+    }
   },
   category: {
     type: String,
