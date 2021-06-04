@@ -11,7 +11,7 @@ describe(isSafeInteger.name, function () {
       Number.MIN_SAFE_INTEGER.toString(),
       1, '1',
       0, '0',
-      -1, '-1',
+      -1, '-1'
     ].forEach(value => expect(isSafeInteger(value), value).to.equal(true, value))
   })
   it('detects unsafe integer', function () {
@@ -23,7 +23,7 @@ describe(isSafeInteger.name, function () {
       -1.1,
       NaN,
       Infinity,
-      -Infinity,
+      -Infinity
     ].forEach(value => expect(isSafeInteger(value), value).to.equal(false, value))
   })
 })

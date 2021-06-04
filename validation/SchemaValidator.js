@@ -4,7 +4,7 @@ const defaultValidator = () => {
   throw new Error('SchemaValidator is not set')
 }
 
-let _validator = undefined
+let _validator
 
 SchemaValidator.set = function (validator) {
   _validator = validator

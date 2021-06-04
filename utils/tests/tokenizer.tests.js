@@ -14,7 +14,7 @@ describe(createSimpleTokenizer.name, function () {
       1,
       new Date(),
       {},
-      (() => {}),
+      () => {},
       []
     ].forEach(value => {
       expect(tokenizer(value)).to.deep.equal([])

@@ -1,6 +1,6 @@
 /* eslint-env mocha */
 import { expect } from 'chai'
-import { getFieldName  } from '../getFieldName'
+import { getFieldName } from '../getFieldName'
 import { FieldNotFoundError } from '../../errors/FieldNotFoundError'
 
 describe(getFieldName.name, function () {

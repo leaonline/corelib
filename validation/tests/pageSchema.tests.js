@@ -4,7 +4,7 @@ import { Random } from 'meteor/random'
 import { expect } from 'chai'
 import { MediaLib } from '../../contexts/MediaLib'
 import { Labels } from '../../i18n/Labels'
-import { createPageSchema,createPageEntrySchema } from '../pageSchema'
+import { createPageSchema, createPageEntrySchema } from '../pageSchema'
 
 describe(createPageSchema.name, function () {
   it('returns a page schema definition object', function () {
@@ -23,7 +23,6 @@ describe(createPageSchema.name, function () {
   })
 })
 
-
 describe(createPageEntrySchema.name, function () {
   it('returns a page entry schema definition', function () {
     const { custom, ...schema } = createPageEntrySchema()
@@ -31,7 +30,7 @@ describe(createPageEntrySchema.name, function () {
       type: Object,
       optional: true,
       label: Labels.entry,
-      blackbox: true,
+      blackbox: true
     })
   })
 
@@ -48,7 +47,7 @@ describe(createPageEntrySchema.name, function () {
         contentId: Random.id(),
         width: '100'
       }
-      expect(custom.call({ value: null })).to.equal(undefined)
+      expect(custom.call({ value: value })).to.equal(undefined)
     })
   }
 })
