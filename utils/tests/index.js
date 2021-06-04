@@ -1,2 +1,6 @@
+import '../numbers/tests'
 import './object/getProperty.tests'
 import './tokenizer.tests'
+import './trapCircular.tests'
+import './getFieldName.tests'
+import './arch.tests'

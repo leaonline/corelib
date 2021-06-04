@@ -6,6 +6,20 @@ const start = '['
 const end = ']'
 const tokenizer = createSimpleTokenizer(start, end)
 describe(createSimpleTokenizer.name, function () {
+  it('returns an empty array for undefined input', function () {
+    [
+      '',
+      undefined,
+      null,
+      1,
+      new Date(),
+      {},
+      (() => {}),
+      []
+    ].forEach(value => {
+      expect(tokenizer(value)).to.deep.equal([])
+    })
+  })
   it('tokenizes a simple field', function () {
     const tokens = tokenizer('[this is interesting]')
     expect(tokens).to.deep.equal([{

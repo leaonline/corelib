@@ -3,6 +3,10 @@ import { Random } from 'meteor/random'
 import { expect } from 'chai'
 import { Scoring } from '../Scoring'
 import { ScoringTypes } from '../ScoringTypes'
+import { Cloze } from '../../items/text/Cloze'
+import { Choice } from '../../items/choice/Choice'
+import { Highlight } from '../../items/highlight/Highlight'
+import { restore, stub } from '../../test-helpers.tests'
 
 describe(Scoring.name, function () {
   it('ensures integrity of it\'s base structure', function () {
@@ -10,10 +14,6 @@ describe(Scoring.name, function () {
     expect(Scoring.label).to.be.a('string')
     expect(Scoring.UNDEFINED).to.equal('__undefined__')
     expect(Scoring.types).to.deep.equal(ScoringTypes)
-  })
-
-  describe(Scoring.init.name, function () {
-    it('is not implemented')
   })
   describe(Scoring.register.name, function () {
     it('registers a scoring function by key', function () {
@@ -41,6 +41,30 @@ describe(Scoring.name, function () {
       const expected = `${key}-${value1}-${value2}`
       const value = Scoring.run(key, value1, value2)
       expect(value).to.equal(expected)
+    })
+    it('throws if there is no scoring function registered by name', function () {
+      const key = Random.id()
+      expect(() => Scoring.run(key)).to.throw(`Expected score function by key <${key}>`)
+    })
+  })
+  describe(Scoring.init.name, function () {
+    it('loads default items dynamically', async function () {
+      expect(Scoring.has(Cloze.name)).to.equal(false)
+      expect(Scoring.has(Choice.name)).to.equal(false)
+      expect(Scoring.has(Highlight.name)).to.equal(false)
+      await Scoring.init()
+      expect(Scoring.has(Cloze.name)).to.equal(true)
+      expect(Scoring.has(Choice.name)).to.equal(true)
+      expect(Scoring.has(Highlight.name)).to.equal(true)
+
+      // ensure we cover to check that it runs only once
+      stub(Scoring, 'register', () => expect.fail())
+      await Scoring.init()
+      await Scoring.init()
+      await Scoring.init()
+      await Scoring.init()
+      await Scoring.init()
+      restore(Scoring, 'register')
     })
   })
 })
