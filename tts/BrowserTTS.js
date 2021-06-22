@@ -1,4 +1,5 @@
 import { i18n } from '../i18n/i18n'
+import { createLog } from '../logging/createLog'
 
 export const BrowserTTS = {}
 
@@ -18,6 +19,13 @@ const internal = {
   speechSynth: undefined,
   cache: new Map()
 }
+
+const debug = createLog({
+  name: BrowserTTS.name,
+  type: 'debug',
+  devOnly: true
+})
+
 
 /**
  * Returns the first found voice for a given language code.
@@ -39,14 +47,14 @@ function getVoices (locale) {
 
   if (!internal.cache.has(locale)) {
     const lowerCaseLocale = locale.toLocaleLowerCase()
-    console.debug('[BrowserTTS]: find voice for locale', locale)
+    debug('find voice for locale', locale)
     const voicesForLocale = internal.voices.filter(voice => voice.lang.toLocaleLowerCase().includes(lowerCaseLocale))
 
     if (!voicesForLocale.length === 0) {
       throw new Error(`No voices found for locale [${locale}]`)
     }
 
-    console.debug('[BrowserTTS]: found voices for locale', locale, voicesForLocale)
+    debug('found voices for locale', locale, voicesForLocale)
     internal.cache.set(locale, voicesForLocale)
   }
 
@@ -79,8 +87,21 @@ function playByText (locale, text, { volume, onEnd, onError }) {
   // utterance.pitch = 0.8
   // utterance.lang = voices[0].lang || locale
 
-  if (onEnd) {
-    utterance.onend = onEnd
+  // XXX: chrome won't play longer tts texts in one piece and stops after a few
+  // words. We need to add an intervall here in order prevent this. See:
+  // https://stackoverflow.com/questions/21947730/chrome-speech-synthesis-with-longer-texts
+  utterance.onstart = function (/* event */) {
+    resumeInfinity(utterance)
+  }
+
+  utterance.onend = function (event) {
+    clearTimeout(timeoutResumeInfinity)
+
+    // pass the event along the handler as if it has been attached
+    // directly to the utterance via utterance.onend = onEnd
+    if (onEnd) {
+      onEnd.call(this, event)
+    }
   }
 
   if (onError) {
@@ -89,6 +110,7 @@ function playByText (locale, text, { volume, onEnd, onError }) {
     }
   }
 
+  clearTimeout(timeoutResumeInfinity) // make sure we have no mem-leak
   internal.speechSynth.cancel() // cancel current speak, if any is running
   internal.speechSynth.speak(utterance)
 }
@@ -136,12 +158,13 @@ const MAX_LOAD_VOICES = 5
  * Note that this function assumes, that there are voices installed on the host system.
  */
 BrowserTTS.load = function loadVoicesWhenAvailable ({ onComplete = () => {}, onError = err => console.error(err) } = {}) {
+  debug('count', loadVoiceCount)
   internal.speechSynth = window.speechSynthesis
   const loadedVoices = internal.speechSynth.getVoices()
 
   if (loadedVoices.length !== 0) {
     internal.voices = loadedVoices
-    console.debug('[BrowserTTS]: voices loaded', internal.voices)
+    debug('voices loaded', internal.voices)
     voicesLoaded = true
     return onComplete()
   }
@@ -151,4 +174,18 @@ BrowserTTS.load = function loadVoicesWhenAvailable ({ onComplete = () => {}, onE
   }
 
   return setTimeout(() => BrowserTTS.load({ onComplete, onError }), 100)
+}
+
+let timeoutResumeInfinity
+
+function resumeInfinity (target) {
+  if (!target && timeoutResumeInfinity) {
+    console.warn('[BrowserTTS]: force-clear timeout')
+    return clearTimeout(timeoutResumeInfinity)
+  }
+
+  window.speechSynthesis.resume()
+  timeoutResumeInfinity = setTimeout(function () {
+    resumeInfinity(target)
+  }, 1000)
 }

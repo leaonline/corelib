@@ -48,7 +48,7 @@ TTSEngine.configure = function configure ({ loader, mode = (TTSEngine.mode || TT
   check(onError, Match.Maybe(Function))
 
   if (Meteor.isServer) {
-    throw new Error('TTS Engine is client-only')
+    throw new Error('TTSEngine is currently a client-only implementation!')
   }
 
   TTSConfig.urlLoader(loader)
