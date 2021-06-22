@@ -26,7 +26,6 @@ const debug = createLog({
   devOnly: true
 })
 
-
 /**
  * Returns the first found voice for a given language code.
  */
