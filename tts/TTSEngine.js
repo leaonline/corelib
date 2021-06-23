@@ -42,6 +42,12 @@ let globalErrorHandler = (err, details) => console.error(err, details)
 //
 // /////////////////////////////////////////////////////////////////////////////
 
+TTSEngine.isAvailable = function () {
+  return TTSEngine.mode === TTSEngine.modes.browser
+    ? BrowserTTS.isAvailable()
+    : ServerTTS.isAvailable()
+}
+
 TTSEngine.configure = function configure ({ loader, mode = (TTSEngine.mode || TTSEngine.modes.browser), onComplete, onError }) {
   check(loader, Function)
   check(mode, String)

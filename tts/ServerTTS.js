@@ -38,6 +38,10 @@ function playAudio (url, onEnd, onError) {
 //
 // /////////////////////////////////////////////////////////////////////////////
 
+ServerTTS.isAvailable = function () {
+  return false
+}
+
 /**
  * Plays a TTS by given text (or translated text).
  * If no text is given or resolved, throws an immediate error.

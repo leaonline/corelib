@@ -1,4 +1,5 @@
 import { i18n } from '../i18n/i18n'
+import { ReactiveVar } from 'meteor/reactive-var'
 import { createLog } from '../logging/createLog'
 
 export const BrowserTTS = {}
@@ -13,6 +14,7 @@ BrowserTTS.name = 'ttsBrowser'
 
 let loadVoiceCount = 0
 let voicesLoaded = false
+const loadSuccess = new ReactiveVar(false)
 
 const internal = {
   voices: undefined,
@@ -136,6 +138,10 @@ function playById (locale, id, { volume, onEnd, onError }) {
 //
 // /////////////////////////////////////////////////////////////////////////////
 
+BrowserTTS.isAvailable = function () {
+  return loadSuccess.get()
+}
+
 BrowserTTS.play = function play ({ id, text, volume, onEnd, onError }) {
   const locale = i18n.getLocale()
 
@@ -165,10 +171,12 @@ BrowserTTS.load = function loadVoicesWhenAvailable ({ onComplete = () => {}, onE
     internal.voices = loadedVoices
     debug('voices loaded', internal.voices)
     voicesLoaded = true
+    loadSuccess.set(true)
     return onComplete()
   }
 
   if (++loadVoiceCount > MAX_LOAD_VOICES) {
+    loadSuccess.set(false)
     return onError(new Error(`Failed to load speech synthesis voices, after ${loadVoiceCount} retries.`))
   }
 

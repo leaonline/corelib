@@ -3,6 +3,9 @@
 import { TTSEngine } from '../TTSEngine'
 
 describe(TTSEngine.name, function () {
+  describe(TTSEngine.isConfigured.name, function () {
+    it('is not implemented')
+  })
   describe(TTSEngine.configure.name, function () {
     it('is not implemented')
   })
