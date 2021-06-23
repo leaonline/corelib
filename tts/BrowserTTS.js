@@ -164,23 +164,40 @@ const MAX_LOAD_VOICES = 5
  */
 BrowserTTS.load = function loadVoicesWhenAvailable ({ onComplete = () => {}, onError = err => console.error(err) } = {}) {
   debug('count', loadVoiceCount)
-  internal.speechSynth = window.speechSynthesis
+  internal.speechSynth = window.speechSynthesis || window.SpeechSynthesis
+
+  if (!internal.speechSynth) {
+    return onError(new Error('Failed to load speech synthesis, it is not available in your browser'))
+  }
+
   const loadedVoices = internal.speechSynth.getVoices()
 
   if (loadedVoices.length !== 0) {
     internal.voices = loadedVoices
-    debug('voices loaded', internal.voices)
+    debug('voices loaded', internal.voices.length)
     voicesLoaded = true
     loadSuccess.set(true)
+    window.localStorage.removeItem('voices_reload')
     return onComplete()
   }
 
+  internal.speechSynth.addEventListener('voiceschanged', function () {
+    const voicesLength = internal.speechSynth.getVoices().length
+
+    if (voicesLength === 0 && !window.localStorage.getItem('voices_reload')) {
+      console.warn('[BrowserTTS]: voiceschanged received but no voices found, force reload')
+      window.localStorage.setItem('voices_reload', '1')
+      window.location.reload()
+    }
+  })
+
   if (++loadVoiceCount > MAX_LOAD_VOICES) {
+    window.localStorage.removeItem('voices_reload')
     loadSuccess.set(false)
     return onError(new Error(`Failed to load speech synthesis voices, after ${loadVoiceCount} retries.`))
   }
 
-  return setTimeout(() => BrowserTTS.load({ onComplete, onError }), 100)
+  return setTimeout(() => BrowserTTS.load({ onComplete, onError }), 500)
 }
 
 let timeoutResumeInfinity
