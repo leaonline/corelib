@@ -126,7 +126,8 @@
       "select": "Dropdowns",
       "highlight": "Markieren",
       "blanks": "Fill-in-the-blanks",
-      "target": "Ziel-Feld"
+      "target": "Ziel-Feld",
+      "isTable": "Tabellen-Modus"
     },
     "highlight": {
       "title": "Markieren",

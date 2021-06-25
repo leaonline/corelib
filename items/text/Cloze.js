@@ -26,6 +26,11 @@ Cloze.schema = {
     label: Labels.text,
     max: 10000
   },
+  isTable: {
+    type: Boolean,
+    label: 'item.cloze.isTable',
+    optional: true
+  },
   scoring: {
     type: Array,
     label: 'scoring.title'
