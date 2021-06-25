@@ -115,7 +115,12 @@ Unit.routes.all = createGetAllRoute({
     unitSet: {
       type: String,
       optional: true
-    }
+    },
+    ids: {
+      type: Array,
+      optional: true
+    },
+    'ids.$': String
   }
 })
 
