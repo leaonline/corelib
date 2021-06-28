@@ -52,8 +52,9 @@ function scoreBlanks (entry, { responses = [] }) {
   const { correctResponse, competency, target } = entry
   const value = responses[target]
 
-  // we still may have individual undefined cases
-  const isUndefined = isUndefinedResponse(value)
+  // we still may have individual undefined cases and we need to cover, that
+  // there may be text inputs, that explictly ask for an undefined response
+  const isUndefined = !correctResponse.source.includes('__undefined__') && isUndefinedResponse(value)
 
   if (isUndefined) {
     return { competency, correctResponse, value, score, isUndefined }
