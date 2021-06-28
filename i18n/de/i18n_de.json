@@ -131,7 +131,8 @@
     },
     "highlight": {
       "title": "Markieren",
-      "activateTTS": "Text-To-Speech bei markieren aktivieren"
+      "activateTTS": "Text-To-Speech bei markieren aktivieren",
+      "includeSpace": "Leerzeichen markierbar"
     }
   },
   "scoring": {

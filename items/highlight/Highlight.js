@@ -21,6 +21,11 @@ Highlight.schema = {
     label: 'item.highlight.activateTTS',
     optional: true
   },
+  includeSpace: {
+    type: Boolean,
+    label: 'item.highlight.includeSpace',
+    optional: true
+  },
   scoring: {
     type: Array,
     label: Scoring.label
