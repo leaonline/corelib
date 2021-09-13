@@ -122,8 +122,8 @@ TestCycle.schema = {
           'level'
         ]
       }
-    }
-
+    },
+    defaultValue: []
   },
   'unitSets.$': {
     type: String

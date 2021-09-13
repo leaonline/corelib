@@ -8,7 +8,7 @@ Level.name = 'level'
 Level.label = 'level.title'
 Level.icon = 'chart-line'
 Level.info = 'level.info'
-Level.representative = 'index'
+Level.representative = 'title'
 Level.useHistory = true
 
 Level.schema = {
