@@ -81,8 +81,8 @@ function playByText (locale, text, { volume, onEnd, onError }) {
   // TODO but for now we just use the first occurrence
   const utterance = new global.SpeechSynthesisUtterance(text)
   utterance.voice = voices[0]
-  // utterance.pitch = 1
-  // utterance.rate = 1
+  utterance.pitch = 0
+  utterance.rate = 1
   // utterance.voiceURI = 'native'
   // utterance.rate = 1
   // utterance.pitch = 0.8
@@ -153,6 +153,7 @@ BrowserTTS.play = function play ({ id, text, volume, onEnd, onError }) {
 }
 
 BrowserTTS.stop = function stop () {
+  clearTimeout(timeoutResumeInfinity)
   internal.speechSynth.cancel()
 }
 
@@ -208,8 +209,9 @@ function resumeInfinity (target) {
     return clearTimeout(timeoutResumeInfinity)
   }
 
-  window.speechSynthesis.resume()
+  internal.speechSynth.pause()
+  internal.speechSynth.resume()
   timeoutResumeInfinity = setTimeout(function () {
     resumeInfinity(target)
-  }, 1000)
+  }, 5000)
 }
