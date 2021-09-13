@@ -23,9 +23,11 @@ export const Scoring = {
   async init () {
     if (_initialized) return true
     const { Choice } = await import('../items/choice/score')
+    const { Connect } = await import('../items/interactive/score')
     const { Cloze } = await import('../items/text/score')
     const { Highlight } = await import('../items/highlight/score')
     Scoring.register(Choice.name, Choice.score)
+    Scoring.register(Connect.name, Connect.score)
     Scoring.register(Cloze.name, Cloze.score)
     Scoring.register(Highlight.name, Highlight.score)
     _initialized = true
