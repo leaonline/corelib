@@ -1,6 +1,7 @@
 import { Choice } from './choice/Choice'
 import { Cloze } from './text/Cloze'
 import { Highlight } from './highlight/Highlight'
+import { Connect } from './interactive/Connect'
 import { ItemTypeName } from './ItemTypeName'
 
 /**
@@ -15,6 +16,7 @@ const allItems = new Map()
 allItems.set(Choice.name, Choice)
 allItems.set(Cloze.name, Cloze)
 allItems.set(Highlight.name, Highlight)
+allItems.set(Connect.name, Connect)
 
 Items.forEach = cb => allItems.forEach(cb)
 
