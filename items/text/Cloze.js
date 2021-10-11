@@ -10,13 +10,27 @@ Cloze.MAX_LENGTH = 10000
 Cloze.isItem = true
 
 Cloze.flavor = {
+  /**
+   * A simple select-box, single-choice style
+   */
   select: {
     name: 'select',
     value: 1
   },
+  /**
+   * Default, text-input
+   */
   blanks: {
     name: 'blanks',
     value: 2
+  },
+  /**
+   * Text-input that is not linked to any scoring. use as distractor or
+   * placeholder or supplemental element.
+   */
+  empty: {
+    name: 'empty',
+    value: 3
   }
 }
 
@@ -63,7 +77,7 @@ Cloze.schema = {
         type: 'self',
         source: 'text',
         // eslint-disable-next-line no-useless-escape
-        pattern: /\{\{(blanks|select)\$([\[\]\s,\.\?„“‚‘!:;"'%/()|<>=+\-*\p{L}\p{M}0-9])*\$([\[\]\s,\.\?„“‚‘!:;"'%/()|<>=+\-*\p{L}\p{M}\d])*[\$\w=&\d]*\}\}/gu
+        pattern: /\{\{(blanks|select)\$([\[\]\s,\.\?„“‚‘!:;≠"'%/()|<>=+\-*\p{L}\p{M}0-9])*\$([\[\]\s,\.\?„“‚‘!:;≠"'%/()|<>=+\-*\p{L}\p{M}\d])*[\$\w=&\d]*\}\}/gu
       }
     }
   },
