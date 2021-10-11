@@ -28,7 +28,6 @@ Connect.score = function (itemDoc = {}, responseDoc = {}) {
     })
   }
 
-
   return scoring.map(entry => {
     if (isUndefined) {
       return fail(entry, responseDoc, isUndefined)
