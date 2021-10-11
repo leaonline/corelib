@@ -28,6 +28,18 @@ const debug = createLog({
   devOnly: true
 })
 
+const voiceConfig = { pitch: 1, rate: 0.8 }
+
+window.configVoice = function ({ pitch, rate }) {
+  if (pitch >= 0 && pitch <= 2) {
+    voiceConfig.pitch = pitch
+  }
+
+  if (rate >= 0.1 && rate <= 10) {
+    voiceConfig.rate = rate
+  }
+}
+
 /**
  * Returns the first found voice for a given language code.
  */
@@ -81,11 +93,11 @@ function playByText (locale, text, { volume, onEnd, onError }) {
   // TODO but for now we just use the first occurrence
   const utterance = new global.SpeechSynthesisUtterance(text)
   utterance.voice = voices[0]
-  utterance.pitch = 0
-  utterance.rate = 1
-  // utterance.voiceURI = 'native'
+  // utterance.pitch = 0
   // utterance.rate = 1
-  // utterance.pitch = 0.8
+  // utterance.voiceURI = 'native'
+  utterance.rate = voiceConfig.rate
+  utterance.pitch = voiceConfig.pitch
   // utterance.lang = voices[0].lang || locale
 
   // XXX: chrome won't play longer tts texts in one piece and stops after a few
