@@ -31,6 +31,13 @@ Cloze.flavor = {
   empty: {
     name: 'empty',
     value: 3
+  },
+  /**
+   * Text-block that wraps text with optional tts
+   */
+  text: {
+    name: 'text',
+    value: 4
   }
 }
 
@@ -45,10 +52,14 @@ Cloze.schema = {
     label: 'item.cloze.isTable',
     optional: true
   },
+  hasTableBorder: {
+    type: Boolean,
+    label: 'item.cloze.hasTableBorder',
+    optional: true
+  },
   scoring: {
     type: Array,
     label: 'scoring.title'
-    // optional: true // todo remove after trial phase
   },
   'scoring.$': {
     type: Object,

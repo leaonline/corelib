@@ -18,6 +18,25 @@ describe(Cloze.name, function () {
     createSchema(Cloze.schema)
   })
 
+  it('has certain flavours defined', function () {
+    expect(Cloze.flavor.select).to.deep.equal({
+      name: 'select',
+      value: 1
+    })
+    expect(Cloze.flavor.blanks).to.deep.equal({
+      name: 'blanks',
+      value: 2
+    })
+    expect(Cloze.flavor.empty).to.deep.equal({
+      name: 'empty',
+      value: 3
+    })
+    expect(Cloze.flavor.text).to.deep.equal({
+      name: 'text',
+      value: 4
+    })
+  })
+
   describe('scoring', function () {
     const createItemDoc = ({ competency = Random.id(), correctResponse = /foo/, target = 0 } = {}) => ({
       scoring: [{

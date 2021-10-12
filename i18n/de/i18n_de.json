@@ -127,7 +127,8 @@
       "highlight": "Markieren",
       "blanks": "Fill-in-the-blanks",
       "target": "Ziel-Feld",
-      "isTable": "Tabellen-Modus"
+      "isTable": "Tabellen-Modus",
+      "hasTableBorder": "Tabellenrahmen anzeigen"
     },
     "highlight": {
       "title": "Markieren",
