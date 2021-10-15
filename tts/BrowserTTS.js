@@ -30,16 +30,6 @@ const debug = createLog({
 
 const voiceConfig = { pitch: 1, rate: 0.8 }
 
-window.configVoice = function ({ pitch, rate }) {
-  if (pitch >= 0 && pitch <= 2) {
-    voiceConfig.pitch = pitch
-  }
-
-  if (rate >= 0.1 && rate <= 10) {
-    voiceConfig.rate = rate
-  }
-}
-
 /**
  * Returns the first found voice for a given language code.
  */
@@ -191,6 +181,15 @@ BrowserTTS.load = function loadVoicesWhenAvailable ({ onComplete = () => {}, onE
     voicesLoaded = true
     loadSuccess.set(true)
     window.localStorage.removeItem('voices_reload')
+    window.configVoice = function ({ pitch, rate }) {
+      if (pitch >= 0 && pitch <= 2) {
+        voiceConfig.pitch = pitch
+      }
+
+      if (rate >= 0.1 && rate <= 10) {
+        voiceConfig.rate = rate
+      }
+    }
     return onComplete()
   }
 
