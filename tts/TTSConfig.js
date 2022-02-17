@@ -11,6 +11,7 @@ TTSConfig.name = 'TTSConfig'
 // /////////////////////////////////////////////////////////////////////////////
 
 let internalUrlLoader
+let maxLoadVoices = 5
 
 // /////////////////////////////////////////////////////////////////////////////
 //
@@ -32,4 +33,9 @@ TTSConfig.urlLoader = function urlLoader (loader) {
   }
 
   return internalUrlLoader
+}
+
+TTSConfig.maxLoadVoices = (value) => {
+  if (value) maxLoadVoices = value
+  return maxLoadVoices
 }

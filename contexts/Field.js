@@ -31,6 +31,15 @@ Field.schema = {
     max: 2,
     unique: true
   },
+  isLegacy: {
+    type: Boolean,
+    label: Labels.legacy,
+    optional: true
+  },
+  icon: {
+    type: String,
+    label: Labels.icon
+  },
   jobs: {
     type: Array,
     label: 'field.jobs',

@@ -45,7 +45,7 @@ export const validateFormData = (formId, formDoc, schema, options) => {
 
   const errors = context.validationErrors()
   if (errors && errors.length > 0) {
-    console.log(errors)
+    console.info(errors)
     errors.forEach(err => AutoForm.addStickyValidationError(formId, err.key, err.type, err.value))
     return null
   }

@@ -28,13 +28,29 @@ TTSEngine.modes = {
 //
 // /////////////////////////////////////////////////////////////////////////////
 
+const modesImpl = {
+  browser: BrowserTTS,
+  server: ServerTTS
+}
+
+const getImpl = () => {
+  ensureConfig()
+  return modesImpl[TTSEngine.mode]
+}
+
 const log = createLog({
   name: TTSEngine.name,
   devOnly: true
 })
 
-let isConfigured = false
-let globalErrorHandler = (err, details) => console.error(err, details)
+const isConfigured = new ReactiveVar(false)
+let _globalErrorHandler = (err) => console.error('[TTSEngine]: error ', err.message, err.details)
+
+const ensureConfig = () => {
+  if (!isConfigured.get()) {
+    throw new Error('[TTSEngine]: TTS needs to be configured, first!')
+  }
+}
 
 // /////////////////////////////////////////////////////////////////////////////
 //
@@ -42,93 +58,71 @@ let globalErrorHandler = (err, details) => console.error(err, details)
 //
 // /////////////////////////////////////////////////////////////////////////////
 
-TTSEngine.isAvailable = function () {
-  return TTSEngine.mode === TTSEngine.modes.browser
-    ? BrowserTTS.isAvailable()
-    : ServerTTS.isAvailable()
+TTSEngine.setLocale = function (locale) {
+  return getImpl().setLocale(locale)
 }
 
-TTSEngine.configure = function configure ({ loader, mode = (TTSEngine.mode || TTSEngine.modes.browser), onComplete, onError }) {
+TTSEngine.isAvailable = function () {
+  return getImpl().isAvailable()
+}
+
+TTSEngine.configure = function configure ({ loader, mode = (TTSEngine.mode || TTSEngine.modes.browser), onComplete, onError, globalErrorHandler }) {
   check(loader, Function)
   check(mode, String)
+  check(onComplete, Match.Maybe(Function))
   check(onError, Match.Maybe(Function))
+  check(globalErrorHandler, Match.Maybe(Function))
 
   if (Meteor.isServer) {
     throw new Error('TTSEngine is currently a client-only implementation!')
   }
 
   TTSConfig.urlLoader(loader)
-  TTSEngine.setMode(mode)
+  TTSEngine.mode = mode
 
-  if (onError) {
-    globalErrorHandler = onError
+  if (globalErrorHandler) {
+    _globalErrorHandler = globalErrorHandler
   }
 
-  if (mode === TTSEngine.modes.browser) {
-    BrowserTTS.load({
-      onError (err) {
-        log(err)
-        globalErrorHandler(err)
-        TTSEngine.mode = TTSEngine.modes.server
-        isConfigured = true
-      },
-      onComplete () {
-        log('successfully loaded')
-        isConfigured = true
-        if (onComplete) onComplete()
+  modesImpl[mode].load({
+    onError (err) {
+      if (onError) {
+        onError(err)
       }
-    })
-  } else {
-    isConfigured = true
-    if (onComplete) onComplete()
-  }
+      else {
+        _globalErrorHandler(err)
+      }
+    },
+    onComplete (data) {
+      log('successfully loaded')
+      isConfigured.set(true)
+      if (onComplete) onComplete(data)
+    }
+  })
 }
 
 TTSEngine.setMode = function setMode (mode) {
   log('set mode to', mode)
+  ensureConfig()
   TTSEngine.mode = mode
 }
 
-TTSEngine.isConfigured = () => isConfigured
+TTSEngine.isConfigured = () => isConfigured.get()
 
 TTSEngine.play = function play ({ id, text, volume, onEnd, onError }) {
-  if (!isConfigured) {
-    throw new Error('TTS needs to be configured, first!')
-  }
-
-  const fallback = () => {
-    const onBrowserError = err => {
-      globalErrorHandler(err)
-      if (onError) onError(err)
-    }
-
-    try {
-      BrowserTTS.play({ id, text, volume, onEnd, onError: onBrowserError })
-    } catch (playbackError) {
-      onBrowserError(playbackError)
-    }
-    TTSEngine.mode = TTSEngine.modes.browser
-  }
-  if (TTSEngine.mode === TTSEngine.modes.server) {
-    const onErrorInternal = err => {
-      log('failed with an error. Attempt fallback. Error details:', err)
-      globalErrorHandler(err)
-      fallback()
-    }
-    ServerTTS.play({ id, text, volume, onEnd, onError: onErrorInternal })
-  } else {
-    fallback()
-  }
+  ensureConfig()
+  const errHandler = onError || _globalErrorHandler
+  const endHandler = onEnd || (() => {})
+  return getImpl().play({
+    id,
+    text,
+    volume,
+    onEnd: endHandler,
+    onError: errHandler
+  })
 }
 
-TTSEngine.stop = function stop () {
-  if (!isConfigured) {
-    throw new Error('TTS needs to be configured, first!')
-  }
-
-  if (TTSEngine.mode === TTSEngine.modes.server) {
-    ServerTTS.stop()
-  } else {
-    BrowserTTS.stop()
-  }
+TTSEngine.stop = function stop ({ onError } = {}) {
+  ensureConfig()
+  return getImpl().stop({ onError })
 }

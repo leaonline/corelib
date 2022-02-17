@@ -89,7 +89,7 @@ Connect.schema = {
   'scoring.$.requires': {
     type: Number,
     label: 'scoring.requires.title',
-    allowedValues: [1, 2],
+    allowedValues: [1, 2, 3],
     options: [
       Scoring.types.all,
       Scoring.types.any,

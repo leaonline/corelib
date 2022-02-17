@@ -1,6 +1,7 @@
 import { i18n } from '../i18n/i18n'
 import { ReactiveVar } from 'meteor/reactive-var'
 import { createLog } from '../logging/createLog'
+import EasySpeech from 'easy-speech'
 
 export const BrowserTTS = {}
 
@@ -12,14 +13,9 @@ BrowserTTS.name = 'ttsBrowser'
 //
 // /////////////////////////////////////////////////////////////////////////////
 
-let loadVoiceCount = 0
-let voicesLoaded = false
-const loadSuccess = new ReactiveVar(false)
-
 const internal = {
-  voices: undefined,
-  speechSynth: undefined,
-  cache: new Map()
+  locale: undefined,
+  initialized: new ReactiveVar(false),
 }
 
 const debug = createLog({
@@ -28,112 +24,6 @@ const debug = createLog({
   devOnly: true
 })
 
-const voiceConfig = { pitch: 1, rate: 0.8 }
-
-/**
- * Returns the first found voice for a given language code.
- */
-
-function getVoices (locale) {
-  if (!internal.speechSynth) {
-    throw new Error('Browser does not support speech synthesis')
-  }
-
-  // skip until voices loader is complete
-  if (!voicesLoaded) {
-    return []
-  }
-
-  if (!internal.voices || internal.voices.length === 0) {
-    throw new Error('No voices installed for speech synthesis')
-  }
-
-  if (!internal.cache.has(locale)) {
-    const lowerCaseLocale = locale.toLocaleLowerCase()
-    debug('find voice for locale', locale)
-    const voicesForLocale = internal.voices.filter(voice => voice.lang.toLocaleLowerCase().includes(lowerCaseLocale))
-
-    if (!voicesForLocale.length === 0) {
-      throw new Error(`No voices found for locale [${locale}]`)
-    }
-
-    debug('found voices for locale', locale, voicesForLocale)
-    internal.cache.set(locale, voicesForLocale)
-  }
-
-  return internal.cache.get(locale)
-}
-
-/**
- * Speak a certain text
- * @param locale the locale this voice requires
- * @param text the text to speak
- * @param onEnd callback if tts is finished
- * @param onError callback if tts has an internal error
- */
-
-function playByText (locale, text, { volume, onEnd, onError }) {
-  const voices = getVoices(locale)
-
-  if (!voices?.length) {
-    throw new Error('No voices found to create utterance')
-  }
-
-  // TODO load preference here, e.g. male / female etc.
-  // TODO but for now we just use the first occurrence
-  const utterance = new global.SpeechSynthesisUtterance(text)
-  utterance.voice = voices[0]
-  // utterance.pitch = 0
-  // utterance.rate = 1
-  // utterance.voiceURI = 'native'
-  utterance.rate = voiceConfig.rate
-  utterance.pitch = voiceConfig.pitch
-  // utterance.lang = voices[0].lang || locale
-
-  // XXX: chrome won't play longer tts texts in one piece and stops after a few
-  // words. We need to add an intervall here in order prevent this. See:
-  // https://stackoverflow.com/questions/21947730/chrome-speech-synthesis-with-longer-texts
-  utterance.onstart = function (/* event */) {
-    resumeInfinity(utterance)
-  }
-
-  utterance.onend = function (event) {
-    clearTimeout(timeoutResumeInfinity)
-
-    // pass the event along the handler as if it has been attached
-    // directly to the utterance via utterance.onend = onEnd
-    if (onEnd) {
-      onEnd.call(this, event)
-    }
-  }
-
-  if (onError) {
-    utterance.onerror = function (event) {
-      onError(event.error || event)
-    }
-  }
-
-  clearTimeout(timeoutResumeInfinity) // make sure we have no mem-leak
-  internal.speechSynth.cancel() // cancel current speak, if any is running
-  internal.speechSynth.speak(utterance)
-}
-
-/**
- *
- * @param locale
- * @param id
- * @param onEnd
- * @param onError
- */
-function playById (locale, id, { volume, onEnd, onError }) {
-  const translated = i18n.get(id)
-  if (!translated || translated === `${locale}.${id}`) {
-    throw new Error(`Unknown TTS by id [${id}]`)
-  }
-
-  return playByText(locale, translated, { volume, onEnd, onError })
-}
-
 // /////////////////////////////////////////////////////////////////////////////
 //
 // PUBLIC
@@ -141,88 +31,81 @@ function playById (locale, id, { volume, onEnd, onError }) {
 // /////////////////////////////////////////////////////////////////////////////
 
 BrowserTTS.isAvailable = function () {
-  return loadSuccess.get()
+  return internal.initialized.get()
 }
 
 BrowserTTS.play = function play ({ id, text, volume, onEnd, onError }) {
   const locale = i18n.getLocale()
 
-  if (text) {
-    return playByText(locale, text, { volume, onEnd, onError })
-  } else {
-    return playById(locale, id, { volume, onEnd, onError })
+  if (locale && internal.locale !== locale) {
+    debug(`change locale from ${internal.locale} to ${locale}; load new voice`)
+
+    const voices = EasySpeech.voices()
+
+    let newVoice = voices.find(v => v.lang === locale)
+
+    if (!newVoice) {
+      const localePrefix = (locale || '').toLowerCase().split(/[-_]/)[0]
+      const prefixMinus = `${localePrefix}-`
+      const prefixUnderscore = `${localePrefix}_`
+
+      debug('found no voice with exact match, try prefix', localePrefix)
+
+      newVoice = voices.find(v => {
+        if (!v.lang) { return false }
+
+        const lowerCaseVoice = v.lang.toLowerCase()
+
+        return (lowerCaseVoice === localePrefix ||
+          lowerCaseVoice.startsWith(prefixMinus) ||
+          lowerCaseVoice.startsWith(prefixUnderscore) ||
+          lowerCaseVoice.startsWith(localePrefix))
+      })
+
+      if (!newVoice) {
+        const details = {
+          locale,
+          localePrefix,
+          voices: internal.speechSynthesis.getVoices()
+            .filter(v => v.lang.includes(localePrefix))
+            .map(v =>({ name: v.name, lang: v.lang }))
+        }
+        const voiceNotFoundError = new Meteor.Error('tts.error', 'tts.voiceNotFound', details)
+
+        if (onError) {
+          onError(voiceNotFoundError)
+        }
+        else {
+          console.error(voiceNotFoundError)
+        }
+      }
+    }
+
+    if (newVoice) {
+      debug('assign new voice', newVoice.name)
+      internal.locale = locale
+      EasySpeech.defaults({ voice: newVoice })
+    }
   }
+
+  const textToSpeak = text || i18n.get(id)
+
+  EasySpeech.speak({ text: textToSpeak, volume: volume })
+    .then((endEvent) => onEnd(endEvent))
+    .catch(error => onError(error))
 }
 
 BrowserTTS.stop = function stop () {
-  clearTimeout(timeoutResumeInfinity)
-  internal.speechSynth.cancel()
+  return EasySpeech.cancel()
 }
 
-const MAX_LOAD_VOICES = 5
-
-/**
- * retries until there have been voices loaded. No stopper flag included in this example.
- * Note that this function assumes, that there are voices installed on the host system.
- */
-BrowserTTS.load = function loadVoicesWhenAvailable ({ onComplete = () => {}, onError = err => console.error(err) } = {}) {
-  debug('count', loadVoiceCount)
-  internal.speechSynth = window.speechSynthesis || window.SpeechSynthesis
-
-  if (!internal.speechSynth) {
-    return onError(new Error('Failed to load speech synthesis, it is not available in your browser'))
-  }
-
-  const loadedVoices = internal.speechSynth.getVoices()
-
-  if (loadedVoices.length !== 0) {
-    internal.voices = loadedVoices
-    debug('voices loaded', internal.voices.length)
-    voicesLoaded = true
-    loadSuccess.set(true)
-    window.localStorage.removeItem('voices_reload')
-    window.configVoice = function ({ pitch, rate }) {
-      if (pitch >= 0 && pitch <= 2) {
-        voiceConfig.pitch = pitch
-      }
-
-      if (rate >= 0.1 && rate <= 10) {
-        voiceConfig.rate = rate
-      }
-    }
-    return onComplete()
-  }
-
-  internal.speechSynth.addEventListener('voiceschanged', function () {
-    const voicesLength = internal.speechSynth.getVoices().length
-
-    if (voicesLength === 0 && !window.localStorage.getItem('voices_reload')) {
-      console.warn('[BrowserTTS]: voiceschanged received but no voices found, force reload')
-      window.localStorage.setItem('voices_reload', '1')
-      window.location.reload()
-    }
-  })
-
-  if (++loadVoiceCount > MAX_LOAD_VOICES) {
-    window.localStorage.removeItem('voices_reload')
-    loadSuccess.set(false)
-    return onError(new Error(`Failed to load speech synthesis voices, after ${loadVoiceCount} retries.`))
-  }
-
-  return setTimeout(() => BrowserTTS.load({ onComplete, onError }), 500)
+BrowserTTS.load = function load ({ onComplete = () => {}, onError = err => console.error(err) } = {}) {
+  EasySpeech.debug(debug)
+  EasySpeech.init()
+    .then(() => {
+      internal.initialized.set(true)
+      onComplete(EasySpeech.status())
+    })
+    .catch(e => onError(e))
 }
 
-let timeoutResumeInfinity
-
-function resumeInfinity (target) {
-  if (!target && timeoutResumeInfinity) {
-    console.warn('[BrowserTTS]: force-clear timeout')
-    return clearTimeout(timeoutResumeInfinity)
-  }
-
-  internal.speechSynth.pause()
-  internal.speechSynth.resume()
-  timeoutResumeInfinity = setTimeout(function () {
-    resumeInfinity(target)
-  }, 5000)
-}
