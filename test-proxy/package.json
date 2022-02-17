@@ -22,6 +22,7 @@
     "@babel/eslint-parser": "^7.12.1",
     "babel-plugin-istanbul": "^6.0.0",
     "chai": "^4.2.0",
+    "easy-speech": "^1.1.1",
     "eslint-plugin-security": "^1.4.0",
     "markdownlint-cli": "^0.27.1",
     "puppeteer": "^5.5.0",
