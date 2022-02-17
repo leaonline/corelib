@@ -1,7 +1,8 @@
-import { i18n } from '../i18n/i18n'
+import { Meteor } from 'meteor/meteor'
 import { ReactiveVar } from 'meteor/reactive-var'
 import { createLog } from '../logging/createLog'
 import EasySpeech from 'easy-speech'
+import { i18n } from '../i18n/i18n'
 
 export const BrowserTTS = {}
 
@@ -15,7 +16,7 @@ BrowserTTS.name = 'ttsBrowser'
 
 const internal = {
   locale: undefined,
-  initialized: new ReactiveVar(false),
+  initialized: new ReactiveVar(false)
 }
 
 const debug = createLog({
@@ -68,14 +69,13 @@ BrowserTTS.play = function play ({ id, text, volume, onEnd, onError }) {
           localePrefix,
           voices: internal.speechSynthesis.getVoices()
             .filter(v => v.lang.includes(localePrefix))
-            .map(v =>({ name: v.name, lang: v.lang }))
+            .map(v => ({ name: v.name, lang: v.lang }))
         }
         const voiceNotFoundError = new Meteor.Error('tts.error', 'tts.voiceNotFound', details)
 
         if (onError) {
           onError(voiceNotFoundError)
-        }
-        else {
+        } else {
           console.error(voiceNotFoundError)
         }
       }
@@ -108,4 +108,3 @@ BrowserTTS.load = function load ({ onComplete = () => {}, onError = err => conso
     })
     .catch(e => onError(e))
 }
-

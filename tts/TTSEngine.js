@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor'
+import { ReactiveVar } from 'meteor/reactive-var'
 import { check, Match } from 'meteor/check'
 import { BrowserTTS } from './BrowserTTS'
 import { ServerTTS } from './ServerTTS'
@@ -88,8 +89,7 @@ TTSEngine.configure = function configure ({ loader, mode = (TTSEngine.mode || TT
     onError (err) {
       if (onError) {
         onError(err)
-      }
-      else {
+      } else {
         _globalErrorHandler(err)
       }
     },

@@ -8,7 +8,7 @@ export const Assets = {
   accept: '*',
   extensions: null, // accept all
   representative: 'name',
-  isPublic: true,
+  isPublic: true
 }
 
 Assets.schema = {}

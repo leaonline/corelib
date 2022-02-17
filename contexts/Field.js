@@ -38,6 +38,7 @@ Field.schema = {
   },
   icon: {
     type: String,
+    optional: true,
     label: Labels.icon
   },
   jobs: {
