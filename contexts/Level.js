@@ -26,6 +26,11 @@ Level.schema = {
     type: Number,
     min: 1
   },
+  isLegacy: {
+    type: Boolean,
+    label: Labels.legacy,
+    optional: true
+  },
   title: {
     type: String,
     label: Labels.title
@@ -33,6 +38,13 @@ Level.schema = {
   description: {
     type: String,
     label: Labels.description,
+    optional: true
+  },
+
+  // the level as numerical value for sorting and calulating
+
+  level: {
+    type: Number,
     optional: true
   }
 }

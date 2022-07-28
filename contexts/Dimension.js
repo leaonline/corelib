@@ -57,6 +57,11 @@ Dimension.schema = {
     label: Labels.shortNum,
     min: 1,
     unique: true
+  },
+  isLegacy: {
+    type: Boolean,
+    optional: true,
+    label: Labels.legacy
   }
 }
 

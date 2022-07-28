@@ -15,7 +15,7 @@ Package.onUse(function (api) {
   api.versionsFrom('1.6')
   api.use('ecmascript')
   api.use('reactive-var')
-  api.use('leaonline:ejson-regexp')
+  api.use('leaonline:ejson-regexp', { weak: true })
 })
 
 Package.onTest(function (api) {
