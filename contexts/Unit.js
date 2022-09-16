@@ -90,8 +90,7 @@ Unit.schema = {
   'instructions.$': createPageEntrySchema(),
   pages: {
     type: Array,
-    label: 'unit.pages',
-    optional: true
+    label: 'unit.pages'
   },
   'pages.$': {
     type: Object,

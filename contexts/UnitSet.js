@@ -122,7 +122,8 @@ UnitSet.schema = {
   },
   progress: {
     type: Number,
-    optional: true
+    optional: true,
+    defaultValue: 0
   },
   story: createPageSchema(),
   'story.$': createPageEntrySchema(),
