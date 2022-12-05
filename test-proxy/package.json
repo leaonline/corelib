@@ -24,7 +24,7 @@
     "chai": "^4.2.0",
     "easy-speech": "^1.1.1",
     "eslint-plugin-security": "^1.4.0",
-    "markdownlint-cli": "^0.27.1",
+    "markdownlint-cli": "^0.32.2",
     "puppeteer": "^5.5.0",
     "simpl-schema": "^1.10.2",
     "sinon": "^9.2.1",
