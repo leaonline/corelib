@@ -35,7 +35,9 @@ BrowserTTS.isAvailable = function () {
   return internal.initialized.get()
 }
 
-BrowserTTS.play = function play ({ id, text, volume, onEnd, onError }) {
+BrowserTTS.defaults = ({ volume, rate, pitch }) => EasySpeech.defaults({  volume, rate, pitch  })
+
+BrowserTTS.play = function play ({ id, text, rate, pitch, volume, onEnd, onError }) {
   const locale = i18n.getLocale()
 
   if (locale && internal.locale !== locale) {
@@ -90,7 +92,7 @@ BrowserTTS.play = function play ({ id, text, volume, onEnd, onError }) {
 
   const textToSpeak = text || i18n.get(id)
 
-  EasySpeech.speak({ text: textToSpeak, volume: volume })
+  EasySpeech.speak({ text: textToSpeak, volume, rate, pitch })
     .then((endEvent) => onEnd(endEvent))
     .catch(error => onError(error))
 }

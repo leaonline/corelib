@@ -109,7 +109,7 @@ TTSEngine.setMode = function setMode (mode) {
 
 TTSEngine.isConfigured = () => isConfigured.get()
 
-TTSEngine.play = function play ({ id, text, volume, onEnd, onError }) {
+TTSEngine.play = function play ({ id, text, volume, rate, pitch, onEnd, onError }) {
   ensureConfig()
   const errHandler = onError || _globalErrorHandler
   const endHandler = onEnd || (() => {})
@@ -117,6 +117,8 @@ TTSEngine.play = function play ({ id, text, volume, onEnd, onError }) {
     id,
     text,
     volume,
+    rate,
+    pitch,
     onEnd: endHandler,
     onError: errHandler
   })
@@ -126,3 +128,5 @@ TTSEngine.stop = function stop ({ onError } = {}) {
   ensureConfig()
   return getImpl().stop({ onError })
 }
+
+TTSEngine.defaults = ({ volume, rate, pitch }) => getImpl().defaults({ volume, rate, pitch })

@@ -103,3 +103,5 @@ ServerTTS.clear = function () {
     audio = null
   }
 }
+
+ServerTTS.defaults = () => {}
