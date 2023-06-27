@@ -11,6 +11,7 @@
     "lint:markdown-fix": "markdownlint --fix \"./packages/corelib/**/*.md\" --config ./.markdownlint.json",
     "test": "METEOR_PACKAGE_DIRS='../' TEST_BROWSER_DRIVER=puppeteer meteor test-packages --once --extra-packages jkuester:http --driver-package meteortesting:mocha ../ --port=7667",
     "test:watch": "METEOR_PACKAGE_DIRS='../' TEST_BROWSER_DRIVER=puppeteer TEST_WATCH=1 meteor test-packages --extra-packages jkuester:http --driver-package meteortesting:mocha ../ --port=7667",
+    "test:browser": "METEOR_PACKAGE_DIRS='../' TEST_WATCH=1 meteor test-packages --extra-packages jkuester:http --driver-package meteortesting:mocha ../ --port=7667",
     "test:coverage": "meteor npm run setup && TEST_BROWSER_DRIVER=puppeteer COVERAGE=1 COVERAGE_OUT_HTML=1 COVERAGE_OUT_LCOVONLY=1 COVERAGE_APP_FOLDER=$(pwd)/ meteor test-packages --once --driver-package meteortesting:mocha --extra-packages jkuester:http,lmieulet:meteor-legacy-coverage,lmieulet:meteor-coverage $(pwd)/packages/corelib --port=7667"
   },
   "dependencies": {
@@ -22,7 +23,7 @@
     "@babel/eslint-parser": "^7.12.1",
     "babel-plugin-istanbul": "^6.0.0",
     "chai": "^4.2.0",
-    "easy-speech": "^1.1.1",
+    "easy-speech": "^2.1.0",
     "eslint-plugin-security": "^1.4.0",
     "markdownlint-cli": "^0.27.1",
     "puppeteer": "^5.5.0",
@@ -72,6 +73,15 @@
           "allowSingleLine": true
         }
       ]
+    }
+  },
+  "meteor": {
+    "nodeModules": {
+      "recompile": {
+        "easy-speech": [
+          "client"
+        ]
+      }
     }
   }
 }

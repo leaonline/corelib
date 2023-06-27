@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor'
 import { ReactiveVar } from 'meteor/reactive-var'
 import { createLog } from '../logging/createLog'
-import EasySpeech from 'easy-speech/dist/EasySpeech.js'
+import EasySpeech from 'easy-speech/dist/EasySpeech.es5.js'
 import { i18n } from '../i18n/i18n'
 
 export const BrowserTTS = {}
@@ -31,7 +31,7 @@ const debug = createLog({
 //
 // /////////////////////////////////////////////////////////////////////////////
 
-BrowserTTS.isAvailable = function () {
+BrowserTTS.isAvailable = function isAvailable () {
   return internal.initialized.get()
 }
 
@@ -50,9 +50,9 @@ BrowserTTS.stop = function stop () {
   return EasySpeech.cancel()
 }
 
-BrowserTTS.load = function load ({ onComplete = () => {}, onError = err => console.error(err) } = {}) {
+BrowserTTS.load = function load ({ maxTimeout = 5000, onComplete = () => {}, onError = err => console.error(err) } = {}) {
   EasySpeech.debug(debug)
-  EasySpeech.init()
+  EasySpeech.init({ maxTimeout })
     .then(() => {
       try {
         updateVoices({

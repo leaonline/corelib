@@ -5,6 +5,8 @@ import { expect } from 'chai'
 import { MediaLib } from '../../contexts/MediaLib'
 import { Labels } from '../../i18n/Labels'
 import { createPageSchema, createPageEntrySchema } from '../pageSchema'
+import { SchemaValidator } from '../SchemaValidator'
+import { createSchema } from '../../test-helpers.tests'
 
 describe(createPageSchema.name, function () {
   it('returns a page schema definition object', function () {
@@ -36,6 +38,10 @@ describe(createPageEntrySchema.name, function () {
 
   if (Meteor.isServer) {
     it('contains a custom validation', function () {
+      SchemaValidator.set(function (...args) {
+        const schema = createSchema(...args)
+        return doc => schema.validate(doc)
+      })
       const { custom } = createPageEntrySchema()
       expect(custom.call({})).to.equal(undefined)
       expect(custom.call({ value: undefined })).to.equal(undefined)
