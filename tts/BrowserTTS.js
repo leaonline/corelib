@@ -137,13 +137,10 @@ const updateVoices = ({ locale, onError }) => {
   // as they provide a coherent
   if (filteredVoices.length > 0) {
     return selectVoice(getBestMatch(filteredVoices))
-  }
-
-
+  } else {
     // Step 1: no voice found for the current locale
     // --> make regex pattern that fits locale
-  // --> search voices for pattern
-  else {
+    // --> search voices for pattern
     const localePrefix = (locale || '').toLowerCase().split(/[-_]/)[0]
     const prefixMinus = `${localePrefix}-`
     const prefixUnderscore = `${localePrefix}_`
@@ -170,8 +167,7 @@ const updateVoices = ({ locale, onError }) => {
 
     if (filteredVoices.length > 0) {
       return selectVoice(getBestMatch(filteredVoices))
-    }
-    else {
+    } else {
       const details = {
         locale,
         localePrefix,
