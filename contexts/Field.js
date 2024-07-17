@@ -1,6 +1,10 @@
 import { Status } from '../types/Status'
 import { Labels } from '../i18n/Labels'
 
+/**
+ * Represents a field of work.
+ * Do not confuse with the technical concept of database fields.
+ */
 export const Field = {}
 
 Field.name = 'field'

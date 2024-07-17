@@ -12,6 +12,6 @@ describe(getFieldName.name, function () {
   })
   it('throws if the field name is not found', function () {
     const schema = {}
-    expect(() => getFieldName(schema, 'foo')).to.throw(FieldNotFoundError.name)
+    expect(() => getFieldName(schema, 'foo')).to.throw(FieldNotFoundError.NAME)
   })
 })
