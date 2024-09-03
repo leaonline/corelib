@@ -18,4 +18,3 @@ ecmascript@0.16.9              # Enable ECMAScript2015+ syntax in app code
 typescript@5.4.3              # Enable TypeScript syntax in .ts and .tsx modules
 shell-server@0.6.0            # Server-side component of the `meteor shell` command
 
-jkuester:http
