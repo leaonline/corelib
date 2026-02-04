@@ -117,6 +117,20 @@ Competency.schema = {
     type: String,
     max: 2500,
     optional: true
+  },
+  link: {
+    type: Object,
+    label: 'competency.link.title',
+    optional: true
+  },
+  'link.url': {
+    type: String,
+    label: 'competency.link.url'
+  },
+  'link.label': {
+    type: String,
+    label: 'competency.link.label',
+    optional: true
   }
 }
 

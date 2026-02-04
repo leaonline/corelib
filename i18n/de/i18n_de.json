@@ -38,7 +38,12 @@
     "descriptionSimple": "Rückmeldung TN",
     "level": "Alphalevel",
     "example": "Beispiel / Übersetzung",
-    "thresholds": "Schwellenwerte Kompetenz"
+    "thresholds": "Schwellenwerte Kompetenz",
+    "link": {
+      "title": "Externer Link",
+      "url": "URL",
+      "label": "Dargestellter Titel"
+    }
   },
   "competencyCategory": {
     "title": "KB-Kategorie"
@@ -67,7 +72,7 @@
     "title": "Unit",
     "legacyId": "Id-Alt",
     "stimuli": "Stimulus",
-    "instructions": "Bearbeitungshinweis",
+    "instructions": "Bearbeitungshinweis (alle Seiten)",
     "pages": "Aufgabenseiten",
     "page": "Aufgabenseite",
     "pageInstructions": "Bearbeitungshinweis (nur diese Seite)",
@@ -92,6 +97,9 @@
       },
       "image": {
         "title": "Bild"
+      },
+      "embed": {
+        "title": "iFrame/Embed"
       },
       "markdown": {
         "title": "Markdown"

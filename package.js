@@ -1,7 +1,7 @@
 /* eslint-env meteor */
 Package.describe({
   name: 'leaonline:corelib',
-  version: '2.0.0',
+  version: '2.0.1',
   // Brief, one-line summary of the package.
   summary: 'Includes the most common reusable components for lea.online',
   // URL to the Git repository containing the source code for this package.
