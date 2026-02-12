@@ -1,7 +1,7 @@
 # lea.online core library
 
 [![Test suite](https://github.com/leaonline/corelib/actions/workflows/node.js.yml/badge.svg)](https://github.com/leaonline/corelib/actions/workflows/node.js.yml)
-[![built with Meteor](https://img.shields.io/badge/Meteor-1.11.1-green?logo=meteor&logoColor=white)](https://meteor.com)
+[![built with Meteor](https://img.shields.io/badge/Meteor-package-green?logo=meteor&logoColor=white)](https://meteor.com)
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 ![GitHub](https://img.shields.io/github/license/leaonline/corelib)

@@ -12,18 +12,18 @@ Package.describe({
 })
 
 Package.onUse(function (api) {
-  api.versionsFrom(['2.8.1', '3.0.1'])
+  api.versionsFrom(['2.8.1', '3.0.1', '3.4'])
   api.use('ecmascript')
   api.use('reactive-var')
 })
 
 Package.onTest(function (api) {
-  api.versionsFrom(['2.8.1', '3.0.1'])
+  api.versionsFrom(['2.8.1', '3.0.1', '3.4'])
   api.use([
     'ecmascript',
     'mongo',
     'random',
-    'lmieulet:meteor-coverage@4.3.0',
+    'lmieulet:meteor-coverage@5.0.0',
     'lmieulet:meteor-legacy-coverage@0.4.0',
     'meteortesting:mocha@3.0.0'
   ])
