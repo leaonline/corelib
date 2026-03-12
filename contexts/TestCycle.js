@@ -6,6 +6,7 @@ import { UnitSet } from './UnitSet'
 import { getFieldName } from '../utils/getFieldName'
 import { createGetAllRoute } from '../decorators/routes/getAll'
 import { createGetByIdRoute } from '../decorators/routes/createGetByIdRoute'
+import { createGetByCodeRoute } from '../decorators/routes/createGetByCodeRoute'
 
 /**
  * A Test-Cycle represents the bridge between
@@ -162,5 +163,9 @@ TestCycle.routes.all = createGetAllRoute({
 })
 
 TestCycle.routes.byId = createGetByIdRoute({
+  context: TestCycle
+})
+
+TestCycle.routes.byCode = createGetByCodeRoute({
   context: TestCycle
 })

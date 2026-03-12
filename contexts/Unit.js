@@ -5,6 +5,7 @@ import { getFieldName } from '../utils/getFieldName'
 import { createPageEntrySchema, createPageSchema } from '../validation/pageSchema'
 import { createGetAllRoute } from '../decorators/routes/getAll'
 import { createGetByIdRoute } from '../decorators/routes/createGetByIdRoute'
+import { createGetByCodeRoute } from '../decorators/routes/createGetByCodeRoute'
 
 export const Unit = {}
 
@@ -124,5 +125,9 @@ Unit.routes.all = createGetAllRoute({
 })
 
 Unit.routes.byId = createGetByIdRoute({
+  context: Unit
+})
+
+Unit.routes.byCode = createGetByCodeRoute({
   context: Unit
 })

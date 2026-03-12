@@ -8,6 +8,7 @@ import { createPageEntrySchema, createPageSchema } from '../validation/pageSchem
 import { trapCircular } from '../utils/trapCircular'
 import { createGetAllRoute } from '../decorators/routes/getAll'
 import { createGetByIdRoute } from '../decorators/routes/createGetByIdRoute'
+import { createGetByCodeRoute } from '../decorators/routes/createGetByCodeRoute'
 
 export const UnitSet = {}
 
@@ -191,5 +192,9 @@ UnitSet.routes.all = createGetAllRoute({
 })
 
 UnitSet.routes.byId = createGetByIdRoute({
+  context: UnitSet
+})
+
+UnitSet.routes.byCode = createGetByCodeRoute({
   context: UnitSet
 })
