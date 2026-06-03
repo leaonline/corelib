@@ -1,59 +1,66 @@
-import { check, Match } from 'meteor/check'
 import { Connect } from './Connect'
-import { Scoring } from '../../scoring/Scoring'
 import { isUndefinedResponse } from '../../utils/response/isUndefinedResponse'
-import { isSafeInteger } from '../../utils/numbers/isSafeInteger'
 import { toInteger } from '../../utils/numbers/toInteger'
 
+
 Connect.score = function (itemDoc = {}, responseDoc = {}) {
-  // check(itemDoc.scoring, [{
-  //   competency: String,
-  //   correctResponse: Match.ObjectIncluding({
-  //     left: Number,
-  //     right: Number
-  //   }),
-  //   requires: Number
-  // }])
-
-  const { scoring } = itemDoc
-  const isUndefined = isUndefinedResponse(responseDoc.responses)
-
-  // of not undefined we check and map all responses to valid integers
-  const mappedResponses = !isUndefined && {
-    responses: responseDoc.responses.map(value => {
+    const { scoring } = itemDoc
+    const isUndefined = isUndefinedResponse(responseDoc.responses)
+    // of not undefined we check and map all responses to valid integers
+    const mappedResponses = !isUndefined && responseDoc.responses.map(value => {
+      const split = value.split(',')
       // we need to check for value integrity, allowed are strings of integers
       // or integers (which could also .0 floats, they are basically ints in JS)
-      check(value, Match.Where(isSafeInteger))
-      return toInteger(value)
+      return split.map(toInteger)
+    })
+
+    return scoring.map(entry => {
+      if (isUndefined) {
+        return fail(entry, responseDoc, isUndefined)
+      }
+      /*
+       TODO: implement
+       switch (entry.requires) {
+       case Scoring.types.all.value:
+       return scoreAll(entry, mappedResponses, isUndefined)
+       case Scoring.types.allInclusive.value:
+       return scoreAllInclusive(entry, mappedResponses, isUndefined)
+       case Scoring.types.any.value:
+       return scoreAny(entry, mappedResponses, isUndefined)
+       default:
+       throw new Error(`Unexpected scoring type ${entry.requires}`)
+       }
+       */
+      return scoreAllInclusive(entry, mappedResponses)
     })
   }
 
-  return scoring.map(entry => {
-    if (isUndefined) {
-      return fail(entry, responseDoc, isUndefined)
-    }
+  function scoreAllInclusive (entry, mappedResponses) {
+    const { competency, correctResponse, explanation } = entry
+    const score = correctResponse.every(({ left, right }) => {
+      return !!mappedResponses.find(([l, r]) => l == left && r == right)
+    })
 
-    switch (entry.requires) {
-      case Scoring.types.all.value:
-        return fail(entry, mappedResponses, isUndefined)
-      case Scoring.types.allInclusive.value:
-        return fail(entry, mappedResponses, isUndefined)
-      case Scoring.types.any.value:
-        return fail(entry, mappedResponses, isUndefined)
-      default:
-        throw new Error(`Unexpected scoring type ${entry.requires}`)
+    return {
+      competency,
+      correctResponse,
+      explanation,
+      value: mappedResponses,
+      score,
+      isUndefined: false
     }
-  })
-}
-
-function fail ({ competency, correctResponse }, { responses }, isUndefined) {
-  return {
-    competency,
-    correctResponse,
-    value: responses,
-    score: false,
-    isUndefined
   }
-}
+
+  function fail ({ competency, correctResponse, explanation }, { responses }, isUndefined) {
+    return {
+      competency,
+      explanation,
+      correctResponse,
+      value: responses,
+      score: false,
+      isUndefined
+    }
+  }
+
 
 export { Connect }

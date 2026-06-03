@@ -9,7 +9,8 @@ Highlight.score = function (itemDoc = {}, responseDoc = {}) {
   check(itemDoc.scoring, [{
     competency: String,
     correctResponse: [Number],
-    requires: Number
+    requires: Number,
+    explanation: Match.Maybe(String)
   }])
 
   const { scoring } = itemDoc
@@ -43,38 +44,39 @@ Highlight.score = function (itemDoc = {}, responseDoc = {}) {
   })
 }
 
-function fail ({ competency, correctResponse }, { responses }, isUndefined) {
+function fail ({ competency, correctResponse, explanation }, { responses }, isUndefined) {
   return {
     competency,
     correctResponse,
     value: responses,
     score: false,
-    isUndefined
+    isUndefined,
+    explanation
   }
 }
 
-function scoreAll ({ competency, correctResponse }, { responses }) {
+function scoreAll ({ competency, correctResponse, explanation }, { responses }) {
   if (correctResponse.length !== responses.length) {
-    return fail({ competency, correctResponse }, { responses }, false)
+    return fail({ competency, correctResponse, explanation }, { responses }, false)
   }
 
   correctResponse.sort()
   responses.sort()
 
   const score = correctResponse.every((value, index) => responses[index] === value)
-  return { competency, correctResponse, value: responses, score, isUndefined: false }
+  return { competency, correctResponse, value: responses, score, isUndefined: false, explanation }
 }
 
-function scoreAllInclusive ({ competency, correctResponse }, { responses }) {
+function scoreAllInclusive ({ competency, correctResponse, explanation }, { responses }) {
   return correctResponse.every((value) => responses.includes(value))
-    ? { competency, correctResponse, value: responses, score: true, isUndefined: false }
-    : { competency, correctResponse, value: responses, score: false, isUndefined: false }
+    ? { competency, correctResponse, value: responses, score: true, isUndefined: false, explanation }
+    : { competency, correctResponse, value: responses, score: false, isUndefined: false, explanation }
 }
 
-function scoreAny ({ competency, correctResponse }, { responses }) {
+function scoreAny ({ competency, correctResponse, explanation }, { responses }) {
   return correctResponse.some(value => responses.includes(value))
-    ? { competency, correctResponse, value: responses, score: true, isUndefined: false }
-    : { competency, correctResponse, value: responses, score: false, isUndefined: false }
+    ? { competency, correctResponse, value: responses, score: true, isUndefined: false, explanation }
+    : { competency, correctResponse, value: responses, score: false, isUndefined: false, explanation }
 }
 
 export { Highlight }

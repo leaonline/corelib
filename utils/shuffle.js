@@ -7,4 +7,6 @@ export const setShuffle = function (fn) {
   _shuffle = fn
 }
 
-export const shuffle = (...args) => _shuffle.apply(_shuffle, args)
+export const shuffle = (...args) => {
+  _shuffle.apply(_shuffle, args)
+}

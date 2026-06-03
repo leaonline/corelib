@@ -19,7 +19,8 @@ Cloze.score = function (itemDoc = {}, responseDoc = {}) {
   check(itemDoc.scoring, [{
     competency: [String],
     correctResponse: RegExp,
-    target: Number
+    target: Number,
+    explanation: Match.Maybe(String)
   }])
 
   const { scoring } = itemDoc
@@ -35,6 +36,8 @@ Cloze.score = function (itemDoc = {}, responseDoc = {}) {
         correctResponse: entry.correctResponse,
         value: responseDoc.responses,
         score: false,
+        explanation: entry.explanation,
+        target: entry.target,
         isUndefined: true
       }
     }
@@ -49,15 +52,15 @@ function scoreBlanks (entry, { responses = [] }) {
   }
 
   let score = false
-  const { correctResponse, competency, target } = entry
+  const { correctResponse, competency, target, explanation } = entry
   const value = responses[target]
 
-  // we still may have individual undefined cases and we need to cover, that
-  // there may be text inputs, that explictly ask for an undefined response
+  // we still may have individual undefined cases, and we need to cover that
+  // there may be text inputs, that explicitly ask for an undefined response
   const isUndefined = !correctResponse.source.includes('__undefined__') && isUndefinedResponse(value)
 
   if (isUndefined) {
-    return { competency, correctResponse, value, score, isUndefined }
+    return { competency, correctResponse, target, value, score, isUndefined, explanation }
   }
 
   check(value, Match.Where(isSafeTextString))
@@ -65,7 +68,7 @@ function scoreBlanks (entry, { responses = [] }) {
   // texts are scored against a RegExp pattern
   score = correctResponse.test(value)
 
-  return { competency, correctResponse, value, score, isUndefined: false }
+  return { competency, correctResponse, target, value, score, explanation, isUndefined: false }
 }
 
 export { Cloze }

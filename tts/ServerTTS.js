@@ -98,6 +98,10 @@ ServerTTS.urlIsCached = function urlIsCached (requestText) {
   return urlCache.has(requestText)
 }
 
+ServerTTS.load = ({ maxTimeout = 5000, onComplete = () => {}, onError = err => console.error(err) } = {}) => {
+  onComplete()
+}
+
 ServerTTS.clear = function () {
   if (audio) {
     audio = null

@@ -26,10 +26,12 @@ export const Scoring = {
     const { Connect } = await import('../items/interactive/score')
     const { Cloze } = await import('../items/text/score')
     const { Highlight } = await import('../items/highlight/score')
+    const { Sort } = await import('../items/sort/score')
     Scoring.register(Choice.name, Choice.score)
     Scoring.register(Connect.name, Connect.score)
     Scoring.register(Cloze.name, Cloze.score)
     Scoring.register(Highlight.name, Highlight.score)
+    Scoring.register(Sort.name, Sort.score)
     _initialized = true
     return true
   }
