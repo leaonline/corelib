@@ -19,7 +19,9 @@ ServerTTS.name = 'TTSServer'
 
 const urlCache = new Map()
 const log = createLog({
-  name: ServerTTS.name
+  name: ServerTTS.name,
+  type: 'debug',
+  devOnly: true
 })
 
 let audio
@@ -83,7 +85,7 @@ ServerTTS.play = function play ({ id, text, onEnd, onError } = {}) {
 
     urlCache.set(requestText, url)
     playAudio(url, onEnd, onError)
-  })
+  }, log)
 }
 
 ServerTTS.stop = function stop () {

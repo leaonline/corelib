@@ -85,20 +85,23 @@ TTSEngine.configure = function configure ({ loader, mode = (TTSEngine.mode || TT
     _globalErrorHandler = globalErrorHandler
   }
 
-  modesImpl[mode].load({
-    onError (err) {
-      if (onError) {
-        onError(err)
-      } else {
-        _globalErrorHandler(err)
-      }
-    },
-    onComplete (data) {
-      log('successfully loaded')
-      isConfigured.set(true)
-      if (onComplete) onComplete(data)
-    }
-  })
+    modesImpl[mode].load({
+        onError (err) {
+            console.debug(err)
+            if (onError) {
+                onError(err)
+            } else {
+                _globalErrorHandler(err)
+            }
+        },
+        onComplete (data) {
+            log(`successfully loaded mode ${mode}`)
+            isConfigured.set(true)
+            if (onComplete) {
+                return onComplete(data)
+            }
+        }
+    })
 }
 
 TTSEngine.setMode = function setMode (mode) {
@@ -109,19 +112,27 @@ TTSEngine.setMode = function setMode (mode) {
 
 TTSEngine.isConfigured = () => isConfigured.get()
 
+TTSEngine.replay = () => {
+    TTSEngine.stop()
+    TTSEngine.play(playCache)
+}
+
+let playCache = {}
+
 TTSEngine.play = function play ({ id, text, volume, rate, pitch, onEnd, onError }) {
   ensureConfig()
   const errHandler = onError || _globalErrorHandler
   const endHandler = onEnd || (() => {})
-  return getImpl().play({
-    id,
-    text,
-    volume,
-    rate,
-    pitch,
-    onEnd: endHandler,
-    onError: errHandler
-  })
+    playCache = {
+        id,
+        text,
+        volume,
+        rate,
+        pitch,
+        onEnd: endHandler,
+        onError: errHandler
+    }
+  return getImpl().play(playCache)
 }
 
 TTSEngine.stop = function stop ({ onError } = {}) {
