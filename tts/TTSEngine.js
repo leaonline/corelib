@@ -44,11 +44,11 @@ const log = createLog({
   devOnly: true
 })
 
-const isConfigured = new ReactiveVar(false)
+const isConfigured = new ReactiveDict({})
 let _globalErrorHandler = (err) => console.error('[TTSEngine]: error ', err.message, err.details)
 
 const ensureConfig = () => {
-  if (!isConfigured.get()) {
+  if (!isConfigured.get(TTSEngine.mode)) {
     throw new Error('[TTSEngine]: TTS needs to be configured, first!')
   }
 }
@@ -96,7 +96,7 @@ TTSEngine.configure = function configure ({ loader, mode = (TTSEngine.mode || TT
         },
         onComplete (data) {
             log(`successfully loaded mode ${mode}`)
-            isConfigured.set(true)
+            isConfigured.set(mode, true)
             if (onComplete) {
                 return onComplete(data)
             }
@@ -110,7 +110,7 @@ TTSEngine.setMode = function setMode (mode) {
   TTSEngine.mode = mode
 }
 
-TTSEngine.isConfigured = () => isConfigured.get()
+TTSEngine.isConfigured = () => isConfigured.get(TTSEngine.mode)
 
 TTSEngine.replay = () => {
     TTSEngine.stop()

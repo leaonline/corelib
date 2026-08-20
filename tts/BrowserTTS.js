@@ -57,6 +57,11 @@ BrowserTTS.stop = function stop () {
 }
 
 BrowserTTS.load = function load ({ maxTimeout = 5000, onComplete = () => {}, onError = err => console.error(err) } = {}) {
+  const status = EasySpeech.status()
+  if (internal.initialized.get()) {
+    return onComplete(EasySpeech.status())
+  }
+
   EasySpeech.debug(debug)
   EasySpeech.init({ maxTimeout })
     .then(() => {
