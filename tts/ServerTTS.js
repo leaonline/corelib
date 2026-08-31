@@ -29,6 +29,7 @@ let audio
 function playAudio (url, onEnd, onError) {
   ServerTTS.stop()
   audio = new window.Audio(url)
+  audio.crossOrigin = 'anonymous'
   audio.addEventListener('ended', onEnd)
   audio.addEventListener('error', onError)
   audio.play()
