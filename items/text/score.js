@@ -16,10 +16,12 @@ const isSafeTextString = s => {
 }
 
 Cloze.score = function (itemDoc = {}, responseDoc = {}) {
+  check(responseDoc.itemId, String)
   check(itemDoc.scoring, [{
     competency: [String],
     correctResponse: RegExp,
-    target: Number
+    target: Number,
+    explanation: Match.Maybe(String)
   }])
 
   const { scoring } = itemDoc
@@ -31,10 +33,13 @@ Cloze.score = function (itemDoc = {}, responseDoc = {}) {
   return scoring.map(entry => {
     if (allUndefined) {
       return {
+        itemId: responseDoc.itemId,
         competency: entry.competency,
         correctResponse: entry.correctResponse,
         value: responseDoc.responses,
         score: false,
+        explanation: entry.explanation,
+        target: entry.target,
         isUndefined: true
       }
     }
@@ -43,21 +48,21 @@ Cloze.score = function (itemDoc = {}, responseDoc = {}) {
   })
 }
 
-function scoreBlanks (entry, { responses = [] }) {
+function scoreBlanks (entry, { itemId, responses = [] }) {
   if (!Array.isArray(responses)) {
     throw new Error('Match error: Failed Match.Where validation')
   }
 
   let score = false
-  const { correctResponse, competency, target } = entry
+  const { correctResponse, competency, target, explanation } = entry
   const value = responses[target]
 
-  // we still may have individual undefined cases and we need to cover, that
-  // there may be text inputs, that explictly ask for an undefined response
+  // we still may have individual undefined cases, and we need to cover that
+  // there may be text inputs, that explicitly ask for an undefined response
   const isUndefined = !correctResponse.source.includes('__undefined__') && isUndefinedResponse(value)
 
   if (isUndefined) {
-    return { competency, correctResponse, value, score, isUndefined }
+    return { itemId, competency, correctResponse, target, value, score, isUndefined, explanation }
   }
 
   check(value, Match.Where(isSafeTextString))
@@ -65,7 +70,7 @@ function scoreBlanks (entry, { responses = [] }) {
   // texts are scored against a RegExp pattern
   score = correctResponse.test(value)
 
-  return { competency, correctResponse, value, score, isUndefined: false }
+  return { itemId, competency, correctResponse, target, value, score, explanation, isUndefined: false }
 }
 
 export { Cloze }

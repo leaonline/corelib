@@ -43,7 +43,13 @@ BrowserTTS.play = function play ({ id, text, rate, pitch, volume, onEnd, onError
 
   EasySpeech.speak({ text: textToSpeak, volume, rate, pitch })
     .then((endEvent) => onEnd(endEvent))
-    .catch(error => onError(error))
+    .catch(error => {
+        if (error.error === "interrupted" || error.error === "canceled") {
+            console.log("speech stopped intentionally", error.error);
+            return onEnd(error)
+        }
+        onError(error)
+    })
 }
 
 BrowserTTS.stop = function stop () {
@@ -51,6 +57,11 @@ BrowserTTS.stop = function stop () {
 }
 
 BrowserTTS.load = function load ({ maxTimeout = 5000, onComplete = () => {}, onError = err => console.error(err) } = {}) {
+  const status = EasySpeech.status()
+  if (internal.initialized.get()) {
+    return onComplete(EasySpeech.status())
+  }
+
   EasySpeech.debug(debug)
   EasySpeech.init({ maxTimeout })
     .then(() => {

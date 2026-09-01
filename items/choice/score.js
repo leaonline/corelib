@@ -10,7 +10,8 @@ Choice.score = function (itemDoc = {}, responseDoc = {}) {
   check(itemDoc.scoring, [{
     competency: String,
     correctResponse: [Number],
-    requires: Number
+    requires: Number,
+    explanation: Match.Maybe(String)
   }])
   const { scoring } = itemDoc
   const { flavor } = itemDoc
@@ -27,14 +28,14 @@ Choice.score = function (itemDoc = {}, responseDoc = {}) {
   })
 }
 
-function scoreSingle ({ competency, correctResponse, requires }, { responses = [] }) {
+function scoreSingle ({ competency, correctResponse, requires, explanation }, { responses = [] }) {
   // single choice have only one selected value
   let value = responses[0]
   let score = false
   const isUndefined = isUndefinedResponse(value)
 
   if (isUndefined) {
-    return { competency, correctResponse, value, score, isUndefined }
+    return { competency, correctResponse, value, score, isUndefined, explanation }
   }
 
   // we need to check for value integrity, allowed are strings of integers
@@ -49,17 +50,18 @@ function scoreSingle ({ competency, correctResponse, requires }, { responses = [
   // use the first defined expected value
   score = correctResponse.includes(value)
 
-  return { competency, correctResponse, value, score, isUndefined }
+  return { competency, correctResponse, value, score, isUndefined, explanation }
 }
 
-function scoreMultiple ({ competency, correctResponse, requires }, { responses = [] }) {
+function scoreMultiple ({ competency, correctResponse, requires, explanation }, { responses = [] }) {
   if (isUndefinedResponse(responses)) {
     return {
       competency,
       correctResponse,
       value: responses,
       score: false,
-      isUndefined: true
+      isUndefined: true,
+      explanation
     }
   }
 
@@ -68,20 +70,22 @@ function scoreMultiple ({ competency, correctResponse, requires }, { responses =
       return scoreMultipleAll({
         competency,
         correctResponse,
-        requires
+        requires,
+        explanation
       }, { responses })
     case Scoring.types.any.value:
       return scoreMultipleAny({
         competency,
         correctResponse,
-        requires
+        requires,
+        explanation
       }, { responses })
     default:
       throw new Error(`Unexpected scoring type ${requires}`)
   }
 }
 
-function scoreMultipleAll ({ competency, correctResponse, requires }, { responses }) {
+function scoreMultipleAll ({ competency, correctResponse, requires, explanation }, { responses }) {
   const mappedResponses = responses.map(value => {
     // we need to check for value integrity, allowed are strings of integers
     // or integers (which could also .0 floats, they are basically ints in JS)
@@ -99,7 +103,8 @@ function scoreMultipleAll ({ competency, correctResponse, requires }, { response
       correctResponse,
       value: mappedResponses,
       score,
-      isUndefined: false
+      isUndefined: false,
+      explanation
     }
   }
 
@@ -112,11 +117,12 @@ function scoreMultipleAll ({ competency, correctResponse, requires }, { response
     correctResponse,
     value: responses,
     score,
-    isUndefined: false
+    isUndefined: false,
+    explanation
   }
 }
 
-function scoreMultipleAny ({ competency, correctResponse, requires }, { responses }) {
+function scoreMultipleAny ({ competency, correctResponse, requires,explanation }, { responses }) {
   const score = responses
     .map(value => {
       if (isUndefinedResponse(value)) return undefined
@@ -132,7 +138,8 @@ function scoreMultipleAny ({ competency, correctResponse, requires }, { response
     correctResponse,
     value: responses,
     score,
-    isUndefined: false
+    isUndefined: false,
+    explanation
   }
 }
 

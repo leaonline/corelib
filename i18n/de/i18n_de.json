@@ -142,6 +142,12 @@
       "title": "Markieren",
       "activateTTS": "Text-To-Speech bei markieren aktivieren",
       "includeSpace": "Leerzeichen markierbar"
+    },
+    "connect": {
+      "title": "Verbinden"
+    },
+    "sort": {
+      "title": "Sortieren"
     }
   },
   "scoring": {
