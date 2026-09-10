@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.11.2",
+    "marked": "^18.0.12",
     "meteor-node-stubs": "^1.0.1"
   },
   "devDependencies": {
