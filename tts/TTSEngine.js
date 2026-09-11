@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor'
-import { ReactiveVar } from 'meteor/reactive-var'
 import { check, Match } from 'meteor/check'
+import { ReactiveDict } from 'meteor/reactive-dict'
 import { BrowserTTS } from './BrowserTTS'
 import { ServerTTS } from './ServerTTS'
 import { TTSConfig } from './TTSConfig'
