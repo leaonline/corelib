@@ -16,13 +16,13 @@ Sort.score = (itemDoc = {}, responseDoc = {}) => {
     if (isUndefined) {
       return fail(entry, responseDoc, isUndefined)
     }
-    return scoreAllInclusive(entry, mappedResponses)
+    return scoreAllInclusive(entry, mappedResponses, responseDoc)
   })
 }
 
-function scoreAllInclusive (entry, mappedResponses) {
+function scoreAllInclusive (entry, mappedResponses, responseDoc) {
   const { competency, correctResponse, explanation } = entry
-
+  const { itemId } = responseDoc
   // [0,1,2,3] == [0,1,2,3] -> true
   // [0,1,2,3] == [3,2,1,0] -> false
   const score = JSON.stringify(mappedResponses) === JSON.stringify(correctResponse)
@@ -33,18 +33,20 @@ function scoreAllInclusive (entry, mappedResponses) {
     value: mappedResponses,
     score,
     isUndefined: false,
-    explanation
+    explanation,
+    itemId
   }
 }
 
-function fail ({ competency, correctResponse, explanation }, { responses }, isUndefined) {
+function fail ({ competency, correctResponse, explanation }, { itemId, responses }, isUndefined) {
   return {
     competency,
     correctResponse,
     value: responses,
     score: false,
     isUndefined,
-    explanation
+    explanation,
+    itemId
   }
 }
 

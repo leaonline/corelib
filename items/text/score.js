@@ -1,6 +1,7 @@
 import { Cloze } from './Cloze'
 import { isUndefinedResponse } from '../../utils/response/isUndefinedResponse'
 import { check, Match } from 'meteor/check'
+import { createScoringInputValidator } from '../common/validateScoringInput'
 
 const critical = /eval\s*\(|__proto__|require\s*\(|import\s*'|new function|\.prototype|function\s*\(/i
 const isSafeTextString = s => {
@@ -15,14 +16,17 @@ const isSafeTextString = s => {
   return !critical.test(s)
 }
 
-Cloze.score = function (itemDoc = {}, responseDoc = {}) {
-  check(responseDoc.itemId, String)
-  check(itemDoc.scoring, [{
+const validateInput = createScoringInputValidator({
+  scoringMatcher: {
     competency: [String],
     correctResponse: RegExp,
     target: Number,
-    explanation: Match.Maybe(String)
-  }])
+    explanation: Match.OneOf(String, null, undefined)
+  }
+})
+
+Cloze.score = function (itemDoc = {}, responseDoc = {}) {
+  validateInput({ itemDoc, responseDoc })
 
   const { scoring } = itemDoc
 

@@ -3,12 +3,12 @@ import { marked, Renderer, Tokenizer } from 'marked'
 export const Markdown = {}
 
 export class DefaultMarkdownRenderer extends Renderer {
-  constructor(userOptions) {
+  constructor (userOptions) {
     super()
     this.userOptions = userOptions
   }
 
-  heading(data) {
+  heading (data) {
     const { tokens, depth } = data
     const text = this.parser.parseInline(tokens)
     const tts = this.userOptions.useTTS ? internal.createTTS(text, this.userOptions) : ''
@@ -16,15 +16,15 @@ export class DefaultMarkdownRenderer extends Renderer {
     return `<h${depth} class="lea-text">${content}</h${depth}>`
   }
 
-  paragraph({ tokens } /*, level */) {
+  paragraph ({ tokens } /*, level */) {
     // Check if there are line breaks within the paragraph
     const hasBreaks = tokens.some(t => t.type === 'br')
-    
+
     if (hasBreaks) {
       // Split tokens by br and render each segment with its own soundbutton
       const segments = []
       let currentSegment = []
-      
+
       for (const token of tokens) {
         if (token.type === 'br') {
           if (currentSegment.length > 0) {
@@ -38,7 +38,7 @@ export class DefaultMarkdownRenderer extends Renderer {
       if (currentSegment.length > 0) {
         segments.push(currentSegment)
       }
-      
+
       // Render each segment with its own soundbutton
       const renderedSegments = segments.map(segment => {
         const html = this.parser.parseInline(segment)
@@ -46,10 +46,10 @@ export class DefaultMarkdownRenderer extends Renderer {
         const tts = this.userOptions.useTTS && plainText ? internal.createTTS(plainText, this.userOptions) : ''
         return tts ? `${tts} ${html}` : html
       })
-      
+
       return `<p class="lea-text">${renderedSegments.join('<br>')}</p>`
     }
-    
+
     // Regular paragraph without line breaks
     const text = this.parser.parseInline(tokens)
     const plainText = toPlainText(tokens)
@@ -58,16 +58,16 @@ export class DefaultMarkdownRenderer extends Renderer {
     return `<p class="lea-text">${content}</p>`
   }
 
-  strong({ tokens }) {
+  strong ({ tokens }) {
     const text = this.parser.parseInline(tokens)
     return `<span class="lea-text-bold">${text}</span>`
   }
 
-  br() {
+  br () {
     return ''
   }
 
-  listitem({ tokens }) {
+  listitem ({ tokens }) {
     const text = this.parser.parse(tokens)
     const plainText = toPlainText(tokens)
     const tts = this.userOptions.useTTS ? internal.createTTS(plainText, this.userOptions) : ''
@@ -75,7 +75,7 @@ export class DefaultMarkdownRenderer extends Renderer {
     return `<li>${content}</li>`
   }
 
-  tablecell({ tokens, header }) {
+  tablecell ({ tokens, header }) {
     const text = this.parser.parseInline(tokens)
     const tts = this.userOptions.useTTS ? internal.createTTS(text, this.userOptions) : ''
     const content = tts ? `${tts} ${text}` : text
@@ -93,11 +93,12 @@ const internal = {
     breaks: true,
     gfm: true,
     async: true,
-    headerIds: false,
+    headerIds: false
   }
 }
 
 const normalizeMarkdown = value =>
+  // eslint-disable-next-line
   value.replace(/^[\u200B\u200C\u200D\u200E\u200F\uFEFF]/, '')
 
 const toPlainText = token => {
@@ -141,7 +142,7 @@ const extractSoundButtonTexts = (token) => {
       // Split by br tokens and extract text for each segment
       const segments = []
       let currentSegment = []
-      
+
       for (const t of token.tokens) {
         if (t.type === 'br') {
           if (currentSegment.length > 0) {
@@ -155,7 +156,7 @@ const extractSoundButtonTexts = (token) => {
       if (currentSegment.length > 0) {
         segments.push(currentSegment)
       }
-      
+
       return segments.map(segment => toPlainText(segment)).filter(text => text.length > 0)
     }
     // No line breaks - return single text
@@ -174,14 +175,14 @@ const extractSoundButtonTexts = (token) => {
   if (token.type === 'table') {
     // Table cells each get their own text
     const texts = []
-    
+
     // Header cells
     if (Array.isArray(token.header)) {
       for (const headerCell of token.header) {
         texts.push(toPlainText(headerCell))
       }
     }
-    
+
     // Body cells
     if (Array.isArray(token.rows)) {
       for (const row of token.rows) {
@@ -190,14 +191,13 @@ const extractSoundButtonTexts = (token) => {
         }
       }
     }
-    
+
     return texts
   }
 
   // For other block types, return the full text
   return [toPlainText(token)]
 }
-
 
 Markdown.setRenderer = value => {
   internal.Renderer = value
@@ -223,8 +223,8 @@ Markdown.render = async (element) => {
     normalizeMarkdown(value),
     {
       ...internal.defaultOptions,
-      renderer,
-    },
+      renderer
+    }
   )
 }
 
@@ -234,7 +234,7 @@ Markdown.tokenize = async (element) => {
 
   const blockTokens = marked.lexer(normalizeMarkdown(value), {
     ...internal.defaultOptions,
-    ...options,
+    ...options
   })
     .filter(token => token.type !== 'space')
 
@@ -246,7 +246,7 @@ Markdown.tokenize = async (element) => {
       if (text.length > 0) {
         result.push({
           ...token,
-          text,
+          text
         })
       }
     }
