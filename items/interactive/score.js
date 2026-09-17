@@ -1,8 +1,22 @@
 import { Connect } from './Connect'
 import { isUndefinedResponse } from '../../utils/response/isUndefinedResponse'
 import { toInteger } from '../../utils/numbers/toInteger'
+import { createScoringInputValidator } from '../common/validateScoringInput'
+import { Match } from 'meteor/check'
+
+const validateInput = createScoringInputValidator({
+  scoringMatcher: Match.ObjectIncluding({
+    competency: String,
+    correctResponse: [{
+      left: Number,
+      right: Number
+    }],
+    explanation: Match.Maybe(Match.OneOf(String, null, undefined))
+  })
+})
 
 Connect.score = function (itemDoc = {}, responseDoc = {}) {
+  validateInput({ itemDoc, responseDoc })
   const { scoring } = itemDoc
   const isUndefined = isUndefinedResponse(responseDoc.responses)
   // of not undefined we check and map all responses to valid integers

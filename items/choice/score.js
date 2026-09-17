@@ -10,12 +10,12 @@ const validateInput = createScoringInputValidator({
   itemDocMatcher: Match.ObjectIncluding({
     flavor: Number
   }),
-  scoringMatcher: {
+  scoringMatcher: Match.ObjectIncluding({
     competency: String,
     correctResponse: [Number],
     requires: Number,
-    explanation: Match.OneOf(String, undefined, null)
-  }
+    explanation: Match.Maybe(Match.OneOf(String, null, undefined))
+  })
 })
 
 Choice.score = function (itemDoc = {}, responseDoc = {}) {

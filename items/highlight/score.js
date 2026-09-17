@@ -7,12 +7,12 @@ import { isSafeInteger } from '../../utils/numbers/isSafeInteger'
 import { createScoringInputValidator } from '../common/validateScoringInput'
 
 const validateInputs = createScoringInputValidator({
-  scoringMatcher: {
+  scoringMatcher: Match.ObjectIncluding({
     competency: String,
     correctResponse: [Number],
     requires: Number,
-    explanation: Match.OneOf(String, undefined, null)
-  }
+    explanation: Match.Maybe(Match.OneOf(String, null, undefined))
+  })
 })
 
 Highlight.score = function (itemDoc = {}, responseDoc = {}) {

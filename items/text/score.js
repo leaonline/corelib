@@ -17,12 +17,12 @@ const isSafeTextString = s => {
 }
 
 const validateInput = createScoringInputValidator({
-  scoringMatcher: {
+  scoringMatcher: Match.ObjectIncluding({
     competency: [String],
     correctResponse: RegExp,
     target: Number,
-    explanation: Match.OneOf(String, null, undefined)
-  }
+    explanation: Match.Maybe(Match.OneOf(String, null, undefined))
+  })
 })
 
 Cloze.score = function (itemDoc = {}, responseDoc = {}) {
