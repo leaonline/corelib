@@ -228,7 +228,7 @@ Markdown.render = async (element) => {
   )
 }
 
-Markdown.tokenize = async (element) => {
+Markdown.tokenize = (element) => {
   if (!element?.value || typeof element.value !== 'string') return []
   const { value, ...options } = element
 
