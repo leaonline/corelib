@@ -1,5 +1,6 @@
 {
   "name": "test-proxy",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "start": "meteor run",
@@ -16,12 +17,12 @@
   },
   "dependencies": {
     "marked": "^18.0.14",
+    "@babel/runtime": "^8.0.5",
     "meteor-node-stubs": "^1.2.30"
   },
   "devDependencies": {
     "@babel/core": "^8.0.6",
     "@babel/eslint-parser": "^7.12.1",
-    "@babel/runtime": "^8.0.5",
     "babel-plugin-istanbul": "^6.0.0",
     "chai": "^6.2.2",
     "easy-speech": "^2.4.0",
