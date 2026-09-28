@@ -59,4 +59,4 @@ jobs:
           cd test-proxy
           npm ci
           npm run setup
-          npm run ci
+          npm run test:ci
