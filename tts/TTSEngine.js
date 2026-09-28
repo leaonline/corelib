@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor'
-import { ReactiveVar } from 'meteor/reactive-var'
 import { check, Match } from 'meteor/check'
+import { ReactiveDict } from 'meteor/reactive-dict'
 import { BrowserTTS } from './BrowserTTS'
 import { ServerTTS } from './ServerTTS'
 import { TTSConfig } from './TTSConfig'
@@ -44,11 +44,11 @@ const log = createLog({
   devOnly: true
 })
 
-const isConfigured = new ReactiveVar(false)
+const isConfigured = new ReactiveDict({})
 let _globalErrorHandler = (err) => console.error('[TTSEngine]: error ', err.message, err.details)
 
 const ensureConfig = () => {
-  if (!isConfigured.get()) {
+  if (!isConfigured.get(TTSEngine.mode)) {
     throw new Error('[TTSEngine]: TTS needs to be configured, first!')
   }
 }
@@ -87,6 +87,7 @@ TTSEngine.configure = function configure ({ loader, mode = (TTSEngine.mode || TT
 
   modesImpl[mode].load({
     onError (err) {
+      console.debug(err)
       if (onError) {
         onError(err)
       } else {
@@ -94,9 +95,11 @@ TTSEngine.configure = function configure ({ loader, mode = (TTSEngine.mode || TT
       }
     },
     onComplete (data) {
-      log('successfully loaded')
-      isConfigured.set(true)
-      if (onComplete) onComplete(data)
+      log(`successfully loaded mode ${mode}`)
+      isConfigured.set(mode, true)
+      if (onComplete) {
+        return onComplete(data)
+      }
     }
   })
 }
@@ -107,13 +110,20 @@ TTSEngine.setMode = function setMode (mode) {
   TTSEngine.mode = mode
 }
 
-TTSEngine.isConfigured = () => isConfigured.get()
+TTSEngine.isConfigured = () => isConfigured.get(TTSEngine.mode)
+
+TTSEngine.replay = () => {
+  TTSEngine.stop()
+  TTSEngine.play(playCache)
+}
+
+let playCache = {}
 
 TTSEngine.play = function play ({ id, text, volume, rate, pitch, onEnd, onError }) {
   ensureConfig()
   const errHandler = onError || _globalErrorHandler
   const endHandler = onEnd || (() => {})
-  return getImpl().play({
+  playCache = {
     id,
     text,
     volume,
@@ -121,7 +131,8 @@ TTSEngine.play = function play ({ id, text, volume, rate, pitch, onEnd, onError 
     pitch,
     onEnd: endHandler,
     onError: errHandler
-  })
+  }
+  return getImpl().play(playCache)
 }
 
 TTSEngine.stop = function stop ({ onError } = {}) {

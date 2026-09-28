@@ -7,47 +7,54 @@ import { createSchema, unsafeInt } from '../../../test-helpers.tests'
 import { UndefinedScore } from '../../../scoring/UndefinedScore'
 import { ScoringTypes } from '../../../scoring/ScoringTypes'
 
-describe(Highlight.name, function () {
-  it('ensures the integrity of the basic structure', function () {
+describe(Highlight.name, () => {
+  it('ensures the integrity of the basic structure', () => {
     expect(Highlight.name).to.equal('highlight')
     expect(Highlight.label).to.be.a('string')
     expect(Highlight.icon).to.be.a('string')
     expect(Highlight.isItem).to.equal(true)
   })
 
-  it('has a valid schema', function () {
+  it('has a valid schema', () => {
     createSchema(Highlight.schema)
   })
 
-  describe('scoring', function () {
-    const createItemDoc = ({ competency = Random.id(), correctResponse = 0, requires = 1 } = {}) => ({
+  describe('scoring', () => {
+    let itemId
+    beforeEach(() => {
+      itemId = Random.id()
+    })
+
+    const createItemDoc = ({ competency = Random.id(), correctResponse = 0, requires = 1, explanation } = {}) => ({
       scoring: [{
-        competency: competency,
+        competency,
         correctResponse: Array.isArray(correctResponse)
           ? correctResponse
           : [correctResponse],
-        requires: requires
+        requires,
+        explanation
       }]
     })
 
-    describe('validation', function () {
-      it('throws on unexpected scoring def', function () {
-        expect(() => Highlight.score()).to.throw('Expected array, got undefined')
+    describe('validation', () => {
+      it('throws on unexpected scoring def', () => {
+        const input = [
+          [() => Highlight.score(), 'Expected item doc scoring array'],
+          [() => Highlight.score(createItemDoc({ correctResponse: null })), 'Match error: Expected number, got null in field [0].correctResponse[0]'],
+          [() => Highlight.score(createItemDoc({
+            competency: null
+          })), 'Match error: Expected string, got null in field [0].competency'],
+          [() => Highlight.score(createItemDoc({
+            requires: null
+          })), 'Match error: Expected number, got null in field [0].requires']
+        ]
 
-        expect(() => Highlight.score(createItemDoc({
-          correctResponse: null
-        }))).to.throw('Match error: Expected number, got null in field [0].correctResponse[0]')
-
-        expect(() => Highlight.score(createItemDoc({
-          competency: null
-        }))).to.throw('Match error: Expected string, got null in field [0].competency')
-
-        expect(() => Highlight.score(createItemDoc({
-          requires: null
-        }))).to.throw('Match error: Expected number, got null in field [0].requires')
+        for (const [fn, message] of input) {
+          expect(fn).to.throw(message)
+        }
       })
 
-      it('throws on invalid reponse inputs', function () {
+      it('throws on invalid response inputs', () => {
         const itemDoc = createItemDoc()
         const invalidInputs = [
           [1.1], [true],
@@ -61,14 +68,15 @@ describe(Highlight.name, function () {
         ]
 
         invalidInputs.forEach(responses => {
-          expect(() => Highlight.score(itemDoc, { responses }))
-            .to.throw('Match error: Failed Match.Where validation')
+          const responseDoc = { itemId, responses }
+          expect(() => Highlight.score(itemDoc, responseDoc))
+            .to.throw(`Expected ${responses[0]} to be safe integer in ${itemId}`)
         })
       })
     })
 
-    describe('undefined values', function () {
-      it('correctly scores an undefined result', function () {
+    describe('undefined values', () => {
+      it('correctly scores an undefined result', () => {
         const itemDoc = createItemDoc()
         const cyclicArray = []
         const cyclicSub = []
@@ -76,7 +84,6 @@ describe(Highlight.name, function () {
         cyclicArray.push(cyclicSub)
 
         ;[
-          undefined,
           [],
           [[]],
           [''],
@@ -85,20 +92,23 @@ describe(Highlight.name, function () {
           [UndefinedScore],
           cyclicArray
         ].forEach(responses => {
-          const score = Highlight.score(itemDoc, { responses })
+          const responseDoc = { itemId, responses }
+          const score = Highlight.score(itemDoc, responseDoc)
           expect(score[0]).to.deep.equal({
             competency: itemDoc.scoring[0].competency,
             correctResponse: itemDoc.scoring[0].correctResponse,
             value: responses,
             score: false,
-            isUndefined: true
+            isUndefined: true,
+            itemId,
+            explanation: itemDoc.scoring[0].explanation
           }, responses)
         })
       })
     })
 
-    describe(ScoringTypes.all.name, function () {
-      it('correctly scores a false result', function () {
+    describe(ScoringTypes.all.name, () => {
+      it('correctly scores a false result', () => {
         const itemDoc = createItemDoc({
           correctResponse: [1, 6],
           requires: ScoringTypes.all.value
@@ -110,18 +120,21 @@ describe(Highlight.name, function () {
         ]
 
         falseResponses.forEach(responses => {
-          const score = Highlight.score(itemDoc, { responses })
+          const responseDoc = { itemId, responses }
+          const score = Highlight.score(itemDoc, responseDoc)
           const expectedValue = responses.map(val => parseInt(val, 10))
           expect(score[0]).to.deep.equal({
             competency: itemDoc.scoring[0].competency,
             correctResponse: itemDoc.scoring[0].correctResponse,
             value: expectedValue,
             score: false,
-            isUndefined: false
+            isUndefined: false,
+            itemId,
+            explanation: itemDoc.scoring[0].explanation
           })
         })
       })
-      it('correctly scores a true result', function () {
+      it('correctly scores a true result', () => {
         const itemDoc = createItemDoc({
           correctResponse: [1, 6],
           requires: ScoringTypes.all.value
@@ -133,21 +146,24 @@ describe(Highlight.name, function () {
         ]
 
         trueResponse.forEach(responses => {
-          const score = Highlight.score(itemDoc, { responses })
+          const responseDoc = { itemId, responses }
+          const score = Highlight.score(itemDoc, responseDoc)
           const expectedValue = responses.map(val => parseInt(val, 10)).sort()
           expect(score[0]).to.deep.equal({
             competency: itemDoc.scoring[0].competency,
             correctResponse: itemDoc.scoring[0].correctResponse,
             value: expectedValue,
             score: true,
-            isUndefined: false
+            isUndefined: false,
+            itemId,
+            explanation: itemDoc.scoring[0].explanation
           })
         })
       })
     })
 
-    describe(ScoringTypes.any.name, function () {
-      it('correctly scores a false result', function () {
+    describe(ScoringTypes.any.name, () => {
+      it('correctly scores a false result', () => {
         const itemDoc = createItemDoc({
           correctResponse: [1, 6],
           requires: ScoringTypes.any.value
@@ -159,18 +175,21 @@ describe(Highlight.name, function () {
         ]
 
         falseResponses.forEach(responses => {
-          const score = Highlight.score(itemDoc, { responses })
+          const responseDoc = { itemId, responses }
+          const score = Highlight.score(itemDoc, responseDoc)
           const expectedValue = responses.map(val => parseInt(val, 10))
           expect(score[0]).to.deep.equal({
             competency: itemDoc.scoring[0].competency,
             correctResponse: itemDoc.scoring[0].correctResponse,
             value: expectedValue,
             score: false,
-            isUndefined: false
+            isUndefined: false,
+            itemId,
+            explanation: itemDoc.scoring[0].explanation
           })
         })
       })
-      it('correctly scores a true result', function () {
+      it('correctly scores a true result', () => {
         const itemDoc = createItemDoc({
           correctResponse: [1, 6],
           requires: ScoringTypes.any.value
@@ -182,24 +201,28 @@ describe(Highlight.name, function () {
         ]
 
         trueResponse.forEach(responses => {
-          const score = Highlight.score(itemDoc, { responses })
+          const responseDoc = { itemId, responses }
+          const score = Highlight.score(itemDoc, responseDoc)
           const expectedValue = responses.map(val => parseInt(val, 10))
           expect(score[0]).to.deep.equal({
             competency: itemDoc.scoring[0].competency,
             correctResponse: itemDoc.scoring[0].correctResponse,
             value: expectedValue,
             score: true,
-            isUndefined: false
+            isUndefined: false,
+            itemId,
+            explanation: itemDoc.scoring[0].explanation
           })
         })
       })
     })
 
-    describe(ScoringTypes.allInclusive.name, function () {
-      it('correctly scores a false result', function () {
+    describe(ScoringTypes.allInclusive.name, () => {
+      it('correctly scores a false result', () => {
         const itemDoc = createItemDoc({
           correctResponse: [1, 6],
-          requires: ScoringTypes.allInclusive.value
+          requires: ScoringTypes.allInclusive.value,
+          explanation: 'moo'
         })
 
         const falseResponses = [
@@ -208,18 +231,21 @@ describe(Highlight.name, function () {
         ]
 
         falseResponses.forEach(responses => {
-          const score = Highlight.score(itemDoc, { responses })
+          const responseDoc = { itemId, responses }
+          const score = Highlight.score(itemDoc, responseDoc)
           const expectedValue = responses.map(val => parseInt(val, 10))
           expect(score[0]).to.deep.equal({
             competency: itemDoc.scoring[0].competency,
             correctResponse: itemDoc.scoring[0].correctResponse,
             value: expectedValue,
             score: false,
-            isUndefined: false
+            isUndefined: false,
+            itemId,
+            explanation: itemDoc.scoring[0].explanation
           })
         })
       })
-      it('correctly scores a true result', function () {
+      it('correctly scores a true result', () => {
         const itemDoc = createItemDoc({
           correctResponse: [1, 6],
           requires: ScoringTypes.allInclusive.value
@@ -231,13 +257,16 @@ describe(Highlight.name, function () {
         ]
 
         trueResponse.forEach(responses => {
-          const score = Highlight.score(itemDoc, { responses })
+          const responseDoc = { itemId, responses }
+          const score = Highlight.score(itemDoc, responseDoc)
           const expectedValue = responses.map(val => parseInt(val, 10))
           expect(score[0]).to.deep.equal({
             competency: itemDoc.scoring[0].competency,
             correctResponse: itemDoc.scoring[0].correctResponse,
             value: expectedValue,
             score: true,
+            itemId,
+            explanation: itemDoc.scoring[0].explanation,
             isUndefined: false
           })
         })

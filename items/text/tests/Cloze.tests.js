@@ -38,16 +38,21 @@ describe(Cloze.name, function () {
   })
 
   describe('scoring', function () {
-    const createItemDoc = ({ competency = Random.id(), correctResponse = /foo/, target = 0 } = {}) => ({
+    let itemId
+    beforeEach(() => {
+      itemId = Random.id(6)
+    })
+    const createItemDoc = ({ competency = Random.id(), correctResponse = /foo/, target = 0, explanation } = {}) => ({
       scoring: [{
         competency: [competency],
-        correctResponse: correctResponse,
-        target: target
+        correctResponse,
+        target,
+        explanation
       }]
     })
 
     it('throws on unexpected scoring def', function () {
-      expect(() => Cloze.score()).to.throw('Expected array, got undefined')
+      expect(() => Cloze.score()).to.throw('Expected item doc scoring array')
 
       expect(() => Cloze.score(createItemDoc({
         correctResponse: null
@@ -67,9 +72,7 @@ describe(Cloze.name, function () {
       const cyclicSub = []
       cyclicSub.push(cyclicArray)
       cyclicArray.push(cyclicSub)
-
       ;[
-        undefined,
         [],
         [[]],
         [''],
@@ -78,14 +81,18 @@ describe(Cloze.name, function () {
         [UndefinedScore],
         cyclicArray
       ].forEach(responses => {
-        const score = Cloze.score(itemDoc, { responses })
+        const responseDoc = { itemId, responses }
+        const score = Cloze.score(itemDoc, responseDoc)
         expect(score[0]).to.deep.equal({
           competency: itemDoc.scoring[0].competency,
           correctResponse: itemDoc.scoring[0].correctResponse,
           value: responses,
+          itemId,
+          explanation: itemDoc.explanation,
+          target: itemDoc.scoring[0].target,
           score: false,
           isUndefined: true
-        }, responses)
+        })
       })
     })
     it('throws on invalid response inputs', function () {
@@ -98,12 +105,12 @@ describe(Cloze.name, function () {
         [Number(unsafeInt().toExponential())], [Number(unsafeInt(true).toExponential())],
         [Infinity], [-Infinity],
         ['this is some example of eval ("whatever bad")'],
-        ['const { exec } = require("child_process")'],
-        'this should fail, too'
+        ['const { exec } = require("child_process")']
       ]
 
       invalidInputs.forEach(responses => {
-        expect(() => Cloze.score(itemDoc, { responses }))
+        const responseDoc = { itemId, responses }
+        expect(() => Cloze.score(itemDoc, responseDoc))
           .to.throw('Match error: Failed Match.Where validation')
       })
     })
@@ -120,12 +127,16 @@ describe(Cloze.name, function () {
       ]
 
       invalidInputs.forEach((responses) => {
-        const score = Cloze.score(itemDoc, { responses })
+        const responseDoc = { itemId, responses }
+        const score = Cloze.score(itemDoc, responseDoc)
         expect(score[0]).to.deep.equal({
+          itemId,
           competency: itemDoc.scoring[0].competency,
           correctResponse: itemDoc.scoring[0].correctResponse,
           value: responses[itemDoc.scoring[0].target],
           score: false,
+          explanation: itemDoc.explanation,
+          target: itemDoc.scoring[0].target,
           isUndefined: false
         })
       })
@@ -143,12 +154,16 @@ describe(Cloze.name, function () {
       ]
 
       invalidInputs.forEach((responses) => {
-        const score = Cloze.score(itemDoc, { responses })
+        const responseDoc = { itemId, responses }
+        const score = Cloze.score(itemDoc, responseDoc)
         expect(score[0]).to.deep.equal({
           competency: itemDoc.scoring[0].competency,
           correctResponse: itemDoc.scoring[0].correctResponse,
           value: responses[itemDoc.scoring[0].target],
           score: true,
+          itemId,
+          explanation: itemDoc.explanation,
+          target: itemDoc.scoring[0].target,
           isUndefined: false
         })
       })

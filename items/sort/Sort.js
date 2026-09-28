@@ -3,62 +3,33 @@ import { Labels } from '../../i18n/Labels'
 import { Competency } from '../../contexts/Competency'
 import { Scoring } from '../../scoring/Scoring'
 
-export const Connect = {}
+export const Sort = {}
 
-Connect.name = 'connect'
-Connect.label = 'item.connect.title'
-Connect.icon = 'grip-lines'
-Connect.isItem = true
+Sort.name = 'sort'
+Sort.label = 'item.sort.title'
+Sort.icon = 'list-ol'
+Sort.isItem = true
 
-Connect.schema = {
-  left: {
+Sort.schema = {
+  list: {
     type: Array,
-    label: 'item.connect.left'
+    label: 'item.sort.list'
   },
-  'left.$': {
+  'list.$': {
     type: Object,
     label: Labels.entry
   },
-  'left.$.text': {
+  'list.$.text': {
     type: String,
     label: Labels.text,
     optional: true
   },
-  'left.$.tts': {
+  'list.$.tts': {
     type: String,
     optional: true,
     label: 'tts.text'
   },
-  'left.$.image': {
-    type: String,
-    optional: true,
-    label: 'image.title',
-    dependency: {
-      filesCollection: MediaLib.name,
-      version: 'original',
-      isImage: true
-    }
-  },
-
-  right: {
-    type: Array,
-    label: 'item.connect.right'
-  },
-  'right.$': {
-    type: Object,
-    label: Labels.entry
-  },
-  'right.$.text': {
-    type: String,
-    label: Labels.text,
-    optional: true
-  },
-  'right.$.tts': {
-    type: String,
-    optional: true,
-    label: 'tts.text'
-  },
-  'right.$.image': {
+  'list.$.image': {
     type: String,
     optional: true,
     label: 'image.title',
@@ -89,11 +60,10 @@ Connect.schema = {
   'scoring.$.requires': {
     type: Number,
     label: 'scoring.requires.title',
-    allowedValues: [1, 2, 3],
+    allowedValues: [1, 2],
     options: [
       Scoring.types.all,
-      Scoring.types.any,
-      Scoring.types.allInclusive
+      Scoring.types.any
     ],
     defaultValue: 1
   },
@@ -102,27 +72,12 @@ Connect.schema = {
     label: 'scoring.correctResponse'
   },
   'scoring.$.correctResponse.$': {
-    type: Object,
-    label: Labels.entry
-  },
-  'scoring.$.correctResponse.$.left': {
     type: Number,
-    label: 'item.connect.left',
+    label: Labels.entry,
     dependency: {
       context: null, // self
-      requires: 'left',
-      field: 'left',
-      valueField: '@index',
-      labelField: 'text'
-    }
-  },
-  'scoring.$.correctResponse.$.right': {
-    type: Number,
-    label: 'item.connect.right',
-    dependency: {
-      context: null, // self
-      requires: 'right',
-      field: 'right',
+      requires: 'list',
+      field: 'list',
       valueField: '@index',
       labelField: 'text'
     }

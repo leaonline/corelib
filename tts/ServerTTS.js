@@ -19,7 +19,9 @@ ServerTTS.name = 'TTSServer'
 
 const urlCache = new Map()
 const log = createLog({
-  name: ServerTTS.name
+  name: ServerTTS.name,
+  type: 'debug',
+  devOnly: true
 })
 
 let audio
@@ -27,6 +29,7 @@ let audio
 function playAudio (url, onEnd, onError) {
   ServerTTS.stop()
   audio = new window.Audio(url)
+  audio.crossOrigin = 'anonymous'
   audio.addEventListener('ended', onEnd)
   audio.addEventListener('error', onError)
   audio.play()
@@ -83,7 +86,7 @@ ServerTTS.play = function play ({ id, text, onEnd, onError } = {}) {
 
     urlCache.set(requestText, url)
     playAudio(url, onEnd, onError)
-  })
+  }, log)
 }
 
 ServerTTS.stop = function stop () {
@@ -96,6 +99,10 @@ ServerTTS.stop = function stop () {
 
 ServerTTS.urlIsCached = function urlIsCached (requestText) {
   return urlCache.has(requestText)
+}
+
+ServerTTS.load = ({ maxTimeout = 5000, onComplete = () => {}, onError = err => console.error(err) } = {}) => {
+  onComplete()
 }
 
 ServerTTS.clear = function () {

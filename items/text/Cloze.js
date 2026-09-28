@@ -95,5 +95,15 @@ Cloze.schema = {
   'scoring.$.correctResponse': {
     type: RegExp,
     label: Labels.entry
+  },
+  'scoring.$.explanation': {
+    type: String,
+    optional: true,
+    label: 'scoring.explanation'
+  },
+  explanation: {
+    type: String,
+    optional: true,
+    label: 'item.explanation'
   }
 }

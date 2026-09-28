@@ -9,7 +9,7 @@ import { Highlight } from '../../items/highlight/Highlight'
 import { restore, stub } from '../../test-helpers.tests'
 
 describe(Scoring.name, function () {
-  it('ensures integrity of it\'s base structure', function () {
+  it('ensures integrity of its base structure', function () {
     expect(Scoring.name).to.be.a('string')
     expect(Scoring.label).to.be.a('string')
     expect(Scoring.UNDEFINED).to.equal('__undefined__')

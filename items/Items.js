@@ -2,6 +2,7 @@ import { Choice } from './choice/Choice'
 import { Cloze } from './text/Cloze'
 import { Highlight } from './highlight/Highlight'
 import { Connect } from './interactive/Connect'
+import { Sort } from './sort/Sort'
 import { ItemTypeName } from './ItemTypeName'
 
 /**
@@ -17,6 +18,7 @@ allItems.set(Choice.name, Choice)
 allItems.set(Cloze.name, Cloze)
 allItems.set(Highlight.name, Highlight)
 allItems.set(Connect.name, Connect)
+allItems.set(Sort.name, Sort)
 
 Items.forEach = cb => allItems.forEach(cb)
 

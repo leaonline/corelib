@@ -7,7 +7,7 @@ export const Choice = {}
 
 Choice.name = 'choice'
 Choice.label = 'item.choice.title'
-Choice.icon = 'tasks'
+Choice.icon = 'check-square'
 Choice.isItem = true
 
 Choice.flavors = {
@@ -109,5 +109,15 @@ Choice.schema = {
       valueField: '@index',
       labelField: 'text'
     }
+  },
+  'scoring.$.explanation': {
+    type: String,
+    optional: true,
+    label: 'scoring.explanation'
+  },
+  explanation: {
+    type: String,
+    optional: true,
+    label: 'item.explanation'
   }
 }

@@ -42,35 +42,40 @@ describe(Choice.name, function () {
   })
 
   describe('scoring', function () {
-    const createItemDoc = ({ flavor = 0, correctResponse = 0, requires = 0 } = {}) => ({
+    let itemId
+    beforeEach(() => {
+      itemId = Random.id()
+    })
+
+    const createItemDoc = ({ flavor = 0, correctResponse = 0, requires = 0, explanation } = {}) => ({
       flavor: flavor,
       scoring: [{
         competency: Random.id(),
         correctResponse: Array.isArray(correctResponse)
           ? correctResponse
           : [correctResponse],
-        requires: requires
+        requires: requires,
+        explanation
       }]
     })
 
     describe('validation', function () {
       it('throws on an unexpected flavor', function () {
-        expect(() => Choice.score()).to.throw('Expected number, got undefined')
+        const responseDoc = { itemId, responses: [] }
+        let itemDoc = createItemDoc()
+        delete itemDoc.flavor
+        expect(() => Choice.score(itemDoc, responseDoc)).to.throw('Match error: Missing key \'flavor\'')
 
-        const itemDoc = createItemDoc({ flavor: 3 })
-        expect(() => Choice.score(itemDoc)).to.throw(`Unexpected undefined choice flavor ${itemDoc.flavor}`)
+        itemDoc = createItemDoc({ flavor: 3 })
+        expect(() => Choice.score(itemDoc, responseDoc)).to.throw(`Unexpected undefined choice flavor ${itemDoc.flavor}`)
       })
       it('throws on unexpected scoring def', function () {
-        expect(() => Choice.score()).to.throw('Expected number, got undefined')
-
+        const responseDoc = { itemId, responses: [] }
         const itemDoc = createItemDoc({
           flavor: Choice.flavors.single.value,
           correctResponse: null
         })
-        expect(() => Choice.score(itemDoc)).to.throw('Match error: Expected number, got null in field [0].correctResponse[0]')
-        expect(() => Choice.score({
-          flavor: Choice.flavors.single.value
-        })).to.throw('Match error: Expected array, got undefined')
+        expect(() => Choice.score(itemDoc, responseDoc)).to.throw('Match error: Expected number, got null in field [0].correctResponse[0]')
       })
     })
 
@@ -81,7 +86,6 @@ describe(Choice.name, function () {
           correctResponse: 1
         })
         ;[
-          undefined,
           [],
           [[]],
           [''],
@@ -89,7 +93,8 @@ describe(Choice.name, function () {
           [null],
           [UndefinedScore]
         ].forEach(responses => {
-          const score = Choice.score(itemDoc, { responses })
+          const responseDoc = { itemId, responses }
+          const score = Choice.score(itemDoc, responseDoc)
           const expectedValue = Array.isArray(responses)
             ? responses[0]
             : responses
@@ -99,6 +104,8 @@ describe(Choice.name, function () {
             correctResponse: itemDoc.scoring[0].correctResponse,
             value: expectedValue,
             score: false,
+            itemId,
+            explanation: itemDoc.scoring[0].explanation,
             isUndefined: true
           }, responses)
         })
@@ -111,7 +118,8 @@ describe(Choice.name, function () {
         })
 
         invalidInputs.forEach(responses => {
-          expect(() => Choice.score(itemDoc, { responses }))
+          const responseDoc = { itemId, responses }
+          expect(() => Choice.score(itemDoc, responseDoc))
             .to.throw('Match error: Failed Match.Where validation')
         })
       })
@@ -124,7 +132,8 @@ describe(Choice.name, function () {
 
         ;[[1], ['1'], [1.0], ['1.0']]
           .forEach(responses => {
-            const score = Choice.score(itemDoc, { responses })
+            const responseDoc = { itemId, responses }
+            const score = Choice.score(itemDoc, responseDoc)
             const expectedValue = Array.isArray(responses)
               ? responses[0]
               : responses
@@ -134,6 +143,8 @@ describe(Choice.name, function () {
               correctResponse: itemDoc.scoring[0].correctResponse,
               value: parseInt(expectedValue, 10),
               score: true,
+              itemId,
+              explanation: itemDoc.scoring[0].explanation,
               isUndefined: false
             }, responses)
           })
@@ -147,7 +158,8 @@ describe(Choice.name, function () {
 
         ;[[22], ['22'], [1.0], ['1']]
           .forEach(responses => {
-            const score = Choice.score(itemDoc, { responses })
+            const responseDoc = { itemId, responses }
+            const score = Choice.score(itemDoc, responseDoc)
             const expectedValue = Array.isArray(responses)
               ? responses[0]
               : responses
@@ -157,6 +169,8 @@ describe(Choice.name, function () {
               correctResponse: itemDoc.scoring[0].correctResponse,
               value: parseInt(expectedValue, 10),
               score: false,
+              itemId,
+              explanation: itemDoc.scoring[0].explanation,
               isUndefined: false
             }, responses)
           })
@@ -169,9 +183,7 @@ describe(Choice.name, function () {
           flavor: Choice.flavors.multiple.value,
           requires: -10
         })
-        const responseDoc = {
-          responses: ['2']
-        }
+        const responseDoc = { itemId, responses: ['2'] }
         expect(() => Choice.score(itemDoc, responseDoc))
           .to.throw('Unexpected scoring type -10')
       })
@@ -181,7 +193,6 @@ describe(Choice.name, function () {
           correctResponse: 1
         })
         ;[
-          undefined,
           [],
           [[]],
           [''],
@@ -192,7 +203,8 @@ describe(Choice.name, function () {
           [[null]],
           [UndefinedScore]
         ].forEach(responses => {
-          const score = Choice.score(itemDoc, { responses })
+          const responseDoc = { itemId, responses }
+          const score = Choice.score(itemDoc, responseDoc)
           const expectedValue = Array.isArray(responses)
             ? responses[0]
             : responses
@@ -202,6 +214,8 @@ describe(Choice.name, function () {
             correctResponse: itemDoc.scoring[0].correctResponse,
             value: expectedValue,
             score: false,
+            itemId,
+            explanation: itemDoc.scoring[0].explanation,
             isUndefined: true
           }, responses)
         })
@@ -216,7 +230,8 @@ describe(Choice.name, function () {
           })
 
           invalidInputs.forEach(responses => {
-            expect(() => Choice.score(itemDoc, { responses }))
+            const responseDoc = { itemId, responses }
+            expect(() => Choice.score(itemDoc, responseDoc))
               .to.throw('Match error: Failed Match.Where validation')
           })
         })
@@ -229,13 +244,16 @@ describe(Choice.name, function () {
 
           ;[[0], [1], [0, 1], [-1, 0, 4]]
             .forEach(responses => {
-              const score = Choice.score(itemDoc, { responses })
+              const responseDoc = { itemId, responses }
+              const score = Choice.score(itemDoc, responseDoc)
 
               expect(score[0]).to.deep.equal({
                 competency: itemDoc.scoring[0].competency,
                 correctResponse: itemDoc.scoring[0].correctResponse,
                 value: responses,
                 score: false,
+                itemId,
+                explanation: itemDoc.scoring[0].explanation,
                 isUndefined: false
               }, responses)
             })
@@ -249,13 +267,16 @@ describe(Choice.name, function () {
 
           ;[[1, 2], [1, 2, 3], [1, 3.0], ['2.0', '3']]
             .forEach(responses => {
-              const score = Choice.score(itemDoc, { responses })
+              const responseDoc = { itemId, responses }
+              const score = Choice.score(itemDoc, responseDoc)
 
               expect(score[0]).to.deep.equal({
                 competency: itemDoc.scoring[0].competency,
                 correctResponse: itemDoc.scoring[0].correctResponse,
                 value: responses,
                 score: true,
+                itemId,
+                explanation: itemDoc.scoring[0].explanation,
                 isUndefined: false
               }, responses)
             })
@@ -271,7 +292,8 @@ describe(Choice.name, function () {
           })
 
           invalidInputs.forEach(responses => {
-            expect(() => Choice.score(itemDoc, { responses }))
+            const responseDoc = { itemId, responses }
+            expect(() => Choice.score(itemDoc, responseDoc))
               .to.throw('Match error: Failed Match.Where validation')
           })
         })
@@ -284,13 +306,16 @@ describe(Choice.name, function () {
 
           ;[[1, 2, 3], [2, 3, 4], [0, 1], [2], [3]]
             .forEach(responses => {
-              const score = Choice.score(itemDoc, { responses })
+              const responseDoc = { itemId, responses }
+              const score = Choice.score(itemDoc, responseDoc)
 
               expect(score[0]).to.deep.equal({
                 competency: itemDoc.scoring[0].competency,
                 correctResponse: itemDoc.scoring[0].correctResponse,
                 value: responses,
                 score: false,
+                itemId,
+                explanation: itemDoc.scoring[0].explanation,
                 isUndefined: false
               }, responses)
             })
@@ -304,13 +329,16 @@ describe(Choice.name, function () {
 
           ;[[2, 3], ['2.0', '3']]
             .forEach(responses => {
-              const score = Choice.score(itemDoc, { responses })
+              const responseDoc = { itemId, responses }
+              const score = Choice.score(itemDoc, responseDoc)
 
               expect(score[0]).to.deep.equal({
                 competency: itemDoc.scoring[0].competency,
                 correctResponse: itemDoc.scoring[0].correctResponse,
                 value: responses,
                 score: true,
+                itemId,
+                explanation: itemDoc.scoring[0].explanation,
                 isUndefined: false
               }, responses)
             })
