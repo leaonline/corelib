@@ -14,8 +14,8 @@ Package.describe({
 Package.onUse(function (api) {
   api.versionsFrom(['2.8.1', '3.0.1', '3.4'])
   api.use('ecmascript')
-  api.use('reactive-var')
-  api.use('reactive-dict')
+  api.use('reactive-var', 'client', { weak: true })
+  api.use('reactive-dict', 'client', { weak: true })
 })
 
 Package.onTest(function (api) {
